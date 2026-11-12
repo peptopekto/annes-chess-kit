@@ -140,7 +140,7 @@ def run() -> None:
             and any(((s.get("counts") or {}).get(c) or {}).get(C.BRILLIANT) for c in ("w", "b"))]
     if not todo:
         return
-    refute = analysis.refuter(16)
+    refute = analysis.refuter(analysis.Limits(depth=16))
     downgraded = 0
     for gid in todo:
         def apply(record: dict) -> bool:

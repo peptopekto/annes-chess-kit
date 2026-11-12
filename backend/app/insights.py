@@ -126,7 +126,8 @@ class Game:
 # id -> ((mtime, your names), Game). Only slim per-game data is kept in memory.
 _cache: dict[str, tuple[tuple, "Game | None"]] = {}
 SLIM_KEYS = ("id", "white", "black", "date", "accuracy", "opening", "plies")
-EXAMPLE_CAP = 150  # example positions per category sent to the UI (drills use up to 60)
+EXAMPLE_CAP = 150  # example positions per category sent to the UI
+DRILL_CAP = 400    # positions per category a drill may build its puzzles from (only some make a clear puzzle)
 # "Clearly winning / clearly lost": your win chance reached this at some point (shared with stats.py,
 # so Insights and Progress count the same games).
 WINNING_PCT, LOSING_PCT = 85, 15
@@ -358,6 +359,12 @@ def _newest(pairs: list[tuple["Game", dict]]) -> list[tuple["Game", dict]]:
     return sorted(pairs, key=lambda gm: (-gm[0].ts, gm[1]["ply"]))[:EXAMPLE_CAP]
 
 
+def _drill(pairs: list[tuple["Game", dict]]) -> list[list]:
+    """[game id, ply] of the newest DRILL_CAP positions: what a drill of this category picks its puzzles from."""
+    newest = sorted(pairs, key=lambda gm: (-gm[0].ts, gm[1]["ply"]))[:DRILL_CAP]
+    return [[g.record["id"], m["ply"]] for g, m in newest]
+
+
 def _opening_family(name: str | None) -> str:
     return (name or "Unknown").split(":")[0].strip()
 
@@ -440,7 +447,7 @@ def _compute(tc: str = "all", color: str = "all", last: int = 0,
         ms = [m for _, m in moves if m["phase"] == ph]
         errs = [(g, m) for g, m in moves if m["phase"] == ph and m["cls"] in SEVERE]
         phases.append({
-            "examples": [_ref(g, m) for g, m in _newest(errs)], "count": len(errs),
+            "examples": [_ref(g, m) for g, m in _newest(errs)], "drill": _drill(errs), "count": len(errs),
             "phase": ph, "moves": len(ms),
             "accuracy": round(sum(m["acc"] for m in ms) / len(ms), 1) if ms else None,
             "errorRate": _rate(sum(1 for m in ms if m["cls"] in SEVERE), len(ms)),
@@ -474,7 +481,7 @@ def _compute(tc: str = "all", color: str = "all", last: int = 0,
         hits = [(g, m) for g, m in moves if m["tag"] == tag and m["cls"] in SEVERE]
         tags.append({"tag": tag, "label": label, "count": len(hits),
                      "games": len({g.record["id"] for g, _ in hits}),
-                     "examples": [_ref(g, m) for g, m in _newest(hits)]})
+                     "examples": [_ref(g, m) for g, m in _newest(hits)], "drill": _drill(hits)})
     out["tags"] = sorted(tags, key=lambda t: -t["count"])
 
     # ---- pieces -------------------------------------------------------------
@@ -728,7 +735,7 @@ def _beginner_sections(games: list[Game], moves: list[tuple[Game, dict]]) -> dic
             if hits:
                 rows.append({"theme": theme, "label": label, "tip": tactics.TIPS[theme], "count": len(hits),
                              "games": len({g.record["id"] for g, _ in hits}),
-                             "examples": [_ref(g, m) for g, m in _newest(hits)[:60]]})
+                             "examples": [_ref(g, m) for g, m in _newest(hits)[:60]], "drill": _drill(hits)})
         out[key] = sorted(rows, key=lambda r: -r["count"])
 
     # How games end.

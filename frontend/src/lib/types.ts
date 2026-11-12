@@ -337,6 +337,8 @@ export interface MoveRef {
   gameId: string; ply: number; san: string; cls: Cls; bestSan: string; fenBefore: string
   white: string; black: string; date: string
 }
+/** [game id, ply] of every position a drill may build puzzles from (newest first, more than the examples). */
+export type DrillPool = [string, number][]
 export interface RateRow { bucket: string; moves: number; errorRate: number | null; blunderRate: number | null }
 export interface Core {
   games: number
@@ -369,9 +371,9 @@ export interface Insights {
   blundersPerGame?: number
   errorsPer40?: number
   record?: { win: number; draw: number; loss: number }
-  phases?: { phase: string; moves: number; accuracy: number | null; errorRate: number | null; blunders: number; lossPerMove: number | null; examples: MoveRef[]; count: number }[]
+  phases?: { phase: string; moves: number; accuracy: number | null; errorRate: number | null; blunders: number; lossPerMove: number | null; examples: MoveRef[]; drill?: DrillPool; count: number }[]
   clock?: { moves: number; remaining: RateRow[]; spent: RateRow[] }
-  tags?: { tag: string; label: string; count: number; games: number; examples: MoveRef[] }[]
+  tags?: { tag: string; label: string; count: number; games: number; examples: MoveRef[]; drill?: DrillPool }[]
   pieces?: { piece: string; moves: number; errors: number; blunders: number; errorRate: number | null }[]
   openings?: { name: string; color: Color; games: number; score: number; accuracy: number | null; openingAccuracy: number | null }[]
   thrown?: (MoveRef & { peak: number; outcome: string; moves: number })[]
@@ -394,7 +396,7 @@ export interface Insights {
   tilt?: { samples: number; rate: number | null; baseline: number | null }
   colors?: Record<'w' | 'b', { games: number; score: number | null; accuracy: number | null }>
 }
-export interface TacticRow { theme: string; label: string; tip: string; count: number; games: number; examples: MoveRef[] }
+export interface TacticRow { theme: string; label: string; tip: string; count: number; games: number; examples: MoveRef[]; drill?: DrillPool }
 
 // ---- Opening trainer ----
 export interface RepNode {
@@ -458,7 +460,7 @@ export interface CoachRef extends MoveRef { uci: string | null; bestUci: string 
 export interface CoachHabit {
   key: string; title: string; why: string; fix: string
   count: number; games: number; pct: number; recentPct: number | null; beforePct: number | null
-  cost: number; impact: number; recentImpact: number | null; examples: CoachRef[]
+  cost: number; impact: number; recentImpact: number | null; examples: CoachRef[]; drill?: DrillPool
   history?: number[]  // share of games per block of 100 games, oldest first
 }
 export interface CoachRepeat {

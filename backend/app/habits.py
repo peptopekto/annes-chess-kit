@@ -302,6 +302,9 @@ def _compute() -> dict:
             "impact": round(len(pairs) / n * cost * share, 4),
             "recentImpact": round(sum(1 for g, _ in pairs if id(g) in recent_ids) / recent_n * cost * share, 4) if n_recent else None,
             "examples": [_ref(g, m) for g, m in newest[:60]],
+            # What "Drill these positions" builds from: the examples are only the newest few, and just some
+            # positions make a clear puzzle.
+            "drill": [[g.record["id"], m["ply"]] for g, m in newest[:400]],
         })
     # Rank by what it costs you *now* (recent games) more than by your whole history.
     habits.sort(key=lambda h: -(0.65 * (h["recentImpact"] if h["recentImpact"] is not None else h["impact"]) + 0.35 * h["impact"]))

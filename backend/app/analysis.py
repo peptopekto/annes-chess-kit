@@ -574,8 +574,10 @@ def reply_line(move: chess.Move, lines: list[C.Line], played: C.Line | None, aft
     return after_lines[0].pv if after_lines else []
 
 
-def refuter(limits: Limits) -> C.Refuter:
+def refuter(limits: Limits | int) -> C.Refuter:
     """Engine check used to test a sacrifice the opponent's best line declines (rare: a few per game at most)."""
+    if isinstance(limits, int):
+        limits = Limits(depth=limits)
     def run(board: chess.Board):
         if board.is_game_over():
             return _terminal_score(board) or chess.engine.PovScore(chess.engine.Cp(0), board.turn), []

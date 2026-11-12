@@ -136,7 +136,7 @@ function HabitCard({ h, rank }: { h: CoachHabit; rank: number }) {
               <span className="text-ink-100">{h.fix}</span>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button variant="primary" size="sm" onClick={() => drill(h.examples, h.title)}><Dumbbell size={14} /> Drill these positions</Button>
+              <Button variant="primary" size="sm" onClick={() => drill(h.examples, h.title, h.drill)}><Dumbbell size={14} /> Drill these positions</Button>
               {h.examples.length > per && (
                 <Button size="sm" variant="ghost" onClick={() => setPage(p => ((p + 1) * per >= Math.min(h.examples.length, 30) ? 0 : p + 1))}>
                   More examples <ArrowRight size={13} />
@@ -164,7 +164,7 @@ function HabitRow({ h }: { h: CoachHabit }) {
       <div className="w-28 text-right font-mono text-xs text-[#ff8796]" title="Win chance lost each time">{costText(h.cost)} each</div>
       <div className="w-52 text-xs"><Trend h={h} /></div>
       {h.history && h.history.length >= 3 && <Spark values={h.history} className="hidden w-24 sm:block" />}
-      <Button size="sm" variant="soft" onClick={() => drill(h.examples, h.title)}><Dumbbell size={13} /> Drill</Button>
+      <Button size="sm" variant="soft" onClick={() => drill(h.examples, h.title, h.drill)}><Dumbbell size={13} /> Drill</Button>
     </div>
   )
 }
@@ -251,7 +251,7 @@ function Plan({ r }: { r: CoachReport }) {
   const run = (p: CoachPlanItem) => {
     if (p.action === 'drill-habit') {
       const h = r.habits.find(x => x.key === p.habit) ?? r.habits[0]
-      if (h) void drill(h.examples, h.title)
+      if (h) void drill(h.examples, h.title, h.drill)
     } else if (p.action === 'drill-repeats') void drill(r.repeats.flatMap(x => x.refs), 'Mistakes I repeat')
     else if (p.action === 'blunder-check') go('/safety/play/mixed/20')
     else if (p.action === 'openings') go('/openings')

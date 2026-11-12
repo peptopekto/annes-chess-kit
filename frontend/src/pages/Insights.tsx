@@ -142,8 +142,9 @@ function Summary({ data }: { data: Insights }) {
     <div className="grid gap-3 md:grid-cols-2">
       {data.summary.map((t, i) => {
         const tag = t.tag ? data.tags?.find(x => x.tag === t.tag) : null
-        const refs = tag?.examples ?? (t.kind === 'thrown' ? data.thrown ?? [] : t.kind === 'phase'
-          ? [...(data.phases ?? [])].sort((a, b) => (a.accuracy ?? 100) - (b.accuracy ?? 100))[0]?.examples ?? [] : [])
+        const weakPhase = t.kind === 'phase' ? [...(data.phases ?? [])].sort((a, b) => (a.accuracy ?? 100) - (b.accuracy ?? 100))[0] : undefined
+        const refs = tag?.examples ?? (t.kind === 'thrown' ? data.thrown ?? [] : weakPhase?.examples ?? [])
+        const pool = tag?.drill ?? weakPhase?.drill
         const good = t.tone === 'good'
         return (
           <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
@@ -156,8 +157,8 @@ function Summary({ data }: { data: Insights }) {
             <div className="min-w-0 flex-1">
               <p className="text-sm leading-relaxed text-ink-100">{t.text}</p>
               {!good && refs.length > 0 && (
-                <Button size="sm" variant="ghost" className="mt-1 -ml-3 text-accent" onClick={() => drill(refs, tag?.label ?? (t.kind === 'thrown' ? 'Thrown wins' : 'Weak phase'))}>
-                  <Dumbbell size={14} /> Drill {Math.min(60, refs.length)} of these positions
+                <Button size="sm" variant="ghost" className="mt-1 -ml-3 text-accent" onClick={() => drill(refs, tag?.label ?? (t.kind === 'thrown' ? 'Thrown wins' : 'Weak phase'), pool)}>
+                  <Dumbbell size={14} /> Drill these positions
                 </Button>
               )}
             </div>
@@ -226,7 +227,7 @@ function Phases({ data }: { data: Insights }) {
               <div>{p.blunders} blunder{p.blunders === 1 ? '' : 's'} · loses {p.lossPerMove ?? '—'}% win chance / move</div>
             </div>
             {p.examples.length > 0 && (
-              <Button size="sm" variant="ghost" className="mt-2 -ml-3 text-accent" onClick={() => drill(p.examples, `${PHASE_LABEL[p.phase]} mistakes`)}>
+              <Button size="sm" variant="ghost" className="mt-2 -ml-3 text-accent" onClick={() => drill(p.examples, `${PHASE_LABEL[p.phase]} mistakes`, p.drill)}>
                 <Dumbbell size={14} /> Drill {Math.min(60, p.count)} of them
               </Button>
             )}
@@ -265,7 +266,7 @@ function MistakeTypes({ data }: { data: Insights }) {
             {open === t.tag && (
               <div className="mb-2 ml-1 space-y-1 border-l border-white/10 pl-3">
                 <MoveRefList refs={t.examples} total={t.count} />
-                <Button size="sm" variant="ghost" className="-ml-3 text-accent" onClick={() => drill(t.examples, t.label)}>
+                <Button size="sm" variant="ghost" className="-ml-3 text-accent" onClick={() => drill(t.examples, t.label, t.drill)}>
                   <Dumbbell size={14} /> Drill {Math.min(60, t.count)} of them
                 </Button>
               </div>

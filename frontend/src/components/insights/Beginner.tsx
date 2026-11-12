@@ -20,13 +20,13 @@ const scoreColor = (s: number | null | undefined) =>
 export function FocusCard({ data }: { data: Insights }) {
   const f = data.focus
   if (!f) return null
-  const refs = (() => {
-    if (!f.drill) return []
-    if (f.drill === 'thrown') return data.thrown ?? []
+  const row = (() => {
+    if (!f.drill || f.drill === 'thrown') return undefined
     const [list, theme] = f.drill.split(':')
     const rows = (list === 'tacticsAgainst' ? data.tacticsAgainst : data.tacticsMissed) ?? []
-    return rows.find(r => r.theme === theme)?.examples ?? []
+    return rows.find(r => r.theme === theme)
   })()
+  const refs = f.drill === 'thrown' ? data.thrown ?? [] : row?.examples ?? []
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       className="relative overflow-hidden rounded-2xl p-5 ring-1 ring-accent/30"
@@ -49,8 +49,8 @@ export function FocusCard({ data }: { data: Insights }) {
             <Button variant="primary" onClick={() => go('/safety')}><Shield size={16} /> Blunder-check drill</Button>
           )}
           {refs.length > 0 && (
-            <Button variant={f.theme === 'free_piece' ? 'soft' : 'primary'} onClick={() => drill(refs, f.title)}>
-              <Dumbbell size={16} /> Practise {Math.min(60, refs.length)} positions
+            <Button variant={f.theme === 'free_piece' ? 'soft' : 'primary'} onClick={() => drill(refs, f.title, row?.drill)}>
+              <Dumbbell size={16} /> Practise these positions
             </Button>
           )}
         </div>
@@ -109,8 +109,8 @@ function TacticList({ title, rows, color, prefix }: { title: string; rows: Tacti
                   </div>
                   <div className="text-xs text-ink-400">{prefix} in {r.games} game{r.games === 1 ? '' : 's'}. Newest first:</div>
                   <RefList refs={r.examples} />
-                  <Button size="sm" variant="ghost" className="-ml-3 text-accent" onClick={() => drill(r.examples, `${title}: ${r.label}`)}>
-                    <Dumbbell size={14} /> Drill {Math.min(60, r.examples.length)} of them
+                  <Button size="sm" variant="ghost" className="-ml-3 text-accent" onClick={() => drill(r.examples, `${title}: ${r.label}`, r.drill)}>
+                    <Dumbbell size={14} /> Drill them
                   </Button>
                 </div>
               )}
