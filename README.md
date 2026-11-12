@@ -32,10 +32,12 @@ Your games and reviews stay on your machine.
 
 ![Game review: every move rated, with an explanation and the eval graph](docs/img/review.webp)
 
-| | |
-|---|---|
-| ![Game summary with accuracy and move ratings](docs/img/summary.webp) | ![Insights: where you lose points](docs/img/insights.webp) |
-| ![Coach: your habits and a training plan](docs/img/coach.webp) | ![Endgame trainer](docs/img/endgames.webp) |
+<p align="center">
+  <img src="docs/img/summary.webp" width="49%" alt="Game summary with accuracy and move ratings">
+  <img src="docs/img/insights.webp" width="49%" alt="Insights: where you lose points">
+  <img src="docs/img/coach.webp" width="49%" alt="Coach: your habits and a training plan">
+  <img src="docs/img/endgames.webp" width="49%" alt="Endgame trainer">
+</p>
 
 ## Features
 
