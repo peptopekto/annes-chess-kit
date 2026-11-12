@@ -149,9 +149,15 @@ Set-Content -Path $pth.FullName -Encoding ASCII -Value @($stdlib, '.', 'Lib\site
 $getPip = Get-File 'https://bootstrap.pypa.io/get-pip.py' 'get-pip.py'
 & "$py\python.exe" $getPip --no-warn-script-location --quiet
 if ($LASTEXITCODE) { throw 'Installing pip into the bundled Python failed' }
-& "$py\python.exe" -m pip install --no-warn-script-location --quiet --prefer-binary -r requirements.txt
-# (--prefer-binary, not --only-binary: python-chess is published as source only - it's pure Python.)
+# python-chess is published as source only (it's pure Python), so pip has to build it - with setuptools, in
+# this Python itself: pip's usual separate build environment doesn't work in the embedded Python (its ._pth
+# file ignores the paths pip sets up). --no-cache-dir: build the same way as on a fresh PC (GitHub's builder),
+# instead of reusing a wheel pip built earlier on this one.
+& "$py\python.exe" -m pip install --no-warn-script-location --quiet --no-cache-dir setuptools wheel
+if ($LASTEXITCODE) { throw 'Installing setuptools into the bundled Python failed' }
+& "$py\python.exe" -m pip install --no-warn-script-location --quiet --no-cache-dir --prefer-binary --no-build-isolation -r requirements.txt
 if ($LASTEXITCODE) { throw 'Installing the Python packages failed' }
+& "$py\python.exe" -m pip uninstall --quiet --yes setuptools wheel   # only needed for building
 # Check that it really starts, then drop what isn't needed at run time (pip, caches, launch scripts).
 & "$py\python.exe" -c "import sys; sys.path.insert(0, r'$Out\backend'); import chess, fastapi, uvicorn, httpx, yaml; import app.main"
 if ($LASTEXITCODE) { throw 'The packaged Python cannot import the app - see the error above' }
