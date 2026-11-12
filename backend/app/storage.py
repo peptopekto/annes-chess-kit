@@ -98,7 +98,7 @@ _cache_lock = threading.Lock()
 _build_lock = threading.Lock()  # one rebuild at a time; concurrent requests wait for it
 _entries_snap: tuple | None = None  # (index, [(summary, highlights)]) – reused while no file changed
 _disk_loaded = False
-_disk_saved_at = 0.0
+_disk_saved_at: float | None = None  # monotonic time of the last save (None: not yet; monotonic() starts near 0 after boot)
 DISK_SAVE_EVERY = 60.0  # during a big batch a game finishes every few seconds: don't rewrite the cache each time
 
 
@@ -187,7 +187,7 @@ def _entries() -> list[tuple[dict, list[dict]]]:
             for gone in set(_cache) - live:
                 del _cache[gone]
                 changed = True
-        if changed and time.monotonic() - _disk_saved_at >= DISK_SAVE_EVERY:
+        if changed and (_disk_saved_at is None or time.monotonic() - _disk_saved_at >= DISK_SAVE_EVERY):
             # Throttled: a missed save only means a few files get re-read on the next start.
             _save_disk_cache()
             _disk_saved_at = time.monotonic()

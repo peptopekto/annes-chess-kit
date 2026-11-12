@@ -270,6 +270,7 @@ def test_storage_cache_tracks_file_changes(tmp_path, monkeypatch):
     monkeypatch.setattr(storage, "_cache", {})
     monkeypatch.setattr(storage, "_entries_snap", None)
     monkeypatch.setattr(storage, "_disk_loaded", False)  # cache file lands next to tmp_path, never in userdata
+    monkeypatch.setattr(storage, "_disk_saved_at", None)  # not throttled by a save in an earlier test
     monkeypatch.setattr(storage, "my_names", lambda: {"me"})
     def write(gid, cls, date):
         rec = {"id": gid, "white": "me", "black": "x", "date": date, "headers": {"UTCDate": date}, "plies": 2,
