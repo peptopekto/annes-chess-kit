@@ -1,0 +1,342 @@
+# Lesson cards: pawn structure.
+#
+# One card per concept the detectors in app/concepts.py measure. The texts are the app's own wording of
+# ideas from the books named in `source` (no quotations). Templates in `in_your_game` are filled per move:
+#   {you} / {your}   the side that moved ("you", "your opponent", or "White"/"Black")
+#   {opp} / {opps}   the other side, {their} its pronoun, {sq} the squares involved
+# `own` is used when the move made the concept worse on the mover's side, `other` when it helped the
+# opponent. A part in brackets that holds {sq} is dropped when there are no squares to name.
+# `your_chance` is shown instead of `ask_yourself` when it was your opponent's move: what their move gave
+# you and how to use it (`own`: they weakened their own position, `other`: they let yours improve).
+#
+# Examples are model positions: `moves` from the start position (or a `fen`), then a short `line` that
+# shows the idea. tests/test_cards.py replays every example and checks that its concept shows up for `side`.
+
+- id: isolated-pawn
+  concept: isolated_pawn
+  title: The isolated pawn
+  level: improver
+  phase: [middlegame, endgame]
+  principle: >-
+    An isolated pawn has no pawn neighbours to protect it: in the long run it becomes a target, and the square
+    in front of it a safe home for enemy pieces.
+  explanation: >-
+    Only pieces can defend a pawn with no pawns on the files next to it, and pieces tied to defence are passive.
+    The square in front of it can never be attacked by a pawn, so the opponent can put a knight there and
+    blockade it. In the middlegame the isolated pawn also gives open files and squares for your pieces, so it
+    can be worth it while you attack. The further the game goes towards the endgame, the weaker it gets.
+  in_your_game:
+    own: This leaves {you} with an isolated pawn ({sq}).
+    other: This lets {opp} get rid of a weak, isolated pawn.
+  ask_yourself: Does my move leave a pawn without neighbours on either side?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Blockade the square in front of the pawn with a knight, trade the pieces that defend it, and attack it along the file."
+    other: "Your pawn structure is healthier now: keep it that way and steer towards an endgame, where structure counts most."
+  exceptions:
+    - With many pieces on the board, an isolated d-pawn gives active play and attacking chances; it is a
+      weakness mainly once pieces are traded.
+    - An isolated pawn that can safely advance and be exchanged is no longer a weakness.
+  source: Nimzowitsch, My System – the isolated queen's pawn
+  related: [blockade, hanging-pawns, pawn-islands]
+  examples:
+    - title: The isolated queen's pawn
+      moves: d4 d5 c4 e6 Nc3 c5 cxd5 exd5 Nf3 Nc6 g3 Nf6 Bg2 Be7 O-O O-O Bg5 cxd4 Nxd4
+      side: black
+      line: h6 Be3 Re8 Qb3
+      note: >-
+        Black's d5 pawn has no pawns on the c- and e-files. White's pieces aim at it from g2, b3 and d1, and the
+        knight on d4 can never be driven away by a pawn.
+
+- id: doubled-pawns
+  concept: doubled_pawn
+  title: Doubled pawns
+  level: improver
+  phase: [middlegame, endgame]
+  principle: >-
+    Doubled pawns can't protect each other and the front one blocks the back one; they are usually a lasting
+    weakness, above all in the endgame.
+  explanation: >-
+    Two pawns on one file control fewer squares than two pawns on neighbouring files, and the rear one can't
+    move past the front one. In a pawn endgame this often means the side with doubled pawns can't make a passed
+    pawn from its majority. In return, the capture that doubled them usually opened a file or gave the bishop
+    pair, so judge what you get for them before you accept them.
+  in_your_game:
+    own: This leaves {you} with doubled pawns ({sq}).
+    other: This lets {opp} repair {their} doubled pawns.
+  ask_yourself: Does this capture or exchange double my pawns – and what do I get for it?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Fix the doubled pawns so they can't advance and trade pieces towards an endgame, where the weaker structure tells."
+    other: "Your structure is repaired: trades now suit you, so head for the endgame."
+  exceptions:
+    - Doubled pawns that control important central squares, or come with an open file for the rooks, can be
+      worth having.
+    - Taking towards the centre (bxc3 rather than dxc3) often keeps the structure healthy enough.
+  source: Capablanca, Chess Fundamentals
+  related: [pawn-islands, bishop-pair]
+  examples:
+    - title: The Exchange Ruy Lopez
+      moves: e4 e5 Nf3 Nc6 Bb5 a6 Bxc6 dxc6 O-O f6 d4 exd4 Nxd4
+      side: black
+      line: c5 Nb3 Qxd1 Rxd1
+      note: >-
+        Black has the bishop pair, but the doubled c-pawns mean White's four kingside pawns against three can
+        make a passed pawn and Black's queenside majority can't.
+
+- id: backward-pawn
+  concept: backward_pawn
+  title: The backward pawn
+  level: improver
+  phase: [middlegame, endgame]
+  principle: >-
+    A backward pawn can't advance safely and no pawn can defend it; the square in front of it becomes a strong
+    post for the opponent.
+  explanation: >-
+    A pawn whose neighbours have moved ahead has no pawn support. If an enemy pawn controls the square in front
+    of it, it can't move up either, so it stays a target on a half-open file. The square in front is also a
+    hole: the opponent's pieces can settle there without being chased away. Before pushing a pawn, check which
+    pawn you leave behind.
+  in_your_game:
+    own: This leaves {you} with a backward pawn ({sq}).
+    other: This lets {opp} fix {their} backward pawn.
+  ask_yourself: After this pawn move, can the pawns behind it still catch up and support it?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Put a piece – best a knight – on the square in front of the backward pawn, and pile up on the pawn along its file."
+    other: "Your backward pawn is no longer a problem: use the pieces that defended it for active play."
+  exceptions:
+    - In some openings (the Sicilian with ...e5) the backward d-pawn is accepted on purpose, because it is easy
+      to defend and the pieces get active play.
+    - If the pawn can advance with a gain of tempo, it isn't really backward.
+  source: Edward Lasker, Chess Strategy – pawn structure
+  related: [holes, knight-outpost]
+  examples:
+    - title: The backward d-pawn in the Sicilian
+      moves: e4 c5 Nf3 Nc6 d4 cxd4 Nxd4 Nf6 Nc3 e5 Ndb5 d6 Bg5 a6 Na3 b5
+      side: black
+      line: Bxf6 gxf6 Nd5
+      note: >-
+        Black's d6 pawn can't move because d5 is White's, and no black pawn can ever defend it. White trades the
+        defender of d5 and puts a knight there.
+
+- id: pawn-islands
+  concept: pawn_islands
+  title: Pawn islands
+  level: improver
+  phase: [endgame, middlegame]
+  principle: >-
+    Every separate group of pawns is one more thing to defend; fewer pawn islands is usually better.
+  explanation: >-
+    Pawns in one connected group defend each other; a pawn on its own needs a piece to look after it. Each
+    extra island also means an extra open or half-open file the opponent's rooks can use. When you recapture,
+    count the islands you'll have afterwards. In endgames the side with fewer islands usually has the easier
+    defence.
+  in_your_game:
+    own: This splits {your} pawns into more islands.
+    other: This lets {opp} join up {their} pawn islands.
+  ask_yourself: Does this capture split my pawns into another group?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Trade pieces and go after the loose pawns one by one with rook and king."
+    other: "With fewer pawn islands you defend more easily: trade pieces and head for the endgame."
+  exceptions:
+    - An extra island is often fine when the capture opens a file for your rook or wins time for an attack.
+  source: Capablanca, Chess Fundamentals
+  related: [isolated-pawn, doubled-pawns]
+  examples:
+    - title: The Nimzo-Indian, Sämisch
+      moves: d4 Nf6 c4 e6 Nc3 Bb4 a3 Bxc3+ bxc3
+      side: white
+      line: c5 e3 Nc6 Bd3
+      note: >-
+        White got the bishop pair, but the a-pawn is now cut off from the doubled c-pawns: two islands on the
+        queenside alone, and Black will aim at c4.
+
+- id: hanging-pawns
+  concept: hanging_pawns
+  title: Hanging pawns
+  level: club
+  phase: [middlegame]
+  principle: >-
+    Hanging pawns (two side by side with no pawn neighbours) are strong while they stand together and can
+    advance, but become targets once one of them must advance or is blockaded.
+  explanation: >-
+    Two pawns on c5 and d5 with no pawns on the b- and e-files control many central squares and can break with
+    ...c4 or ...d4. But no pawn defends them, so pieces must. The side playing against them attacks both at
+    once to force one forward; then the other is backward or isolated. The side with the pawns should use them
+    before the opponent can pile up on them.
+  in_your_game:
+    own: This leaves {your} hanging pawns ({sq}) easier to attack.
+    other: This frees {opps} hanging pawns.
+  ask_yourself: Can my opponent attack these pawns faster than I can use them?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Attack both pawns with pieces at once to force one forward; then blockade it and go after the other."
+    other: "Your hanging pawns are free: push one at the right moment to open lines for your pieces."
+  exceptions:
+    - With active pieces and the advance ...d4 well prepared, hanging pawns are a strength.
+  source: Nimzowitsch, My System – the isolated pawn and its descendants
+  related: [isolated-pawn, center-pawns]
+  examples:
+    - title: Fischer–Spassky, Reykjavik 1972, game 6
+      moves: >-
+        c4 e6 Nf3 d5 d4 Nf6 Nc3 Be7 Bg5 O-O e3 h6 Bh4 b6 cxd5 Nxd5 Bxe7 Qxe7 Nxd5 exd5 Rc1 Be6 Qa4 c5 Qa3
+        Rc8 Bb5 a6 dxc5 bxc5
+      side: black
+      line: O-O Ra7 Be2 Nd7 Nd4 Qf8 Nxe6 fxe6 e4
+      note: >-
+        Black's c5 and d5 stand side by side with no pawn neighbours. White trades the bishop that guards them
+        and hits d5 with e4.
+
+- id: passed-pawn
+  concept: passed_pawn
+  title: The passed pawn
+  level: beginner
+  phase: [middlegame, endgame]
+  principle: >-
+    A passed pawn has no enemy pawn to stop it: create your own, and stop your opponent's early – it gets
+    stronger the further it goes.
+  explanation: >-
+    No enemy pawn can block or capture a passed pawn, so only pieces can stop it, and a piece stopping a pawn is
+    doing a pawn's job. Every step forward ties down more of the opponent's pieces. In the endgame a passed
+    pawn is often the whole game. That's why trades that give the opponent a passed pawn are dangerous even
+    when material stays equal.
+  in_your_game:
+    own: This gives up {your} passed pawn's chances.
+    other: This lets {opp} get a passed pawn ({sq}).
+  ask_yourself: After this move, does anyone get a pawn that only pieces can stop?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their passed pawn is less dangerous now: blockade what's left with a piece and play where you are stronger."
+    other: "You have a passed pawn: support it with your pieces and push it – every step ties down more of theirs."
+  exceptions:
+    - A passed pawn that is blockaded and can be won is a weakness, not a strength.
+  source: Nimzowitsch, My System – the passed pawn
+  related: [blockade, protected-passer, rook-behind-passer, rule-of-the-square]
+  examples:
+    - title: An outside passed pawn
+      fen: 8/pp3k2/8/3P4/8/8/PP3K2/8 w - - 0 1
+      side: white
+      line: Ke3 Ke7 Ke4 Kd6 Kd4
+      note: >-
+        Black's king has to stay in front of the d-pawn, so White's king gets a free hand on the other side.
+
+- id: protected-passer
+  concept: protected_passer
+  title: The protected passed pawn
+  level: improver
+  phase: [endgame, middlegame]
+  principle: >-
+    A protected passed pawn is a lasting trump: it ties down enemy pieces for good and decides many endgames.
+  explanation: >-
+    A passed pawn defended by another pawn can't be won by the enemy king. The king has to stay near it, so in
+    a king-and-pawn ending your own king is free to win pawns elsewhere. Making one, or preventing the
+    opponent's, is worth a lot of patience.
+  in_your_game:
+    own: This loses the protection of {your} passed pawn.
+    other: This lets {opp} get a protected passed pawn ({sq}).
+  ask_yourself: Can I prevent a passed pawn that its own pawns protect?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their passed pawn lost its pawn protection: attack it with your king and pieces."
+    other: "Your protected passed pawn is a lasting trump: head for the endgame, where their king must stay next to it."
+  exceptions:
+    - A protected passer that is firmly blockaded by a piece does little in the middlegame.
+  source: Capablanca, Chess Fundamentals
+  related: [passed-pawn, blockade]
+  examples:
+    - title: The king can't take it
+      fen: 8/p4k2/8/2pP4/2P5/8/P4K2/8 w - - 0 1
+      side: white
+      line: Ke3 Ke7 Ke4 Kd6 Kf5
+      note: >-
+        The d5 pawn is covered by c4. Black's king can't capture it, and once it steps away the pawn runs, so
+        White's king walks to the kingside.
+
+- id: connected-passers
+  concept: connected_passers
+  title: Connected passed pawns
+  level: improver
+  phase: [endgame]
+  principle: >-
+    Two connected passed pawns protect each other as they advance and often beat a piece in the endgame.
+  explanation: >-
+    Passed pawns on neighbouring files support each other: when one is attacked the other moves up beside it.
+    Pushed together side by side, a king alone can't stop them, and on the sixth rank they are often stronger
+    than a rook. Advance them together, not one far ahead of the other.
+  in_your_game:
+    own: This breaks up {your} connected passed pawns.
+    other: This lets {opp} get connected passed pawns ({sq}).
+  ask_yourself: Do my pawns move forward together?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their passed pawns are split up: blockade the front one and pick off the other."
+    other: "Push your connected passed pawns side by side, supported by king or rook."
+  exceptions:
+    - Connected passers far back on their own half can still be blockaded by king and pieces.
+  source: Capablanca, Chess Fundamentals
+  related: [passed-pawn]
+  examples:
+    - title: Two pawns against the king
+      fen: 8/5kp1/8/8/8/1PP5/6P1/2K5 w - - 0 1
+      side: white
+      line: Kd2 Ke6 c4 Kd6 b4
+      note: >-
+        b- and c-pawns advance side by side; the black king can stop neither without letting the other through.
+
+- id: blockade
+  concept: blockade
+  title: The blockade
+  level: improver
+  phase: [middlegame, endgame]
+  principle: >-
+    Blockade an enemy passed pawn with a piece directly in front of it – a knight is best; the blockader is safe
+    there and the pawn is stuck.
+  explanation: >-
+    A pawn can only move forward, so a piece on the square in front of it stops it completely. The blockading
+    piece can't be attacked by that pawn, and the square is often one the opponent's other pawns can't reach
+    either. A knight is the ideal blockader because it keeps working from there; a bishop or the king will do.
+    Don't let the pawn advance first: every step makes the blockade harder.
+  in_your_game:
+    own: This gives up the blockade of the passed pawn.
+    other: This lets {opp} blockade {your} passed pawn (with the piece on {sq}).
+  ask_yourself: Is the square in front of the passed pawn occupied – and by whom?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their blockader has left: push your passed pawn now."
+    other: "You can blockade their passed pawn: put a piece – best a knight – right in front of it and keep it there."
+  exceptions:
+    - A blockader that is needed elsewhere, or can be attacked by pieces, may have to give way.
+  source: Nimzowitsch, My System – the blockade
+  related: [passed-pawn, isolated-pawn, knight-outpost]
+  examples:
+    - title: A knight in front of the pawn
+      fen: 8/p4k2/8/8/3p4/3N4/P4K2/8 w - - 0 1
+      side: white
+      line: Ke2 Ke6 Kd2 Kd5
+      note: >-
+        The knight on d3 stops the d-pawn for good and still covers b4, c5, e5 and f4.
+
+- id: holes
+  concept: holes
+  title: Weak squares (holes)
+  level: improver
+  phase: [middlegame, opening]
+  principle: >-
+    A square no pawn of yours can ever cover again is a permanent weakness – a hole where enemy pieces settle.
+    Pawn moves can't be taken back.
+  explanation: >-
+    Every pawn move gives up control of the squares it used to guard. If no other pawn can reach those squares,
+    they stay weak for the rest of the game, and an enemy knight placed there can only be exchanged, never
+    chased away. Holes near your king or in the centre matter most. Before a pawn move, look at the squares it
+    leaves behind.
+  in_your_game:
+    own: This leaves holes {your} pawns can never cover again ({sq}).
+    other: This lets {opp} cover {their} weak squares.
+  ask_yourself: Which squares can no pawn of mine ever defend after this pawn move?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Find the route for a knight to the new hole – count the moves – and plant it there."
+    other: "Your weak squares are covered now: turn to their weaknesses."
+  exceptions:
+    - A hole the opponent's pieces can't reach, or that you can cover with a piece, does little harm.
+  source: Nimzowitsch, My System; Capablanca, Chess Fundamentals
+  related: [backward-pawn, knight-outpost, outpost-squares]
+  examples:
+    - title: The d5 square in the Najdorf
+      moves: e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be2 e5 Nb3
+      side: black
+      line: Be7 O-O O-O Bg5 Be6 Bxf6 Bxf6 Nd5
+      note: >-
+        After ...e5 no black pawn can cover d5 again. White trades the knight that guarded it and occupies it.

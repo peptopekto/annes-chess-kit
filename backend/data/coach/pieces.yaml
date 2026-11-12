@@ -1,0 +1,402 @@
+# Lesson cards: pieces. Format: see pawns.yaml.
+
+- id: knight-outpost
+  concept: knight_outpost
+  title: The knight outpost
+  level: improver
+  phase: [middlegame, endgame]
+  principle: >-
+    A knight on an outpost – supported by a pawn, where no enemy pawn can chase it – is often worth more than
+    a rook.
+  explanation: >-
+    Knights are short-range pieces, so they need a forward square where they can't be driven away. An outpost
+    in the centre or on the opponent's side, defended by your own pawn, is that square. From there the knight
+    attacks deep into the enemy position, and it can only be removed by giving up a piece for it. Look for
+    outposts after the pawn structure is fixed, and plan the route of your knight to it.
+  in_your_game:
+    own: This gives up {your} knight's outpost.
+    other: This lets {opp} plant a knight on an outpost (on {sq}).
+  ask_yourself: Can an enemy knight settle on a square my pawns can never attack?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their knight lost its outpost: keep it out with your pawns and pieces."
+    other: "Put your knight on the outpost and keep it there; trade off the enemy piece that could exchange it."
+  exceptions:
+    - If the opponent can exchange the knight for a bad piece of their own, the outpost loses its value.
+  source: Nimzowitsch, My System – outposts on open files
+  related: [holes, outpost-squares, blockade]
+  examples:
+    - title: The knight on d5
+      moves: e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be2 e5 Nb3 Be7 O-O O-O Bg5 Be6 Bxf6 Bxf6 Nd5
+      side: white
+      line: Nd7 c3 Bg5 Qd3
+      note: >-
+        The knight on d5 is defended by e4 and no black pawn can attack it. Black has to give up the bishop on e6
+        for it sooner or later.
+
+- id: bishop-outpost
+  concept: bishop_outpost
+  title: A bishop on a protected post
+  level: club
+  phase: [middlegame]
+  principle: >-
+    A bishop on a protected square deep in enemy territory pins down the opponent's position.
+  explanation: >-
+    Like a knight, a bishop on an advanced square defended by a pawn can't be chased away by pawns. From there
+    it cuts the opponent's position in two and takes squares from the rooks and the king. It's strongest when
+    the opponent has no bishop of that colour to trade it.
+  in_your_game:
+    own: This gives up {your} bishop's strong post.
+    other: This lets {opp} post a bishop on a protected square (on {sq}).
+  ask_yourself: Can an enemy bishop settle on a square my pawns can never attack?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their bishop lost its strong post: keep it from coming back."
+    other: "Post your bishop on the protected square; from there it cuts their position in two."
+  exceptions:
+    - A bishop on an outpost that blocks its own pawn or has no targets does less than it looks.
+  source: Nimzowitsch, My System – outposts
+  related: [knight-outpost, bad-bishop]
+  examples:
+    - title: The bishop on d6
+      fen: r4rk1/pp3ppp/2pB4/4P3/8/8/PPP2PPP/R4RK1 w - - 0 1
+      side: white
+      line: Rfd1 Rfd8 Rd3
+      note: >-
+        Supported by e5, the bishop on d6 can't be driven away and keeps the black rooks off the d- and e-files.
+
+- id: outpost-squares
+  concept: outpost_squares
+  title: Squares for your knights
+  level: improver
+  phase: [middlegame]
+  principle: >-
+    Outposts are made by pawn moves: every pawn move leaves squares behind that it can never guard again.
+  explanation: >-
+    An outpost square is a hole in the opponent's camp that your pawn supports. When the opponent makes one,
+    note it and bring a knight there; when you are about to make one, think twice. The square matters more than
+    the knight that happens to be near it: knights can be re-routed, pawn moves can't be taken back.
+  in_your_game:
+    own: This gives away the outpost squares {your} knights could have used.
+    other: This gives {opp} outpost squares for {their} knights ({sq}).
+  ask_yourself: Which squares does this pawn move give up for good?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their knights have fewer good squares now: keep it that way and improve your own pieces."
+    other: "You've got an outpost: route a knight to it and support it with a pawn."
+  exceptions:
+    - An outpost no knight can reach in time, or one the opponent can cover with a piece, is only a target.
+  source: Nimzowitsch, My System – outposts
+  related: [holes, knight-outpost]
+  examples:
+    - title: d5 waits for a knight
+      moves: e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be2 e5 Nb3
+      side: white
+      line: Be7 Bg5 Be6 Bxf6 Bxf6 Nd5
+      note: >-
+        ...e5 made d5 an outpost for White. The knight on c3 is one move away.
+
+- id: bad-bishop
+  concept: bad_bishop
+  title: Good and bad bishop
+  level: improver
+  phase: [middlegame, endgame]
+  principle: >-
+    Put your pawns on the opposite colour of your bishop. Pawns fixed on the bishop's colour make it a bad
+    bishop that only defends them.
+  explanation: >-
+    A bishop moves on one colour only. If your own pawns are blocked on that colour, they take the bishop's
+    squares and it becomes a 'tall pawn'. The opponent's pieces then settle on the other colour, which nothing
+    of yours controls. Either put your pawns on the other colour, trade the bad bishop, or bring it outside
+    the pawn chain before the position closes.
+  in_your_game:
+    own: This fixes {your} pawns on the colour of {your} bishop, making it a bad bishop (on {sq}).
+    other: This lets {opp} free {their} bad bishop.
+  ask_yourself: Which colour are my pawns on, and which of my bishops does that hurt?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their bishop is now bad: keep their pawns fixed on its colour, avoid trading it, and play on the other colour."
+    other: "Your bishop is free: bring it to an open diagonal."
+  exceptions:
+    - A 'bad' bishop that defends important pawns or sits outside the pawn chain can be a good piece.
+  source: Capablanca, Chess Fundamentals
+  related: [minor-piece-fit, bishop-outpost, space]
+  examples:
+    - title: The French bishop
+      moves: e4 e6 d4 d5 e5 c5 c3 Nc6 Nf3 Bd7 Be2 Qb6 O-O cxd4 cxd4
+      side: black
+      line: Nge7 Nc3 Nf5
+      note: >-
+        Black's pawns on d5 and e6 stand on light squares, blocked by White's pawns, so the bishop on d7 has few
+        squares; the knights do the work.
+
+- id: bishop-pair
+  concept: bishop_pair
+  title: The bishop pair
+  level: improver
+  phase: [middlegame, endgame]
+  principle: >-
+    Two bishops together control both colours; in open positions and endgames the bishop pair is a real
+    advantage – don't give it away cheaply.
+  explanation: >-
+    One bishop covers half the board; two cover all of it and complement each other perfectly. The more open
+    the position, the stronger they get, and in endgames with pawns on both wings they often beat bishop and
+    knight. Trade a bishop for a knight when you get something concrete for it, not out of habit.
+  in_your_game:
+    own: This gives up {your} bishop pair.
+    other: This lets {opp} keep or gain the bishop pair.
+  ask_yourself: Am I trading one of my bishops without getting something for it?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "They gave up the bishop pair: fix the pawns and look for outposts, where your knight can match their bishop."
+    other: "Open the position: the bishop pair gets stronger with every open line and pawn exchange."
+  exceptions:
+    - In closed positions knights can be as good or better.
+    - Doubling the opponent's pawns or winning time can be worth a bishop.
+  source: Capablanca, Chess Fundamentals
+  related: [minor-piece-fit, doubled-pawns]
+  examples:
+    - title: Two bishops for the structure
+      moves: d4 Nf6 c4 e6 Nc3 Bb4 a3 Bxc3+ bxc3
+      side: white
+      line: c5 e3 Nc6 Bd3
+      note: >-
+        Black gave a bishop for the knight to double White's pawns. White's two bishops will want to open the
+        position.
+
+- id: minor-piece-fit
+  concept: minor_piece_fit
+  title: The right minor piece for the structure
+  level: club
+  phase: [middlegame, endgame]
+  principle: >-
+    Bishops want open positions, knights closed ones: keep the minor piece that suits the pawn structure.
+  explanation: >-
+    A bishop reaches across the board in one move, so with few central pawns it outranges a knight. When the
+    centre is locked, long diagonals are blocked and the knight's jumps over pawns count more. When you trade
+    minor pieces, think about which pieces stay and whether the centre will open or close.
+  in_your_game:
+    own: This leaves {you} with the minor piece that doesn't fit the pawn structure.
+    other: This leaves {opp} with the better minor piece for this structure.
+  ask_yourself: Is the centre open or closed – and which minor piece wants that?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their minor piece doesn't fit the structure any more: keep the structure as it is so it stays that way."
+    other: "You have the better minor piece: don't trade it, and keep the pawn structure that suits it."
+  exceptions:
+    - A knight with a secure outpost can beat a bishop even in an open position.
+  source: Capablanca, Chess Fundamentals
+  related: [bishop-pair, bad-bishop]
+  examples:
+    - title: Bishop against knight on an open board
+      fen: 6k1/pp3ppp/4n3/8/8/8/PP3PPP/2B3K1 w - - 0 1
+      side: white
+      line: Kf1 Kf8 Ke2 Ke7 Be3 a6 Bb6
+      note: >-
+        No central pawns, pawns on both wings: the bishop can attack on both sides at once, the knight needs
+        several moves to switch.
+
+- id: open-file-rook
+  concept: rook_open_file
+  title: Rooks belong on open files
+  level: beginner
+  phase: [middlegame, endgame]
+  principle: >-
+    Rooks belong on open files: take the open file first, then use it to get into the opponent's camp.
+  explanation: >-
+    A rook behind its own pawns does nothing. On a file without pawns it controls the whole length of the
+    board, and the goal is an entry square – usually on the 7th or 8th rank. When a file opens, the side that
+    puts a rook there first usually owns it; doubling the rooks makes the claim stronger.
+  in_your_game:
+    own: This gives up the open file for {your} rook.
+    other: This lets {opp} take the open file (rook on {sq}).
+  ask_yourself: Which file is open – and whose rook gets there first?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "The open file is yours to take: put a rook on it first and double if you can."
+    other: "Your rook gets the open file: look for the entry square on the 7th or 8th rank."
+  exceptions:
+    - An open file is worth little if every entry square is covered.
+  source: Nimzowitsch, My System – the open file
+  related: [seventh-rank, doubled-rooks, half-open-file]
+  examples:
+    - title: Down the d-file to the 7th
+      fen: r5k1/pp3ppp/2p5/8/8/8/PP3PPP/3R2K1 w - - 0 1
+      side: white
+      line: Rd7 a5 Rb7
+      note: >-
+        Only White has a rook on the open d-file, and it goes straight to the 7th rank.
+
+- id: half-open-file
+  concept: rook_half_open_file
+  title: The half-open file
+  level: improver
+  phase: [middlegame]
+  principle: >-
+    A half-open file (none of your pawns on it) points your rook straight at an enemy pawn – a ready-made target.
+  explanation: >-
+    A file with only an enemy pawn on it is the natural place for your rook: the pawn at the end of it is a
+    target you can attack again and again, and the rook supports pawn advances there (the minority attack).
+    When a capture gives you a half-open file, bring a rook to it.
+  in_your_game:
+    own: This takes {your} rook off its half-open file.
+    other: This lets {opps} rook use a half-open file.
+  ask_yourself: Which enemy pawn could my rook attack along a half-open file?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their rook left the half-open file: use the break to free your position."
+    other: "Put your rook on the half-open file and pile up on the pawn at the end of it."
+  exceptions:
+    - If the pawn at the end is well defended and can't be attacked further, the file is a dead end.
+  source: Nimzowitsch, My System – the open file
+  related: [open-file-rook, backward-pawn]
+  examples:
+    - title: The Carlsbad structure
+      moves: d4 d5 c4 e6 Nc3 Nf6 cxd5 exd5 Bg5 c6 e3 Be7 Bd3 O-O Qc2 Nbd7 Nf3 Re8 O-O Nf8 Rac1
+      side: white
+      line: Ne6 Bh4 g6 b4
+      note: >-
+        White's rook on c1 looks at the c6 pawn; with b4–b5 White will attack it and leave Black a weak pawn.
+
+- id: seventh-rank
+  concept: rook_seventh
+  title: The rook on the 7th rank
+  level: improver
+  phase: [middlegame, endgame]
+  principle: >-
+    A rook on the 7th rank attacks pawns from the side and cuts off the king – often decisive.
+  explanation: >-
+    Pawns that haven't moved stand on the 7th rank, where they can't defend each other against a rook from the
+    side. The rook also keeps the enemy king on the back rank. Two rooks on the 7th usually win, or force a
+    perpetual check. Getting a rook there is the reason to fight for open files.
+  in_your_game:
+    own: This gives up {your} rook's place on the 7th rank.
+    other: This lets {opps} rook reach {your} 2nd rank (on {sq}).
+  ask_yourself: Can a rook get to the 7th rank – mine or theirs?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their rook left your 2nd rank: now get your own rook to the 7th."
+    other: "Get your rook to the 7th rank: attack the pawns from the side and keep their king on the back rank."
+  exceptions:
+    - A rook on the 7th with no pawns to attack and the king able to drive it off does little.
+  source: Nimzowitsch, My System – the 7th and 8th ranks
+  related: [open-file-rook, doubled-rooks]
+  examples:
+    - title: Eating pawns from the side
+      fen: r5k1/pp1R1ppp/8/8/8/8/5PPP/6K1 w - - 0 1
+      side: white
+      line: Rxb7 Rf8 Rxa7
+      note: >-
+        The rook on d7 takes the queenside pawns one by one; Black's rook can't defend them in time.
+
+- id: doubled-rooks
+  concept: doubled_rooks
+  title: Doubled rooks
+  level: improver
+  phase: [middlegame]
+  principle: >-
+    Two rooks on one open file are much stronger than two rooks apart: double them to own the file.
+  explanation: >-
+    One rook on an open file can be challenged and exchanged; two can't be pushed off. Doubled rooks also
+    protect each other on the way to the 7th rank. When you own a file, doubling is usually the next step.
+  in_your_game:
+    own: This undoubles {your} rooks.
+    other: This lets {opp} double {their} rooks on an open file.
+  ask_yourself: Can I double my rooks on the open file before my opponent does?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their rooks are no longer doubled: challenge the file with your own rook."
+    other: "Double your rooks on the open file before they can contest it."
+  exceptions:
+    - If the opponent controls every entry square, doubling only ties up both rooks.
+  source: Nimzowitsch, My System – the open file
+  related: [open-file-rook, seventh-rank]
+  examples:
+    - title: Two rooks on the d-file
+      fen: 6k1/pp3ppp/2p5/8/8/8/PP1R1PPP/3R2K1 w - - 0 1
+      side: white
+      line: Rd7 a5 Rb7
+      note: >-
+        With the second rook behind it, the first goes to the 7th rank and the file stays White's.
+
+- id: rook-behind-passer
+  concept: rook_behind_passer
+  title: Rooks behind passed pawns
+  level: improver
+  phase: [endgame]
+  principle: >-
+    Rooks belong behind passed pawns – your own and your opponent's: from behind, the rook gets more active as
+    the pawn advances.
+  explanation: >-
+    A rook behind its own passed pawn supports it all the way and gains squares with every step. A rook in front
+    of the pawn gets more passive with every step. Against an enemy passed pawn the same holds: behind it, your
+    rook attacks it and stays active. This rule decides many rook endgames.
+  in_your_game:
+    own: This takes {your} rook away from behind the passed pawn.
+    other: This lets {opps} rook get behind the passed pawn.
+  ask_yourself: Where is the passed pawn – and is my rook behind it?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their rook left its place behind the passed pawn: get your rook behind it instead."
+    other: "Put your rook behind the passed pawn – behind yours to push it, behind theirs to attack it."
+  exceptions:
+    - Close to promotion, a rook in front of the pawn with the king nearby can be enough.
+  source: Capablanca, Chess Fundamentals (the rule is Tarrasch's)
+  related: [passed-pawn, open-file-rook]
+  examples:
+    - title: Behind the a-pawn
+      fen: r5k1/8/8/P7/8/8/6PK/R7 w - - 0 1
+      side: white
+      line: a6 Kf7 a7 Kg7
+      note: >-
+        White's rook supports the pawn from a1. Black's rook, in front of it, can't leave the a-file and does
+        nothing else.
+
+- id: knight-rim
+  concept: knight_rim
+  title: A knight on the rim is dim
+  level: beginner
+  phase: [opening, middlegame]
+  principle: >-
+    A knight on the rim is dim: on the edge it controls half the squares it would in the centre.
+  explanation: >-
+    In the centre a knight reaches eight squares; on the edge four, in the corner two. It also takes longer to
+    get anywhere. Develop knights towards the centre (f3, c3, f6, c6), and put one on the edge only with a
+    concrete reason, such as trading a strong bishop.
+  in_your_game:
+    own: This puts {your} knight on the edge (on {sq}).
+    other: This lets {opps} knight leave the edge.
+  ask_yourself: How many squares does my knight control there?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their knight is on the edge: take its squares so it stays there, and play where it can't help."
+    other: "Your knight can leave the edge: bring it towards the centre."
+  exceptions:
+    - Na4 or Nh4 to trade a bishop, attack a weak pawn or reach a better square next move can be good.
+  source: Edward Lasker, Chess Strategy
+  related: [undeveloped, passive-piece]
+  examples:
+    - title: Developing to the edge
+      moves: e4 e5 Nh3 Nf6
+      side: white
+      line: Nc3 Bc5
+      note: >-
+        The knight on h3 covers g5, f4, f2 and g1; on f3 it would also attack e5 and d4 in the centre.
+
+- id: passive-piece
+  concept: passive_piece
+  title: Improve your worst piece
+  level: beginner
+  phase: [middlegame, endgame]
+  principle: >-
+    Every piece needs a job: a piece with no safe squares is as good as missing. Improve your worst piece.
+  explanation: >-
+    A game is won with the pieces that take part. A bishop locked behind pawns or a knight with no squares
+    counts for nothing while the opponent plays with everything. When you don't know what to do, find your
+    worst piece and give it a better square.
+  in_your_game:
+    own: This leaves pieces without a job ({sq}).
+    other: This frees one of {opps} passive pieces.
+  ask_yourself: Which of my pieces is worst – and how do I improve it?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "One of their pieces has no good squares: keep it shut in and play where it can't help."
+    other: "Your passive piece is free: activate it now."
+  exceptions:
+    - A piece that looks passive can be doing an important defensive job.
+  source: Emanuel Lasker, Common Sense in Chess
+  related: [bad-bishop, knight-rim]
+  examples:
+    - title: A trapped bishop
+      fen: 6k1/b4ppp/1P6/2P5/8/8/5PPP/6K1 w - - 0 1
+      side: black
+      line: Kf1 Kf8 Ke2 Ke7 Kd3
+      note: >-
+        The bishop on a7 is shut in by the pawns on b6 and c5 – Black is effectively playing a piece down.

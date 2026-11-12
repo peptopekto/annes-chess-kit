@@ -1,0 +1,96 @@
+# Lesson cards: centre and space. Format: see pawns.yaml.
+
+- id: center-pawns
+  concept: center_pawns
+  title: Pawns in the centre
+  level: beginner
+  phase: [opening, middlegame]
+  principle: >-
+    Pawns in the centre give your pieces room and take squares from the opponent's; don't give them up without
+    a reason.
+  explanation: >-
+    Pawns on d4 and e4 (d5 and e5) control the squares where the opponent's pieces want to stand and open lines
+    for your own. Give a central pawn only for something: an exchange that opens lines for your pieces, or
+    material. In the opening, a move that lets the opponent set up two pawns in the centre often costs more
+    than it looks.
+  in_your_game:
+    own: This gives up {your} hold on the centre with pawns.
+    other: This lets {opp} set up pawns in the centre.
+  ask_yourself: Who will own the centre after this move?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "They gave up the centre: occupy it with your pawns and put your pieces behind them."
+    other: "You get pawns in the centre: support them so they can't be undermined and use the room they give your pieces."
+  exceptions:
+    - Hypermodern openings let the opponent build a centre on purpose and attack it with pieces and pawns.
+  source: Emanuel Lasker, Common Sense in Chess
+  related: [center-control, space]
+  examples:
+    - title: The big pawn centre
+      moves: e4 d6 d4 Nf6 Nc3 g6 f4
+      side: white
+      line: Bg7 Nf3 O-O Bd3
+      note: >-
+        White's pawns on d4, e4 and f4 take the squares e5, d5 and f5 from Black's pieces. Black will need a
+        pawn break such as ...c5 or ...e5.
+
+- id: center-control
+  concept: center_control
+  title: Control the centre
+  level: beginner
+  phase: [opening, middlegame]
+  principle: >-
+    Control the centre (d4, e4, d5, e5) with pawns and pieces: pieces there reach everywhere.
+  explanation: >-
+    A piece in the centre can get to either wing quickly; a piece on the edge can't. That's why the fight in the
+    opening is for d4, e4, d5 and e5 – by occupying them with pawns, or by aiming pieces at them. A move that
+    gives up this fight hands the opponent the better squares for the rest of the game.
+  in_your_game:
+    own: This gives up control of the centre.
+    other: This lets {opp} take over the centre.
+  ask_yourself: What does my move do for the four centre squares?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "They gave up the centre: put pawns and pieces on the squares they no longer control."
+    other: "You control the centre: use it to switch your pieces to whichever wing matters."
+  exceptions:
+    - A flank attack can work when the centre is closed and can't be opened.
+  source: Réti, Modern Ideas in Chess; Nimzowitsch, My System – the centre
+  related: [center-pawns, space, undeveloped]
+  examples:
+    - title: The Italian with c3 and d4
+      moves: e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d4
+      side: white
+      line: exd4 cxd4 Bb4+
+      note: >-
+        c3 prepared d4: White fights for all four centre squares with pawns and pieces at once.
+
+- id: space
+  concept: space
+  title: Space
+  level: improver
+  phase: [opening, middlegame]
+  principle: >-
+    More space means more room for your pieces and less for your opponent's; the side with less space should
+    seek exchanges.
+  explanation: >-
+    Pawns that have advanced in the centre give your pieces safe squares behind them and leave the opponent's
+    pieces cramped. A cramped side finds it hard to move its pieces from one wing to the other. If you have
+    space, keep pieces on and avoid trades; if you're cramped, trade pieces and break with a pawn.
+  in_your_game:
+    own: This gives up space.
+    other: This lets {opp} gain space.
+  ask_yourself: Whose pieces will have more room after this move?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "They gave up space: advance where it's safe and keep pieces on, so theirs stay cramped."
+    other: "You have more room: keep pieces on, avoid trades and stop their freeing pawn breaks."
+  exceptions:
+    - Advanced pawns can become targets if they can't be supported.
+  source: Nimzowitsch, My System – the centre and the pawn chain
+  related: [center-pawns, bad-bishop]
+  examples:
+    - title: The French Advance
+      moves: e4 e6 d4 d5 e5 c5 c3 Nc6 Nf3
+      side: white
+      line: Qb6 a3 c4
+      note: >-
+        The pawn on e5 gives White room on the kingside, while Black's pieces behind the d5–e6 chain have fewer
+        squares. Black has to strike at the chain with ...c5 and ...f6.

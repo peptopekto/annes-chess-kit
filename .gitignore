@@ -1,0 +1,34 @@
+# Your own data: reviews, imports, settings, puzzle sets, logs – never commit it.
+userdata/
+
+# Engines and networks are downloaded separately (see engine/README.md).
+engine/*
+!engine/README.md
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+backend/data/openings.cache.json
+
+# Web UI: dependencies and build output (built by `npm run build` or the release zip)
+frontend/node_modules/
+frontend/dist/
+.tools/
+
+# Windows launcher and shortcut (built locally with scripts/launcher/build.bat)
+AnnesChessKit.exe
+*.lnk
+
+# Packaging output (package.bat): the ready-to-run folder, zip, installer and download cache
+dist/
+/python/
+
+# Editors, OS and tool files
+.claude/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

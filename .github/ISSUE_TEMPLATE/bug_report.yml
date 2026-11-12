@@ -1,0 +1,38 @@
+name: Bug report
+description: Something doesn't work or a move is rated wrongly.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: game
+    attributes:
+      label: Game or position
+      description: For a wrong rating or explanation, paste the PGN or FEN and the move number.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Shown in Settings, or the release zip name.
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: System
+      placeholder: Windows 11, Python 3.12, Stockfish 17
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Relevant lines from userdata/app.log, or the console output of "AnnesChessKit (debug).bat".
+      render: text

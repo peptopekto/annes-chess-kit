@@ -1,0 +1,163 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "chessground/assets/chessground.base.css";
+@import "chessground/assets/chessground.cburnett.css";
+
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  /* Graphite neutrals with a faint cool tint – calm surfaces so the move colours pop. */
+  --color-ink-950: #07080a;
+  --color-ink-900: #0b0c0f;
+  --color-ink-850: #111216;
+  --color-ink-800: #16171c;
+  --color-ink-700: #1e2026;
+  --color-ink-600: #2a2d35;
+  --color-ink-500: #686d7b; /* tertiary text: ~3.8:1 on the page background */
+  --color-ink-400: #7f8492; /* secondary text: ~5.2:1 (WCAG AA) */
+  --color-ink-300: #9ca1ae;
+  --color-ink-200: #cdd0d8;
+  --color-ink-100: #eeeff2;
+
+  --color-brilliant: #1ee3cf;
+  --color-great: #5b8cff;
+  --color-best: #7fd858;
+  --color-excellent: #5fc46e;
+  --color-good: #93b39a;
+  --color-book: #d0a272;
+  --color-inaccuracy: #f7c845;
+  --color-mistake: #ff9a3d;
+  --color-miss: #ff6b81;
+  --color-blunder: #ff3d55;
+  --color-forced: #94a3b8;
+
+  --color-accent: #2ee6d1;
+  --color-accent-2: #a78bfa;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-shake: shake 0.42s cubic-bezier(.36,.07,.19,.97) both;
+  @keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(4px); }
+    30%, 50%, 70% { transform: translateX(-7px); }
+    40%, 60% { transform: translateX(7px); }
+  }
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+}
+
+:root {
+  color-scheme: dark;
+  --board-light: #dfe4ee;
+  --board-dark: #7d8bb0;
+  --lm: rgba(247, 200, 69, 0.42);
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-ink-900);
+  color: var(--color-ink-100);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+/* A faint glow at the top of the content area – depth without the neon. */
+main {
+  background:
+    radial-gradient(900px 380px at 50% -160px, rgba(46, 230, 209, 0.07), transparent 70%),
+    radial-gradient(700px 300px at 90% -120px, rgba(167, 139, 250, 0.05), transparent 70%);
+}
+
+/* Headings: tight, confident, modern. */
+.font-display { letter-spacing: -0.025em; }
+h1.font-display { letter-spacing: -0.035em; }
+/* Numbers line up in tables and tiles. */
+.tabular-nums, .font-mono { font-variant-numeric: tabular-nums; }
+
+* { scrollbar-width: thin; scrollbar-color: var(--color-ink-600) transparent; }
+::selection { background: rgba(46, 230, 209, 0.3); }
+
+/* Visible keyboard focus everywhere, never on mouse clicks (in the base layer, so outline-none utilities still win). */
+@layer base {
+  :where(button, a, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--color-accent) 75%, transparent);
+    outline-offset: 2px;
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, #2ee6d1 0%, #6aa0ff 55%, #b49cff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* The standard surface: solid, hairline border, a soft top highlight. */
+.glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.012)), var(--color-ink-850);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.035) inset, 0 12px 32px -16px rgba(0, 0, 0, 0.7);
+}
+/* Floating layers (menus, tooltips, toasts, dialogs). */
+.popover {
+  background: color-mix(in oklab, var(--color-ink-800) 88%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.75), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  backdrop-filter: blur(20px) saturate(1.4);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,.035) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.035) 100%) 0 0 / 200% 100%;
+  animation: var(--animate-shimmer);
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Chessground board theme                                           */
+/* ------------------------------------------------------------------ */
+.cg-wrap { width: 100%; height: 100%; }
+.cg-wrap cg-board {
+  background: repeating-conic-gradient(var(--board-dark) 0 25%, var(--board-light) 0 50%) 0 0 / 25% 25%;
+  border-radius: 10px;
+}
+cg-container { border-radius: 10px; }
+.board-frame {
+  border-radius: 14px;
+  padding: 0;
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+cg-board square.last-move { background-color: var(--lm); }
+cg-board square.selected { background-color: rgba(30, 227, 207, 0.45); }
+cg-board square.move-dest {
+  background: radial-gradient(rgba(12, 14, 22, 0.32) 19%, transparent 21%);
+}
+cg-board square.oc.move-dest {
+  background: radial-gradient(transparent 0%, transparent 79%, rgba(12, 14, 22, 0.32) 80%);
+}
+cg-board square.move-dest:hover { background: rgba(30, 227, 207, 0.35); }
+/* Premoves (set while the opponent is thinking): possible squares and the move that is waiting. */
+cg-board square.premove-dest { background: radial-gradient(rgba(140, 150, 175, 0.75) 19%, transparent 21%); }
+cg-board square.oc.premove-dest { background: radial-gradient(transparent 0, transparent 79%, rgba(140, 150, 175, 0.75) 80%); }
+cg-board square.premove-dest:hover { background: rgba(140, 150, 175, 0.4); }
+cg-board square.current-premove { background-color: rgba(90, 110, 190, 0.6); }
+cg-board square.check {
+  background: radial-gradient(ellipse at center, rgba(255, 40, 70, 0.95) 0%, rgba(230, 20, 50, 0.6) 30%, rgba(169, 0, 0, 0) 75%);
+}
+.cg-wrap coords { font-family: var(--font-sans); font-weight: 700; font-size: 10px; }
+.cg-wrap coords coord { color: rgba(16, 20, 34, 0.55) !important; text-shadow: none; }
+piece.dragging { filter: drop-shadow(0 12px 12px rgba(0,0,0,.45)); }
+piece { filter: drop-shadow(0 2px 1.5px rgba(0,0,0,.25)); }

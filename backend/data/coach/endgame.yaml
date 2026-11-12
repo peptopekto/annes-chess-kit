@@ -1,0 +1,93 @@
+# Lesson cards: endgame. Format: see pawns.yaml.
+
+- id: active-king
+  concept: king_activity
+  title: Activate your king in the endgame
+  level: beginner
+  phase: [endgame]
+  principle: >-
+    In the endgame the king is a fighting piece: bring it to the centre and towards the pawns.
+  explanation: >-
+    With queens off, there is little danger of mate, and the king becomes as strong as a minor piece. A
+    centralised king attacks pawns, supports your own passed pawns and stops the opponent's. In many endings
+    the side whose king arrives first wins; the first moves of the endgame are often king moves.
+  in_your_game:
+    own: This keeps {your} king passive in the endgame.
+    other: This lets {opps} king become active.
+  ask_yourself: Is it the endgame – then what is my king doing?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their king is passive: bring yours forward first."
+    other: "Your king can become active: march it to the centre and towards the pawns."
+  exceptions:
+    - With rooks or queens on, check for mating patterns before you walk forward.
+  source: Capablanca, Chess Fundamentals
+  related: [opposition, passed-pawn]
+  examples:
+    - title: The king leads
+      fen: 8/pp3k2/8/3K4/8/8/PP6/8 w - - 0 1
+      side: white
+      line: Kc5 Ke6 b4 Kd7 Kb5
+      note: >-
+        White's king on d5 is three moves closer to the pawns than Black's; it heads for the queenside pawns.
+
+- id: opposition
+  concept: opposition
+  title: The opposition
+  level: improver
+  phase: [endgame]
+  principle: >-
+    In king-and-pawn endings, the opposition (kings facing each other, the other side to move) decides who gets
+    through.
+  explanation: >-
+    When the kings stand two squares apart on a file, rank or diagonal, the side that does NOT have to move has
+    the opposition: the other king must give way. With a pawn, that decides whether it promotes or the game is a
+    draw. Count the moves before you step forward; sometimes a waiting move is the winning one.
+  in_your_game:
+    own: This gives {opp} the opposition.
+    other: This lets {opp} take the opposition.
+  ask_yourself: Who has the opposition after my king move?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "You have the opposition: keep it, and their king has to give way."
+    other: "Take the opposition: put your king in front of theirs with them to move."
+  exceptions:
+    - With a rook's pawn, or spare pawn moves on the board, the opposition alone doesn't decide.
+  source: Capablanca, Chess Fundamentals
+  related: [active-king, rule-of-the-square]
+  examples:
+    - title: King and pawn against king
+      fen: 4k3/8/4K3/4P3/8/8/8/8 b - - 0 1
+      side: white
+      line: Kd8 Kf7 Kd7 e6+ Kd6 e7
+      note: >-
+        Black has to move and give way; White's king steps aside and escorts the pawn to e8.
+
+- id: rule-of-the-square
+  concept: unstoppable_passer
+  title: The rule of the square
+  level: beginner
+  phase: [endgame]
+  principle: >-
+    The rule of the square: if the king can't step into the pawn's square, the pawn promotes.
+  explanation: >-
+    Draw a square from the passed pawn to its promotion rank. If the defending king can step into it on its
+    move, it catches the pawn; if not, the pawn queens. It saves counting moves one by one and tells you at a
+    glance whether a pawn race or a trade into a pawn ending works.
+  in_your_game:
+    own: This lets {opps} king catch {your} passed pawn.
+    other: This gives {opp} a passed pawn {your} king can no longer catch ({sq}).
+  ask_yourself: Can my king still reach the square of the passed pawn?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Your king can now catch their passed pawn: step into its square."
+    other: "Your passed pawn can't be caught: push it."
+  exceptions:
+    - Pieces in the king's way, or a pawn still on its starting square (it can move two), change the count.
+  source: Capablanca, Chess Fundamentals
+  related: [passed-pawn, opposition]
+  examples:
+    - title: Outside the square
+      fen: 8/8/8/P7/8/8/6k1/K7 w - - 0 1
+      side: white
+      line: a6 Kf3 a7 Ke4 a8=Q+
+      note: >-
+        The square of the a5 pawn reaches from a5 to d8. Black's king on g2 can't step into it, so the pawn
+        promotes.

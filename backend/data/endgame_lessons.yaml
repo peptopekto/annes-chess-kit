@@ -1,0 +1,325 @@
+# How each endgame drill works – shown under "How it works" in the trainer.
+#
+# Keyed by drill id (app/endgames.py). Positions are mirrored and colours swapped at random, so the texts avoid
+# fixed square names where possible ("the square next to the corner" rather than "g8").
+#   idea:     what makes the pattern work, in a few sentences
+#   spot:     when to look for it in your own games (optional)
+#   steps:    the plan, in order
+#   mistakes: what usually goes wrong (optional)
+
+# ---------------------------------------------------------------------------- checkmates
+kq:
+  idea: >-
+    The queen alone can't mate, but it can lock the enemy king in a box that gets smaller every move. Your king
+    then comes up to cover the last squares, and the queen gives mate on the edge of the board.
+  steps:
+    - Put the queen a knight's move away from the enemy king. That leaves the king a rectangle to move in.
+    - Each time the king moves, follow it with the queen at the same knight's-move distance. The box shrinks.
+    - Once the king is on the edge, stop shrinking. Walk your own king towards it.
+    - "Mate: the queen on the edge next to the enemy king, protected by your king – or the queen checking along the edge while your king faces the enemy king."
+  mistakes:
+    - "Stalemate: before every queen move, check that the enemy king still has a legal move."
+    - Checking all the time. Checks let the king run back to the centre; quiet queen moves that shrink the box work better.
+    - Putting the queen next to the enemy king without your king protecting it.
+
+krr:
+  idea: >-
+    Two rooks mate without help from the king. One rook keeps the enemy king from crossing a line, the other
+    gives check on the next line – then they swap roles and walk the king to the edge like a ladder.
+  steps:
+    - Put one rook on a rank (or file) the enemy king can't cross.
+    - Check with the other rook one line further. The king has to step back.
+    - The first rook jumps two lines ahead with the next check. Repeat until the king is on the edge.
+    - Mate on the edge, the second rook guarding the line in front of it.
+  mistakes:
+    - Letting the king come close to a rook. If it does, move that rook to the far end of its line, then continue.
+    - Putting both rooks on the same side, where one blocks the other.
+
+kr:
+  idea: >-
+    The rook cuts the king off along a line, and your king takes the opposition (kings facing each other with one
+    square between). A rook check in that moment pushes the enemy king back one line. Repeat until it's on the edge.
+  steps:
+    - Cut the enemy king off with the rook along a rank or file.
+    - Bring your king up, on the same side as the enemy king, to face it.
+    - When the kings face each other, check with the rook. The enemy king has to step back one line.
+    - If the enemy king steps sideways instead of facing yours, make a waiting move with the rook along its line (keep the cut).
+    - On the edge, the same check is mate.
+  mistakes:
+    - Checking when the kings don't face each other. The king just walks back up.
+    - Leaving the rook where the enemy king can attack it; keep it at a distance.
+    - Stalemate on the edge when the king has only one square and you take it away without check.
+
+kbb:
+  idea: >-
+    Two bishops side by side make a diagonal wall the king can't cross. With your king's help the wall moves
+    towards a corner; the mate comes in the corner, one bishop checking and the other covering the escape square.
+  steps:
+    - Place the bishops next to each other in the centre. Together they cover a band of squares.
+    - Bring your king up close. The enemy king can only approach the bishops, not pass them.
+    - Push the king to the edge, then along the edge to a corner.
+    - Mate in the corner with the bishops on neighbouring diagonals.
+  mistakes:
+    - Stalemate in the corner. Give the king a square until the mating check.
+    - Leaving a bishop where the king can attack it.
+
+kbn:
+  idea: >-
+    Bishop and knight can only force mate in a corner of the bishop's colour. If the king runs to the other corner,
+    the knight's W-manoeuvre drives it along the edge to the right one – the hardest basic mate.
+  steps:
+    - Drive the king to the edge with king, bishop and knight together.
+    - Find the right corner – the one the bishop can cover.
+    - If the king is in the wrong corner, use the W-manoeuvre. The knight takes away the escape squares in turn while the bishop seals the diagonal and your king stays close.
+    - In the right corner, the bishop checks along the diagonal and the knight covers the last square.
+  mistakes:
+    - Trying to mate in the wrong corner.
+    - Letting the king slip back to the centre while the knight is far away.
+    - "The 50-move rule: you have 50 moves – keep the pieces together and don't waste time."
+
+# ---------------------------------------------------------------------------- mating patterns
+backrank:
+  idea: >-
+    A king behind its unmoved pawns has no escape square ("luft"). A rook or queen on the back rank gives mate if
+    nothing can block or take it. Often a single piece guards that rank – remove it and the back rank is open.
+  spot:
+    - The opponent has castled and hasn't moved the pawns in front of the king.
+    - Only one piece guards the back rank, and you control the file towards it.
+  steps:
+    - Count the attackers and defenders of the square on the back rank you want to enter.
+    - If the defenders hold, take the defender with check – often a queen sacrifice. The recapture is forced.
+    - The piece that recaptured has left its post. Your rook enters on the back rank, and it's mate.
+  mistakes:
+    - Entering with the rook first – it's simply taken.
+    - A quiet move first, which lets the opponent make luft (a pawn move next to the king).
+    - "For your own games: a weak back rank works both ways. When you have time, one pawn move next to your king prevents this."
+
+arabian:
+  idea: >-
+    Rook and knight against a king in the corner. The rook gives check on the square right next to the king,
+    along the edge; the knight protects the rook and covers the square diagonally next to the corner.
+  spot:
+    - The enemy king is in the corner, or can be driven there.
+    - Your rook controls the rank (or file) next to the edge.
+    - Your knight can reach the square a knight's jump from both the corner's neighbours.
+  steps:
+    - The rook on the second line from the edge keeps the king in the corner.
+    - Bring the knight to the square that guards the rook's mating square and the square next to the corner.
+    - The rook moves next to the king, protected by the knight – mate.
+  mistakes:
+    - "Stalemate: with the knight in place, the king may have no legal move. Here the opponent still has a pawn to push, so it's fine – without one it would be stalemate."
+    - Checking with the rook before the knight is ready. The king just takes it or walks out.
+
+anastasia:
+  idea: >-
+    The king sits on the edge and its own pawn takes its escape square. A knight a little further away covers the
+    two squares next to the king; a rook or queen on the edge file then gives mate.
+  spot:
+    - Your knight has landed close to the castled king, covering the squares around it.
+    - The file on the edge (next to the king) can be opened, and your rook can swing over to it.
+  steps:
+    - Knight in place – it covers the two squares next to the king's own pawn.
+    - Sacrifice the queen on the edge pawn next to the king, with check. The king has to take; it's the only legal move.
+    - The rook comes to the edge file with check. The pawn and the knight cover everything else – mate.
+  mistakes:
+    - Swinging the rook first. The opponent gets a move to defend.
+    - Not checking that after the queen sacrifice the king's capture is really forced.
+
+boden:
+  idea: >-
+    Two bishops on crossing diagonals. The king's neighbours are blocked by its own pieces; one bishop covers the
+    squares next to the king from far away, the other gives mate on the second diagonal.
+  spot:
+    - The opponent castled long, or the king is on its side of the board with its own pieces next to it.
+    - Only one pawn stands between your bishop and the king's diagonal.
+    - Your other bishop already covers the squares diagonally next to the king.
+  steps:
+    - The first bishop covers the escape squares along its diagonal.
+    - Sacrifice the queen with check to remove the pawn that blocks the second diagonal. Taking is forced.
+    - The second bishop gives check on the opened diagonal – mate.
+  mistakes:
+    - Bringing the second bishop first. The pawn simply blocks, or the king escapes.
+    - Missing that the queen sacrifice must be check – otherwise the opponent has time.
+
+legal:
+  idea: >-
+    An early bishop pins your knight to your queen. Taking the centre pawn with the knight anyway offers the queen –
+    but if the opponent takes it, the bishop checks on the square next to the king and the other knight mates.
+    The three minor pieces cover every square around the king.
+  spot:
+    - Early in the game, your knight is pinned to the queen by a bishop.
+    - Your bishop already aims at the pawn next to the enemy king, and a second knight can jump in front of the king.
+  steps:
+    - (Already played) The knight takes the centre pawn and ignores the pin. The opponent took the queen.
+    - The bishop takes the pawn next to the king, with check. The king has only one square to go to; the knight covers the other.
+    - The second knight gives check – mate. Bishop and knights cover all the king's squares.
+  mistakes:
+    - "As the defender: never take the queen here. Taking the knight wins a piece."
+    - Taking back material instead of looking for the check.
+
+smothered:
+  idea: >-
+    A king surrounded by its own pieces can't escape a knight check, and a knight check can't be blocked. Queen
+    and knight drive the king into the corner with checks; a queen sacrifice forces the rook to block the last free
+    square, and the knight mates.
+  spot:
+    - The enemy king is near the corner, with its own pieces next to it.
+    - Your queen controls the diagonal towards the king, and your knight is close.
+  steps:
+    - The queen checks on the diagonal. The king goes into the corner (if it steps the other way, the queen mates next to it).
+    - The knight checks next to the king. The king goes back.
+    - The knight jumps away with a double check (knight and queen at once). Only a king move helps – back to the corner.
+    - Sacrifice the queen next to the king with check. The knight covers that square, so the rook has to take.
+    - The knight returns with check. The king is smothered – mate.
+  mistakes:
+    - A single check where the opponent can block or take.
+    - Missing the double check. With two pieces giving check, only the king can move.
+
+# ---------------------------------------------------------------------------- pawn endings
+kpk:
+  idea: >-
+    The king wins the race, not the pawn. Your king must get in front of the pawn; with the opposition (kings facing
+    each other, the opponent to move) it reaches the key squares two ranks in front of the pawn, and then the pawn
+    queens whatever the defender does.
+  steps:
+    - Put your king in front of the pawn, not behind or beside it.
+    - Take the opposition. The defending king has to give way.
+    - Reach a key square (two squares in front of the pawn, or diagonally next to that square). Now the pawn walks through.
+    - Push the pawn only when your king already controls the way to the queening square.
+  mistakes:
+    - Pushing the pawn first. It runs away from its king and is lost or blocked.
+    - "Stalemate: with the pawn on the seventh rank and the enemy king in front of it."
+    - A rook pawn (a- or h-file) is usually a draw if the defending king reaches the corner.
+
+kkp:
+  idea: >-
+    As the defender, stand in front of the pawn and keep the opposition. If the attacking king never reaches a key
+    square, the pawn can't queen without stalemating you.
+  steps:
+    - Get your king in front of the pawn as fast as possible.
+    - When the enemy king is in front of its pawn, face it (opposition).
+    - When the pawn moves up to your rank with check, step straight back – not sideways. Then you can take the opposition again.
+    - At the end you are in front of the queening square, and it's stalemate or the pawn is lost.
+  mistakes:
+    - Stepping sideways or diagonally when the pawn gives check. The attacker's king gets past you.
+    - Moving towards the pawn from the side when you should be in front of it.
+
+break:
+  idea: >-
+    Three pawns against three, facing each other. A sacrifice of the middle pawn deflects one of the enemy pawns,
+    and the next sacrifice opens the way for one of yours. Whatever the opponent takes, one pawn gets through.
+  steps:
+    - Push the middle pawn – it can be taken in two ways.
+    - Whichever pawn took it, push the pawn on the other side next to it. It offers itself as well.
+    - After the second capture, the remaining pawn runs to queen. The enemy king is too far away.
+  mistakes:
+    - Starting with an outside pawn. The opponent takes and keeps the blockade.
+    - Not counting first whether the enemy king can catch the last pawn.
+
+reti:
+  idea: >-
+    A king moving diagonally gets as close to two targets at once as it would by heading for either one. So the
+    king chases the enemy pawn and supports its own pawn at the same time. If the opponent stops one plan, the
+    other works.
+  steps:
+    - Walk diagonally – towards the enemy pawn's path and towards your own pawn at once.
+    - If the enemy pawn runs, keep walking; you'll enter its square and catch it.
+    - If the enemy king goes for your pawn, your king arrives in time to protect it. Then the opponent has to spend a move, and you catch the other pawn.
+  mistakes:
+    - Chasing the pawn straight along the edge – one tempo short.
+    - Pushing your own pawn too early; it's taken and your king is still far away.
+
+# ---------------------------------------------------------------------------- rook endings
+lucena:
+  idea: >-
+    Your king stands in front of your pawn on the seventh rank and needs to come out from under it without endless
+    side checks. The solution is to "build a bridge": the rook goes to the fourth rank and later blocks the checks.
+  steps:
+    - Check with the rook to drive the enemy king one more file away from the pawn.
+    - Put the rook on the fourth rank (counted from your side).
+    - Walk your king out. The enemy rook checks from behind.
+    - When your king is on the fifth rank, block the check with the rook – that's the bridge. The pawn queens.
+  mistakes:
+    - Walking the king out before the rook is ready. The checks never stop.
+    - Not cutting the enemy king off first. It comes back and attacks the pawn.
+
+philidor:
+  idea: >-
+    A pawn down, you hold the draw with your rook on the third rank from your side (the sixth from the attacker's).
+    The enemy king can't advance. Once the pawn advances, the king has no shelter left, and your rook checks it
+    from behind.
+  steps:
+    - Put your rook on your third rank and keep it there; wait with your king near the queening square.
+    - As long as the pawn stays back, just move the rook along that rank.
+    - When the pawn moves onto your third rank, take the rook to the far side (the attacker's back rank).
+    - Check the king from behind. The pawn no longer shields it, and the checks don't run out.
+  mistakes:
+    - Going passively to your back rank too early. Then the enemy king walks up and it's lost.
+    - Checking from too close. Keep the rook far away when giving checks.
+
+rvp:
+  idea: >-
+    A rook usually wins against a pawn – if your king gets there in time. The rook cuts the enemy king off from the
+    pawn or from the queening square; your own king does the real work.
+  steps:
+    - Count first. How many moves until the pawn queens, and how many for your king to reach the square in front of it?
+    - Use the rook to cut the enemy king off along a rank or file, away from its pawn or from your king's path.
+    - Bring your king to the front of the pawn, not behind it.
+    - Win the pawn, then mate with king and rook.
+  mistakes:
+    - Checking the king towards its pawn – each check that helps it forward costs you a tempo.
+    - Coming at the pawn from behind with your king.
+    - Taking the rook too far away when the pawn is about to promote.
+
+# ---------------------------------------------------------------------------- minor pieces
+wrongb:
+  idea: >-
+    A bishop and a rook pawn can't win if the bishop doesn't control the queening square (the "wrong" bishop) and your
+    king reaches that corner. The bishop can never drive your king out, and the only other option is stalemate.
+  steps:
+    - Run your king straight to the corner in front of the pawn – the queening square.
+    - Once there, move between the corner and the square next to it.
+    - The bishop can't attack the corner. Stalemate is your friend here.
+  mistakes:
+    - Going after the pawn and getting cut off from the corner by the enemy king.
+    - Leaving the corner area because nothing seems to happen.
+
+ocb:
+  idea: >-
+    With bishops of opposite colours, your bishop controls squares the other bishop can never contest. Put your king
+    and bishop in front of the pawns on squares of your bishop's colour, and even two extra pawns can't get through.
+  steps:
+    - Bring your king in front of the pawns.
+    - Use the bishop to control a square the pawns must pass – one of your bishop's colour.
+    - If the pawns are split, the king blocks one and the bishop watches the other from far away.
+    - Keep the blockade. Giving the bishop for the last pawns is fine – a bishop alone can't win.
+  mistakes:
+    - Trading bishops. The pawn ending is usually lost.
+    - Putting the king or bishop where a pawn push attacks it with tempo.
+    - Chasing pawns from behind instead of blocking them.
+
+# ---------------------------------------------------------------------------- queen endings
+qp7:
+  idea: >-
+    A queen stops a pawn on the seventh rank with checks and pins until the enemy king has to stand in front of its
+    own pawn. That move blocks the pawn and gives you a free move to bring your king closer.
+  steps:
+    - Check or pin until the enemy king steps in front of the pawn.
+    - Use that moment to move your king one step closer.
+    - Repeat until your king is close enough. Then win the pawn or mate.
+  mistakes:
+    - Random checks that let the king run away from its pawn.
+    - "Stalemate tricks: with a rook pawn or bishop pawn the defender often leaves its pawn to make stalemate possible. Those positions are often draws unless your king is already close."
+
+kqkr:
+  idea: >-
+    Queen against rook is won, but slowly. Push the king to the edge and reach Philidor's position with the opponent
+    to move. Then the rook has to leave its king, and forks, skewers or mates follow.
+  steps:
+    - Drive the enemy king and rook to the edge with your queen and king.
+    - Aim for Philidor's position. The enemy king is on the edge, its rook next to it, your king facing it.
+    - Pass the move (a triangle with the queen) so the opponent has to move there.
+    - The rook must leave its king. Look for a fork or skewer of king and rook, or mate.
+  mistakes:
+    - Allowing a rook fork of your king and queen.
+    - "Stalemate traps: the rook sacrifices itself with check. Make sure taking it doesn't leave the king without moves."

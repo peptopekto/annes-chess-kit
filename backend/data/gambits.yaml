@@ -1,0 +1,233 @@
+# Gambits the Instructive bot can play (setup: "Gambits").
+#
+# `bot` is the colour the bot plays; `lines` are move sequences in SAN from the start position. Whenever the
+# game reaches a position on one of the lines with the bot to move – by any move order – the bot plays the
+# line's next move. When you leave the line, the bot plays its normal moves again. Branches are just more
+# lines. tests/test_gambits.py checks that every line is legal.
+
+- id: alien
+  name: Alien Gambit
+  against: the Caro-Kann (4...Nf6)
+  bot: w
+  idea: White gives the g5 knight for the f7 pawn to drag Black's king out and attack it with Nf3–e5 and Bc4/Bd3.
+  lines:
+    - e4 c6 d4 d5 Nc3 dxe4 Nxe4 Nf6 Ng5 h6 Nxf7 Kxf7 Nf3 Bg4 Ne5+
+    - e4 c6 d4 d5 Nc3 dxe4 Nxe4 Nf6 Ng5 h6 Nxf7 Kxf7 Nf3 Bf5 Ne5+
+
+- id: milner-barry
+  name: Milner-Barry Gambit
+  against: the French Advance
+  bot: w
+  idea: White gives the d4 pawn for fast development and pressure on the e- and c-files against Black's king in the centre.
+  lines:
+    - e4 e6 d4 d5 e5 c5 c3 Nc6 Nf3 Qb6 Bd3 cxd4 cxd4 Bd7 O-O
+
+- id: smith-morra
+  name: Smith-Morra Gambit
+  against: the Sicilian
+  bot: w
+  idea: White gives a pawn for quick development and open c- and d-files.
+  lines:
+    - e4 c5 d4 cxd4 c3 dxc3 Nxc3
+
+- id: wing-sicilian
+  name: Sicilian Wing Gambit
+  against: the Sicilian
+  bot: w
+  idea: White gives the b-pawn to pull Black's c-pawn away from the centre.
+  lines:
+    - e4 c5 b4
+
+- id: kings-gambit
+  name: King's Gambit
+  against: 1...e5
+  bot: w
+  idea: White gives the f-pawn to open the f-file and take the centre with d4.
+  lines:
+    - e4 e5 f4
+
+- id: danish
+  name: Danish Gambit
+  against: 1...e5 and ...exd4
+  bot: w
+  idea: White gives two pawns for two bishops raking at Black's king.
+  lines:
+    - e4 e5 d4 exd4 c3 dxc3 Bc4 cxb2 Bxb2
+
+- id: scotch-gambit
+  name: Scotch Gambit
+  against: 1...e5 2...Nc6
+  bot: w
+  idea: White develops the bishop to c4 instead of taking back on d4, aiming at f7.
+  lines:
+    - e4 e5 Nf3 Nc6 d4 exd4 Bc4
+
+- id: goring
+  name: Göring Gambit
+  against: 1...e5 2...Nc6
+  bot: w
+  idea: White offers the c-pawn for development and a strong centre.
+  lines:
+    - e4 e5 Nf3 Nc6 d4 exd4 c3 dxc3 Nxc3
+
+- id: evans
+  name: Evans Gambit
+  against: the Italian (3...Bc5)
+  bot: w
+  idea: White gives the b-pawn to gain time on the bishop and build the centre with c3 and d4.
+  lines:
+    - e4 e5 Nf3 Nc6 Bc4 Bc5 b4 Bxb4 c3
+
+- id: fried-liver
+  name: Fried Liver Attack
+  against: the Two Knights (4...d5 5...Nxd5)
+  bot: w
+  idea: White sacrifices the knight on f7 to pull Black's king into the open.
+  lines:
+    - e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5 Nxd5 Nxf7 Kxf7 Qf3+
+
+- id: vienna-gambit
+  name: Vienna Gambit
+  against: the Vienna (2...Nf6)
+  bot: w
+  idea: White strikes with f4 to open the f-file and gain space.
+  lines:
+    - e4 e5 Nc3 Nf6 f4
+
+- id: halloween
+  name: Halloween Gambit
+  against: the Four Knights
+  bot: w
+  idea: White gives a knight for the e5 pawn and chases Black's pieces with d4 and e5.
+  lines:
+    - e4 e5 Nf3 Nc6 Nc3 Nf6 Nxe5 Nxe5 d4
+
+- id: blackmar-diemer
+  name: Blackmar–Diemer Gambit
+  against: 1...d5
+  bot: w
+  idea: White gives the e-pawn and opens the f-file for a kingside attack.
+  lines:
+    - d4 d5 e4 dxe4 Nc3 Nf6 f3
+
+- id: staunton
+  name: Staunton Gambit
+  against: the Dutch
+  bot: w
+  idea: White gives the e-pawn to open lines against Black's weakened king.
+  lines:
+    - d4 f5 e4
+
+- id: englund
+  name: Englund Gambit
+  against: 1.d4
+  bot: b
+  idea: Black gives the e-pawn for quick development and a few well-known traps – the famous one ends with ...Qc1# after 4.Bf4 Qb4+ 5.Bd2 Qxb2.
+  lines:
+    - d4 e5 dxe5 Nc6 Nf3 Qe7 Bf4 Qb4+ Bd2 Qxb2 Bc3 Bb4 Qd2 Bxc3 Qxc3 Qc1#
+    - d4 e5 dxe5 Nc6 Nf3 Qe7 Bg5 Qb4+
+    - d4 e5 dxe5 Nc6 Nf3 Qe7 Nc3 Nxe5
+
+- id: budapest
+  name: Budapest Gambit
+  against: 1.d4 Nf6 2.c4
+  bot: b
+  idea: Black gives the e-pawn and wins it back on e5 with active pieces.
+  lines:
+    - d4 Nf6 c4 e5 dxe5 Ng4
+
+- id: benko
+  name: Benko Gambit
+  against: 1.d4 Nf6 2.c4 c5 3.d5
+  bot: b
+  idea: Black gives a queenside pawn for long-term pressure on the a- and b-files.
+  lines:
+    - d4 Nf6 c4 c5 d5 b5 cxb5 a6
+
+- id: albin
+  name: Albin Countergambit
+  against: the Queen's Gambit
+  bot: b
+  idea: Black gives the e-pawn and plants a pawn on d4 that cramps White.
+  lines:
+    - d4 d5 c4 e5 dxe5 d4
+
+- id: stafford
+  name: Stafford Gambit
+  against: the Petrov with 3.Nxe5
+  bot: b
+  idea: Black gives the e-pawn for quick piece play and traps around f2 and e4.
+  lines:
+    - e4 e5 Nf3 Nf6 Nxe5 Nc6 Nxc6 dxc6
+
+- id: elephant
+  name: Elephant Gambit
+  against: 2.Nf3
+  bot: b
+  idea: Black strikes back in the centre at once with ...d5.
+  lines:
+    - e4 e5 Nf3 d5
+
+- id: latvian
+  name: Latvian Gambit
+  against: 2.Nf3
+  bot: b
+  idea: Black gives the f-pawn – a King's Gambit with colours reversed.
+  lines:
+    - e4 e5 Nf3 f5
+
+- id: traxler
+  name: Traxler Counterattack
+  against: the Two Knights with 4.Ng5
+  bot: b
+  idea: Black ignores the attack on f7 and counterattacks f2.
+  lines:
+    - e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 Bc5
+
+- id: rousseau
+  name: Rousseau Gambit
+  against: the Italian (3.Bc4)
+  bot: b
+  idea: Black strikes with ...f5 to open the f-file early.
+  lines:
+    - e4 e5 Nf3 Nc6 Bc4 f5
+
+- id: schliemann
+  name: Schliemann Gambit
+  against: the Ruy Lopez
+  bot: b
+  idea: Black counterattacks with ...f5 against the Spanish.
+  lines:
+    - e4 e5 Nf3 Nc6 Bb5 f5
+
+- id: marshall
+  name: Marshall Attack
+  against: the closed Ruy Lopez (8.c3)
+  bot: b
+  idea: Black gives a pawn for a lasting attack on White's king.
+  lines:
+    - e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 O-O c3 d5
+
+- id: icelandic
+  name: Icelandic Gambit
+  against: the Scandinavian with 3.c4
+  bot: b
+  idea: Black gives the d-pawn for development and play against White's centre.
+  lines:
+    - e4 d5 exd5 Nf6 c4 e6
+
+- id: portuguese
+  name: Portuguese Gambit
+  against: the Scandinavian with 3.d4
+  bot: b
+  idea: Black gives the d-pawn to develop fast and pin the f3 knight.
+  lines:
+    - e4 d5 exd5 Nf6 d4 Bg4
+
+- id: from
+  name: From's Gambit
+  against: Bird's Opening (1.f4)
+  bot: b
+  idea: Black gives the e-pawn to open the e1–h4 diagonal against White's king.
+  lines:
+    - f4 e5 fxe5 d6

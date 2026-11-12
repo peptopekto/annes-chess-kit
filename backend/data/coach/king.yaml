@@ -1,0 +1,217 @@
+# Lesson cards: development and king safety. Format: see pawns.yaml.
+
+- id: undeveloped
+  concept: undeveloped
+  title: Develop your pieces
+  level: beginner
+  phase: [opening]
+  principle: >-
+    In the opening, bring out your knights and bishops before anything else: every move spent elsewhere is a
+    move your opponent is ahead.
+  explanation: >-
+    In the opening the side with more pieces in play usually wins the fight that follows. Moving the same piece
+    twice, early queen trips and pawn moves that don't help development all lose time. Knights first, then
+    bishops, castle, and connect the rooks; only then start operations.
+  in_your_game:
+    own: This leaves pieces at home that should be developed ({sq}).
+    other: This gives {opp} time to finish developing.
+  ask_yourself: Which of my pieces are still on their starting squares?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "They're behind in development: open the position and act before they catch up."
+    other: "Use the time to finish your development and castle."
+  exceptions:
+    - Winning material or stopping a direct threat comes before development.
+  source: Emanuel Lasker, Common Sense in Chess
+  related: [king-in-the-centre, knight-rim]
+  examples:
+    - title: The early queen
+      moves: e4 e5 Qh5 Nc6 Bc4 g6 Qf3 Nf6 Qb3 Nd4 Qc3 Bg7 d3 O-O
+      side: white
+      line: Bg5 d5
+      note: >-
+        White's queen has moved four times; the knights on b1 and g1 and the bishop on c1 are still at home,
+        while Black is castled with everything in play.
+
+- id: king-in-the-centre
+  concept: king_center
+  title: Castle early
+  level: beginner
+  phase: [opening, middlegame]
+  principle: >-
+    Castle early: a king left in the centre gets caught when the centre opens.
+  explanation: >-
+    The centre is where the files open first. A king on e1 or e8 in an open position faces rooks and queens on
+    the e- and d-files, and it blocks its own rooks from connecting. Castling takes two moves of preparation;
+    find them before the position opens, especially when you are behind in development.
+  in_your_game:
+    own: This keeps {your} king in the centre while lines open.
+    other: This gives {opp} time to get {their} king to safety.
+  ask_yourself: Is my king safe – could I castle now?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their king is still in the centre: open the centre with pawn breaks before they castle."
+    other: "Castle now, while you have time."
+  exceptions:
+    - In some endgame-like positions with queens off, the king is well placed in the centre.
+  source: Emanuel Lasker, Common Sense in Chess
+  related: [undeveloped, lost-castling, open-lines-to-the-king]
+  examples:
+    - title: The Danish Gambit
+      moves: e4 e5 d4 exd4 c3 dxc3 Bc4 cxb2 Bxb2 d6 Nf3 Nc6 O-O Be6 Bxe6 fxe6 Qb3 Qd7 Ng5 Nd8
+      side: black
+      line: f4 Nf6 f5
+      note: >-
+        White gave pawns to open lines; Black's king is still on e8 and the f-file is opening.
+
+- id: lost-castling
+  concept: lost_castling
+  title: Don't lose the right to castle
+  level: beginner
+  phase: [opening, middlegame]
+  principle: >-
+    Moving the king before castling gives up castling for good; the rook in the corner stays out of play.
+  explanation: >-
+    A king that has moved can't castle any more, so it has to walk to safety by hand and the h-rook needs
+    several moves to join the game. Block checks with a piece when you can, and keep the king's option to
+    castle for as long as it matters.
+  in_your_game:
+    own: This costs {you} the right to castle.
+    other: This lets {opp} keep {their} castling options.
+  ask_yourself: Do I really need to move my king – or can I block or castle instead?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their king can't castle any more: open lines towards it before their rook joins in."
+    other: "You keep your castling options: castle soon."
+  exceptions:
+    - Blocking a check can lose a piece; then moving the king is the lesser evil.
+  source: Emanuel Lasker, Common Sense in Chess
+  related: [king-in-the-centre]
+  examples:
+    - title: Kf1 in the Italian
+      moves: e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d4 exd4 cxd4 Bb4+ Kf1
+      side: white
+      line: d5 e5 Ne4
+      note: >-
+        After Kf1 White can't castle; the rook on h1 will need g3 and Kg2 to get out.
+
+- id: pawn-shield
+  concept: king_shield
+  title: Leave the pawns in front of your king alone
+  level: improver
+  phase: [opening, middlegame]
+  principle: >-
+    Leave the pawns in front of your castled king alone: every pawn move there opens a door that can't be
+    closed again.
+  explanation: >-
+    The pawns on f2, g2 and h2 (f7, g7, h7) protect the castled king. Each push creates holes and gives the
+    opponent a pawn to attack with their own pawns or pieces. Make such a move only with a concrete reason –
+    a needed escape square, or stopping a piece from landing on g5/g4.
+  in_your_game:
+    own: This weakens the pawn cover in front of {your} king.
+    other: This lets {opp} repair {their} king's pawn cover.
+  ask_yourself: Is there a concrete reason to move this pawn in front of my king?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their king's pawn cover is weakened: bring pieces to the new holes and attack the pushed pawn."
+    other: "Your king's cover is intact: keep it so and go after theirs."
+  exceptions:
+    - h3 (or ...h6) to give the king air or stop a pin is often useful.
+  source: Emanuel Lasker, Common Sense in Chess; Capablanca, Chess Fundamentals
+  related: [holes, back-rank, open-lines-to-the-king]
+  examples:
+    - title: g4 in front of the own king
+      moves: e4 e5 Nf3 Nc6 Bc4 Bc5 O-O Nf6 d3 d6 h3 O-O g4
+      side: white
+      line: Nxg4 hxg4 Bxg4
+      note: >-
+        After h3 and g4 Black can give a knight for two pawns and open the lines in front of White's king.
+
+- id: open-lines-to-the-king
+  concept: king_open_lines
+  title: Keep the lines to your king closed
+  level: improver
+  phase: [middlegame]
+  principle: >-
+    Don't open files towards your own king, and keep them closed while enemy rooks and queens are about.
+  explanation: >-
+    An open or half-open file next to the king is a road for the opponent's rooks and queen. Captures towards
+    your king's side, pawn trades in front of it and pushing your pawns there all open such roads. If you
+    must open lines, do it on the side where the opponent's king is.
+  in_your_game:
+    own: This opens a line towards {your} king.
+    other: This lets {opp} close the lines to {their} king.
+  ask_yourself: Which files or diagonals lead to my king after this move?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "A line towards their king has opened: bring a rook or the queen onto it."
+    other: "The lines to your king are closing: use the calm to improve your pieces."
+  exceptions:
+    - When the opponent has no heavy pieces left to use the file, it does little harm.
+  source: Emanuel Lasker, Common Sense in Chess
+  related: [pawn-shield, king-attackers]
+  examples:
+    - title: The open g-file
+      fen: r4rk1/ppp2p1p/2n5/3q4/3P4/2P2Q2/PP3PPP/R5RK w - - 0 20
+      side: black
+      line: Qg3+ Kh8 Qh4
+      note: >-
+        Black's g-pawn is gone and White's rook already stands on g1: queen and rook use the open file at once.
+
+- id: king-attackers
+  concept: king_attackers
+  title: Count the attackers
+  level: beginner
+  phase: [opening, middlegame]
+  principle: >-
+    Count the attackers and defenders around your king: once the attackers outnumber the defenders, an attack is
+    coming.
+  explanation: >-
+    An attack on the king works when more pieces can join it than can defend. Each enemy piece that aims at the
+    squares around your king is a warning, and taking your own pieces away from the king makes it worse. Bring
+    a defender back, trade off the most dangerous attacker, or strike in the centre before the attack is ready.
+  in_your_game:
+    own: This lets more of {opps} pieces aim at {your} king (from {sq}).
+    other: This takes pressure off {opps} king.
+  ask_yourself: How many enemy pieces aim at my king, and how many of mine defend it?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "More of your pieces aim at their king now: bring one more attacker and look for a sacrifice that opens it."
+    other: "The pressure on your king has eased: consolidate first, then take the initiative."
+  exceptions:
+    - Attackers that can't get closer or be supported are less dangerous than they look.
+  source: Emanuel Lasker, Common Sense in Chess – attack and defence
+  related: [open-lines-to-the-king, pawn-shield]
+  examples:
+    - title: Pressure on f7
+      moves: e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5
+      side: black
+      line: d5 exd5 Nxd5 Nxf7
+      note: >-
+        Bishop and knight both aim at f7 next to Black's king, defended only by the king. Black has to act at
+        once.
+
+- id: back-rank
+  concept: back_rank
+  title: The weak back rank
+  level: beginner
+  phase: [middlegame, endgame]
+  principle: >-
+    Give your king a flight square (luft) in time: a king trapped on the back rank by its own pawns can be mated
+    by one rook.
+  explanation: >-
+    With the pawns on f2, g2 and h2 still home, a rook or queen check on the first rank is mate unless a piece
+    can block. Many games at every level end this way. When the heavy pieces come off the back rank, or the
+    opponent's rook reaches an open file, make room with h3 or g3 (...h6 or ...g6).
+  in_your_game:
+    own: This leaves {your} king without an escape square off the back rank.
+    other: This lets {opp} fix {their} back rank.
+  ask_yourself: If a rook checks on my back rank, where does my king go?
+  your_chance:  # on your opponent's move: how to use what it gave you
+    own: "Their back rank is weak: look for a rook or queen check on it, and deflect its defenders."
+    other: "Your back rank is safe now: your rooks and queen are free to leave it."
+  exceptions:
+    - While a rook or queen still guards the back rank, the weakness is only potential.
+  source: Capablanca, Chess Fundamentals
+  related: [pawn-shield, open-file-rook]
+  examples:
+    - title: Mate on the back rank
+      fen: 6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1
+      side: black
+      line: Rd8#
+      note: >-
+        Black's king is boxed in by its own pawns: one rook check on the 8th rank is mate.
