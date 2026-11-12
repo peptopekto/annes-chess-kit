@@ -33,10 +33,10 @@ Your games and reviews stay on your machine.
 ![Game review: every move rated, with an explanation and the eval graph](docs/img/review.webp)
 
 <p align="center">
-  <img src="docs/img/summary.webp" width="49%" alt="Game summary with accuracy and move ratings">
-  <img src="docs/img/insights.webp" width="49%" alt="Insights: where you lose points">
-  <img src="docs/img/coach.webp" width="49%" alt="Coach: your habits and a training plan">
-  <img src="docs/img/endgames.webp" width="49%" alt="Endgame trainer">
+  <img src="docs/img/progress.webp" width="49%" alt="Progress page with games reviewed, average accuracy, win record and a rating chart per platform.">
+  <img src="docs/img/trends.webp" width="49%" alt="Accuracy over time chart, and results by game number in a session, time of day and day of the week.">
+  <img src="docs/img/tactics.webp" width="49%" alt="Accuracy by game phase, and bar charts of the tactics fallen for and the tactics missed.">
+  <img src="docs/img/openings.webp" width="49%" alt="Opening trainer showing the positions where the usual move goes wrong, with the better move as an arrow.">
 </p>
 
 ## Features
