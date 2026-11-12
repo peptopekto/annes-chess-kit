@@ -325,8 +325,12 @@ def _no(reason: str) -> None:
         _why[reason] += 1
 
 
-def _build(game_id: str, ply: int, max_mate: int) -> dict | None:
-    """A puzzle from the position before your move `ply` in a review – or None if it isn't a good one."""
+def _build(game_id: str, ply: int, max_mate: int, check_setup: bool = True) -> dict | None:
+    """A puzzle from the position before your move `ply` in a review – or None if it isn't a good one.
+
+    check_setup=False keeps positions that only exist because your opponent had just erred: right for
+    drills of positions you picked on purpose ("didn't punish a mistake", "missed free material"),
+    where spotting their error is exactly what's trained."""
     import chess
 
     from . import tactics
@@ -341,7 +345,7 @@ def _build(game_id: str, ply: int, max_mate: int) -> dict | None:
     sc = ((record.get("ratingModel") or {}).get("k") or C.LICHESS_K) / C.LICHESS_K
     if move["loss"] < MIN_LOSS * sc and move["cls"] != "miss":
         return _no("the right move didn't matter enough")
-    if not setup_is_sound(prev, sc):
+    if check_setup and not setup_is_sound(prev, sc):
         return _no("your opponent had just erred")
     board = chess.Board(move["fenBefore"])
     mate = (move.get("bestEval") or {}).get("mate")
@@ -388,7 +392,7 @@ def _build(game_id: str, ply: int, max_mate: int) -> dict | None:
     })
 
 
-def _build_all(todo: list[tuple[str, int]], max_mate: int, enough) -> list[dict]:
+def _build_all(todo: list[tuple[str, int]], max_mate: int, enough, check_setup: bool = True) -> list[dict]:
     """Build puzzles from (game id, ply) in order, in parallel chunks, until `enough(puzzles)` says stop."""
     from concurrent.futures import ThreadPoolExecutor
 
@@ -398,7 +402,7 @@ def _build_all(todo: list[tuple[str, int]], max_mate: int, enough) -> list[dict]
     with ThreadPoolExecutor(max_workers=engine.batch.size) as pool:
         for i in range(0, len(todo), 32):
             chunk = todo[i:i + 32]
-            puzzles += [p for p in pool.map(lambda r: _build(r[0], r[1], max_mate), chunk) if p]
+            puzzles += [p for p in pool.map(lambda r: _build(r[0], r[1], max_mate, check_setup), chunk) if p]
             if enough(puzzles):
                 break
     return puzzles
@@ -422,9 +426,16 @@ def create_from_moves(refs: list[tuple[str, int]], name: str, amount: int = 50) 
             seen.add(epd)
             todo.append((game_id, ply))
     random.shuffle(todo)
-    puzzles = _build_all(todo, max_mate, lambda ps: len(ps) >= amount)[:amount]
+    with _why_lock:
+        before = Counter(_why)
+    # You picked these positions for what they show, so ones after an error of your opponent's stay in.
+    puzzles = _build_all(todo, max_mate, lambda ps: len(ps) >= amount, check_setup=False)[:amount]
     if not puzzles:
-        raise ValueError("None of these positions has a clear tactic or mate to find – analyse more games and try again.")
+        with _why_lock:
+            turned_down = (_why - before).most_common(1)
+        reason = f" Most common reason: {turned_down[0][0]} ({turned_down[0][1]} of {len(todo)})." if turned_down else ""
+        raise ValueError(f"None of these {len(todo)} positions makes a clear puzzle (a tactic or mate with "
+                         f"one right move).{reason}")
     extra = {"source": "games", "maxMate": max_mate, "fromPositions": len(refs)}
     if rating:
         extra["rating"] = round(rating)

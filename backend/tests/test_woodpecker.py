@@ -112,3 +112,44 @@ def test_interleave_mixes_patterns():
     order = [p["pattern"]["key"] for p in woodpecker._interleave(ps)]
     assert sorted(order) == ["a"] * 4 + ["b"] * 2
     assert order[:4] == ["a", "b", "a", "b"]
+
+
+def _after_their_blunder():
+    # Black has just hung the rook on a8 (a blunder); White, to move, could take it.
+    prev = {"cls": "blunder", "loss": 0.45, "fenBefore": "r5k1/5ppp/8/8/8/8/8/R5K1 b - - 0 1", "uci": "g8h8"}
+    move = {"cls": "miss", "loss": 0.40, "san": "Kf1", "uci": "g1f1", "bestSan": "Rxa8+",
+            "fenBefore": "r6k/5ppp/8/8/8/8/8/R5K1 w - - 0 1"}
+    return {"moves": [prev, move]}
+
+
+def test_drills_of_chosen_positions_keep_positions_after_an_opponent_error(monkeypatch):
+    from collections import Counter
+    from app import tactics
+    monkeypatch.setattr(woodpecker.storage, "load", lambda gid: _after_their_blunder())
+    monkeypatch.setattr(woodpecker, "_solver_ep", lambda move, board, k: None)
+    monkeypatch.setattr(tactics, "puzzle_solution", lambda board, line, max_mate: None)
+    monkeypatch.setattr(tactics, "quiet_solution", lambda board, line: None)
+    monkeypatch.setattr(woodpecker, "_why", Counter())
+    # The general puzzle sets leave it out: the position only exists because the opponent erred.
+    assert woodpecker._build("g", 2, 3) is None and woodpecker._why["your opponent had just erred"] == 1
+    # A drill of positions you picked (e.g. "didn't punish a mistake") keeps it and looks for the tactic.
+    woodpecker._why.clear()
+    assert woodpecker._build("g", 2, 3, check_setup=False) is None
+    assert "your opponent had just erred" not in woodpecker._why
+
+
+def test_create_from_moves_builds_without_the_setup_check(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(woodpecker.storage, "load_many", lambda ids: {"g": _after_their_blunder()})
+    monkeypatch.setattr(woodpecker, "_current_rating", lambda: None)
+    def fake_build_all(todo, max_mate, enough, check_setup=True):
+        seen["check_setup"] = check_setup
+        woodpecker._no("no tactic: a quiet positional move")
+        return []
+    monkeypatch.setattr(woodpecker, "_build_all", fake_build_all)
+    try:
+        woodpecker.create_from_moves([("g", 2)], "Didn't punish a mistake")
+        raise AssertionError("expected no puzzles")
+    except ValueError as e:
+        assert "Most common reason: no tactic" in str(e) and "1 positions" in str(e)
+    assert seen["check_setup"] is False
