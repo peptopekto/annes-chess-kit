@@ -318,7 +318,7 @@ function Player({ drill, mode, level, onBack, onRecord }: {
 
   return (
     <div className="mx-auto flex max-w-[1400px] flex-col gap-5 p-4 lg:flex-row lg:p-6">
-      <div className="mx-auto w-full max-w-[min(100%,calc(100vh-150px))] lg:mx-0">
+      <div className="mx-auto w-full max-w-[calc(min(100%,calc(100vh-150px))*var(--board-zoom,1))] lg:mx-0">
         <div className="flex h-10 items-center gap-2 px-1 text-sm font-medium">
           {mode === 'perfect' ? <Bot size={15} className="text-ink-300" /> : <User size={15} className="text-ink-300" />}
           <span>{mode === 'perfect' ? 'Perfect defence' : `Maia ${level ?? ''}`}</span>
@@ -327,7 +327,7 @@ function Player({ drill, mode, level, onBack, onRecord }: {
         </div>
         <div className="relative">
           <div className={clsx('board-frame aspect-square w-full min-w-0 transition', browsing && 'opacity-90')}>
-            <Board wheelSteps fen={shownFen ?? EMPTY} orientation={pos?.you ?? 'w'} movable={!loading && !over && yourTurn && !thinking && !browsing}
+            <Board wheelSteps resizable fen={shownFen ?? EMPTY} orientation={pos?.you ?? 'w'} movable={!loading && !over && yourTurn && !thinking && !browsing}
               premove={!loading && !over && !browsing && pos ? pos.you : undefined}
               lastMove={loading ? null : lastMove} onMove={onMove} shapes={loading ? [] : shapes} tints={tints} />
           </div>

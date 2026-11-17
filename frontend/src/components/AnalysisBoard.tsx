@@ -140,12 +140,12 @@ function Inner({ onClose, fen, orientation: initialOrientation, moves, at, title
         role="dialog" aria-modal="true" aria-label={title} onClick={e => e.stopPropagation()}>
         {/* board */}
         <div className="flex min-w-0 flex-1 justify-center">
-          <div className="flex flex-col gap-1" style={{ width: 'min(100%, calc(100vh - 9rem))' }}>
+          <div className="flex flex-col gap-1" style={{ width: 'calc(min(100%, calc(100vh - 9rem)) * var(--board-zoom, 1))' }}>
             <div className="flex h-5 items-center pl-5 sm:pl-6"><MaterialDiff fen={current} color={orientation === 'w' ? 'b' : 'w'} /></div>
             <div className="flex gap-2">
               <div className="w-3 shrink-0 sm:w-4"><EvalBar ev={engine?.eval ?? { cp: 0 }} orientation={orientation} /></div>
               <div className="board-frame aspect-square min-w-0 flex-1">
-                <Board wheelSteps fen={current} orientation={orientation} movable onMove={u => play([u])}
+                <Board wheelSteps resizable fen={current} orientation={orientation} movable onMove={u => play([u])}
                   lastMove={last ? uciSquares(last) : null} shapes={arrows} />
               </div>
             </div>

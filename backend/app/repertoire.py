@@ -18,7 +18,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import chess
 
-from . import analysis, engine, openings, storage
+from . import analysis, engine, openings, progress, storage
 from . import classify as C
 from .config import USERDATA, write_atomic
 
@@ -82,6 +82,14 @@ def _corpus() -> dict:
     except (OSError, pickle.PickleError, EOFError, ValueError):
         pass
 
+    task = progress.track("repertoire", "Collecting the moves of your games")
+    try:
+        return _build_corpus(cache, sig, task)
+    finally:
+        task.close()
+
+
+def _build_corpus(cache, sig, task: progress.Task) -> dict:
     moves: dict[str, dict[str, Counter]] = {"w": defaultdict(Counter), "b": defaultdict(Counter)}
     for _, color, pgn in _corpus_sources():
         b = chess.Board()
@@ -94,7 +102,10 @@ def _corpus() -> dict:
             b.push(m)
 
     losses: dict[tuple, list[float]] = defaultdict(list)
-    for gid, _ in storage.index():
+    index = storage.index()
+    task.step(0, len(index), "Reading your reviews")
+    for i, (gid, _) in enumerate(index):
+        task.step(i)
         r = storage.load(gid)
         if not r or not r.get("me") or r.get("startFen") != chess.STARTING_FEN:
             continue
@@ -163,9 +174,15 @@ def build(family: str, color: str) -> dict:
     names = openings.book()
     me = chess.WHITE if color == "w" else chess.BLACK
 
+    with progress.track("repertoire", "Checking your moves with the engine", MAX_PLY + 1) as task:
+        return _build_tree(family, color, seen_moves, losses, book_next, root, names, me, task)
+
+
+def _build_tree(family: str, color: str, seen_moves, losses, book_next, root, names, me, task: progress.Task) -> dict:
     nodes: dict[str, dict] = {}
     level = [(chess.Board(), None, None, "")]
     for ply in range(MAX_PLY + 1):
+        task.step(ply)
         if not level:
             break
         # 1) create nodes for this level

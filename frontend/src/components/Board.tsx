@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { forwardRef, useEffect, useImperativeHandle, useReducer, useRef, useState } from 'react'
 import { CLS, ClassIcon } from '../lib/classes'
 import { cgColor, dests, needsPromotion, squareXY, turnOf } from '../lib/chess'
+import { getBoardZoom, MAX_ZOOM, MIN_ZOOM, setBoardZoom, useBoardZoom } from '../lib/boardZoom'
 import type { Cls, Color } from '../lib/types'
 
 const brushes = {
@@ -42,6 +43,8 @@ export interface BoardProps {
   tints?: { square: string; color: string; ring?: string; ringWidth?: number }[]
   /** Mouse wheel over the board steps through the moves (sends ← / → like the keyboard). */
   wheelSteps?: boolean
+  /** Show the grip on the bottom-right corner that resizes the board (the size is shared by every board). */
+  resizable?: boolean
 }
 
 export interface BoardHandle { badgeRect(): DOMRect | null }
@@ -185,6 +188,7 @@ export const Board = forwardRef<BoardHandle, BoardProps>(function Board(props, r
   return (
     <div ref={wrap} className="board-frame relative aspect-square w-full select-none" style={{ ['--lm' as string]: lmColor }}>
       <div ref={el} className="cg-wrap" />
+      {props.resizable && <ResizeGrip board={wrap} />}
 
       {props.tints?.map(t => {
         const p = squareXY(t.square, props.orientation)
@@ -285,4 +289,54 @@ declare module 'react' {
       piece: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
     }
   }
+}
+
+/**
+ * The corner grip: drag to resize the board (as on Lichess), double-click for the largest size, or use the
+ * arrow keys when it has focus. The size scales the largest board that fits, so it suits every page.
+ */
+function ResizeGrip({ board }: { board: React.RefObject<HTMLDivElement | null> }) {
+  const zoom = useBoardZoom()
+  const drag = useRef<{ x: number; y: number; width: number } | null>(null)
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0 || !board.current) return
+    e.preventDefault()
+    e.stopPropagation()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    drag.current = { x: e.clientX, y: e.clientY, width: board.current.getBoundingClientRect().width }
+  }
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current
+    if (!d || !board.current) return
+    // Where the corner should be: the board grows by the pointer's average x/y movement.
+    const target = d.width + ((e.clientX - d.x) + (e.clientY - d.y)) / 2
+    const now = board.current.getBoundingClientRect().width
+    if (now > 0) setBoardZoom(getBoardZoom() * target / now, false)
+  }
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current) return
+    drag.current = null
+    e.currentTarget.releasePointerCapture(e.pointerId)
+    setBoardZoom(getBoardZoom())
+  }
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const step = { ArrowUp: 0.05, ArrowRight: 0.05, ArrowDown: -0.05, ArrowLeft: -0.05 }[e.key]
+    if (step !== undefined) setBoardZoom(zoom + step)
+    else if (e.key === 'Home') setBoardZoom(MIN_ZOOM)
+    else if (e.key === 'End') setBoardZoom(MAX_ZOOM)
+    else return
+    e.preventDefault()
+    e.stopPropagation()  // the arrow keys step through the moves elsewhere on the page
+  }
+
+  return (
+    <div role="slider" tabIndex={0} aria-label="Board size" aria-valuemin={Math.round(MIN_ZOOM * 100)}
+      aria-valuemax={Math.round(MAX_ZOOM * 100)} aria-valuenow={Math.round(zoom * 100)} aria-valuetext={`${Math.round(zoom * 100)} %`}
+      title="Drag to resize the board · double-click for the largest size"
+      className="board-grip" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp} onDoubleClick={() => setBoardZoom(MAX_ZOOM)} onKeyDown={onKeyDown}>
+      <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M11 3 3 11M11 7 7 11" /></svg>
+    </div>
+  )
 }

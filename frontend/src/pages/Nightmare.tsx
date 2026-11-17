@@ -7,6 +7,7 @@ import { Board } from '../components/Board'
 import { MaterialDiff } from '../components/MaterialDiff'
 import { EvalBar } from '../components/EvalBar'
 import { Button, Card, ErrorNote, PageHeader, PageSkeleton, Segmented, Spinner } from '../components/ui'
+import { LoadingNotice } from '../components/LoadingNotice'
 import { api } from '../lib/api'
 import { go, leave, replace } from '../lib/router'
 import { playUci, uciSquares } from '../lib/chess'
@@ -447,7 +448,7 @@ function ConvertTab({ level, stats, onPlay }: { level: number; stats?: BotProgre
       </Card>
 
       {error && <ErrorNote>{error}</ErrorNote>}
-      {!spots && !error && <div className="flex items-center gap-2 py-10 text-sm text-ink-400"><Spinner size={16} /> Looking through your games…</div>}
+      {!spots && !error && <LoadingNotice compact title="Looking through your games for won positions you lost" tasks={['insights', 'summaries']} />}
       {spots && spots.length === 0 && (
         <Card className="p-6 text-sm text-ink-400">
           {doneCount > 0
@@ -894,13 +895,13 @@ function PlayView({ game, setGame, onSummary, onExit }: {
 
   return (
     <div className="mx-auto flex max-w-[1400px] flex-col gap-5 p-4 lg:flex-row lg:p-6">
-      <div className="mx-auto w-full max-w-[min(100%,calc(100vh-150px))] lg:mx-0">
+      <div className="mx-auto w-full max-w-[calc(min(100%,calc(100vh-150px))*var(--board-zoom,1))] lg:mx-0">
         {sideBar(opp, game.focus === 'off' ? `Maia ${game.level}` : `Nightmare · Maia ${game.level}`,
           game.focus === 'off' ? <Bot size={15} className="text-accent" /> : <Skull size={15} className="text-blunder" />, thinking)}
         <div className="relative flex gap-2">
           {analysing && <div className="w-3 shrink-0 sm:w-4"><EvalBar ev={engine?.eval ?? { cp: 0 }} orientation={game.color} /></div>}
           <div className={clsx('board-frame aspect-square w-full min-w-0 transition', browsing && !game.over && !exploring && 'opacity-90')}>
-            <Board wheelSteps fen={shownChess.fen()} orientation={game.color} movable={game.over || exploring ? true : yourTurn && !thinking && !browsing}
+            <Board wheelSteps resizable fen={shownChess.fen()} orientation={game.color} movable={game.over || exploring ? true : yourTurn && !thinking && !browsing}
               premove={game.over || exploring || browsing ? undefined : game.color}
               lastMove={lastShown ? uciSquares(lastShown) : null} onMove={onMove}
               lastMoveColor={shownMark ? CLS[shownMark.cls].color : undefined} badge={badge}

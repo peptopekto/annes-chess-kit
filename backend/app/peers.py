@@ -26,7 +26,7 @@ import chess
 
 from . import classify as C
 from . import concepts as K
-from . import insights, positional, storage, tactics
+from . import insights, positional, progress, storage, tactics
 from .config import USERDATA, my_names, write_atomic
 
 BAND = 100            # "your level": opponents within this many points of your rating in that game
@@ -175,21 +175,24 @@ def _all_facts() -> list[dict]:
         if not _loaded:
             _load_disk()
         out, live, dirty = [], set(), False
-        for gid, mtime in storage.index():
-            live.add(gid)
-            hit = _cache.get(gid)
-            if hit and hit[0] == mtime:
-                f = hit[1]
-            else:
-                try:
-                    record = storage.load(gid)
-                    f = facts(record) if record else None
-                except Exception:  # one odd review must not take the page down
-                    f = None
-                _cache[gid] = (mtime, f)
-                dirty = True
-            if f:
-                out.append(f)
+        index = storage.index()
+        with progress.track("peers", "Measuring both players of every game", len(index)) as task:
+            for i, (gid, mtime) in enumerate(index):
+                task.step(i)
+                live.add(gid)
+                hit = _cache.get(gid)
+                if hit and hit[0] == mtime:
+                    f = hit[1]
+                else:
+                    try:
+                        record = storage.load(gid)
+                        f = facts(record) if record else None
+                    except Exception:  # one odd review must not take the page down
+                        f = None
+                    _cache[gid] = (mtime, f)
+                    dirty = True
+                if f:
+                    out.append(f)
         for gone in set(_cache) - live:
             del _cache[gone]
             dirty = True

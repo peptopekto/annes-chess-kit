@@ -115,13 +115,13 @@ export function SafetyPlay({ mode = 'mixed', count = 20 }: { mode?: string; coun
   return (
     <div className="mx-auto flex h-full max-w-[1300px] flex-col gap-4 p-4 lg:flex-row lg:items-start lg:p-6">
       <div className="flex min-w-0 flex-1 justify-center">
-        <div className="flex flex-col gap-3" style={{ width: 'min(100%, calc(100vh - 7rem))' }}>
+        <div className="flex flex-col gap-3" style={{ width: 'calc(min(100%, calc(100vh - 7rem)) * var(--board-zoom, 1))' }}>
           <div className="flex items-center gap-3 px-1">
             <span className={clsx('size-4 rounded ring-1 ring-white/30', orientation === 'w' ? 'bg-white' : 'bg-ink-950')} />
             <span className="font-display text-lg font-semibold">You are {orientation === 'w' ? 'White' : 'Black'}</span>
             <MaterialBalance fen={fen} className="ml-auto" />
           </div>
-          <Board ref={board} fen={fen} orientation={orientation} shapes={shapes} lastMove={lastMove}
+          <Board resizable ref={board} fen={fen} orientation={orientation} shapes={shapes} lastMove={lastMove}
             lastMoveColor={lmColor} highlight={highlight} />
         </div>
       </div>

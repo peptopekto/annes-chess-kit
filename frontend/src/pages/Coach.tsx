@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react'
 import { Board } from '../components/Board'
 import { drill } from '../components/insights/drill'
 import { TrainingCard } from '../components/training/TrainingCard'
-import { Button, Card, CardsSkeleton, ErrorNote, PageHeader, Skeleton } from '../components/ui'
+import { Button, Card, ErrorNote, PageHeader } from '../components/ui'
+import { LoadingNotice } from '../components/LoadingNotice'
 import { api } from '../lib/api'
 import { turnOf, uciSquares } from '../lib/chess'
 import { go } from '../lib/router'
@@ -24,11 +25,8 @@ export function CoachPage() {
       <TrainingCard />
       {error && <ErrorNote>{error}</ErrorNote>}
       {!report && !error && (
-        <div className="space-y-4">
-          <Skeleton className="h-28 rounded-2xl" />
-          <CardsSkeleton count={3} className="grid gap-4" h="h-64" />
-          <p className="text-center text-xs text-ink-500">Going through all your reviewed games – the first time takes a little while.</p>
-        </div>
+        <LoadingNotice title="Putting together your training plan" tasks={['insights', 'summaries']}
+          note="Going through all your reviewed games. The first time takes a little while; after that the page opens straight away." />
       )}
       {report && report.games === 0 && <Card className="p-8 text-center text-ink-300">Review some of your games first – the coach learns from them.</Card>}
       {report && report.games > 0 && <Report r={report} />}

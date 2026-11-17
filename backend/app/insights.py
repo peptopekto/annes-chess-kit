@@ -20,7 +20,7 @@ import chess.pgn
 
 from . import classify as C
 from . import habits, tactics
-from . import storage
+from . import progress, storage
 from .config import USERDATA, my_names, write_atomic
 
 ERRORS = {C.INACCURACY, C.MISTAKE, C.MISS, C.BLUNDER}
@@ -77,6 +77,32 @@ def _clocks(pgn: str) -> list[float | None]:
     if game is None:
         return []
     return [node.clock() for node in game.mainline()]
+
+
+def move_times(record: dict) -> dict | None:
+    """Seconds spent on every move and the clock left after it, from the PGN's [%clk] comments.
+
+    One entry per move (None where the PGN has no clock for it); None for games without clocks and for
+    daily games, whose clocks count days."""
+    tc = (record.get("headers", {}).get("TimeControl") or record.get("timeControl") or "").strip()
+    if "/" in tc:
+        return None
+    try:
+        base = float(tc.split("+")[0]) if tc and tc not in ("-", "?") else None
+    except ValueError:
+        base = None
+    inc = _increment(tc)
+    n = len(record.get("moves", []))
+    clocks = _clocks(record.get("pgn", ""))[:n]
+    if not any(c is not None for c in clocks):
+        return None
+    spent, left = [], []
+    for i in range(n):
+        c = clocks[i] if i < len(clocks) else None
+        prev = clocks[i - 2] if i >= 2 else base  # this side's clock after its previous move
+        left.append(round(c, 1) if c is not None else None)
+        spent.append(round(max(0.0, prev - c + inc), 1) if c is not None and prev is not None else None)
+    return {"spent": spent, "clock": left, "base": base, "inc": inc}
 
 
 def _phase(board: chess.Board, fullmove: int, cls: str) -> str:
@@ -250,21 +276,24 @@ def _games_locked() -> list["Game"]:
         _load_disk_cache()
     names = frozenset(my_names())
     out, live, dirty = [], set(), False
-    for gid, mtime in storage.index():
-        live.add(gid)
-        cached = _cache.get(gid)
-        if cached and cached[0] == (mtime, names):
-            g = cached[1]
-        else:
-            try:
-                record = storage.load(gid)
-            except ValueError:
-                record = None
-            g = _build(record) if record else None
-            _cache[gid] = ((mtime, names), g)
-            dirty = True
-        if g:
-            out.append(g)
+    index = storage.index()
+    with progress.track("insights", "Reading your reviews", len(index)) as task:
+        for i, (gid, mtime) in enumerate(index):
+            task.step(i)
+            live.add(gid)
+            cached = _cache.get(gid)
+            if cached and cached[0] == (mtime, names):
+                g = cached[1]
+            else:
+                try:
+                    record = storage.load(gid)
+                except ValueError:
+                    record = None
+                g = _build(record) if record else None
+                _cache[gid] = ((mtime, names), g)
+                dirty = True
+            if g:
+                out.append(g)
     for gone in set(_cache) - live:
         del _cache[gone]
         dirty = True

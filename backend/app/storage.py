@@ -13,6 +13,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from . import progress
 from .config import GAMES_DIR, my_names, write_atomic
 
 SUMMARY_KEYS = ("id", "white", "black", "whiteElo", "blackElo", "result", "date", "timeControl",
@@ -178,11 +179,13 @@ def _entries() -> list[tuple[dict, list[dict]]]:
             _load_disk_cache()
         live = {gid for gid, _ in idx}
         out, changed = [], False
-        for gid, mtime in idx:
-            e, read = _entry(gid, mtime)
-            changed |= read
-            if e:
-                out.append(e)
+        with progress.track("summaries", "Reading your game list", len(idx)) as task:
+            for i, (gid, mtime) in enumerate(idx):
+                task.step(i)
+                e, read = _entry(gid, mtime)
+                changed |= read
+                if e:
+                    out.append(e)
         with _cache_lock:
             for gone in set(_cache) - live:
                 del _cache[gone]

@@ -14,7 +14,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTex
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import __version__, analysis, botprogress, cards, coach, endgames, engine, habits, importers, insights, jobs, library, nightmare, openings, peers, pieces, positional, recheck, repertoire, safety, stats, storage, tactics, training, upgrade, woodpecker
+from . import __version__, analysis, botprogress, cards, coach, endgames, engine, habits, importers, insights, jobs, library, nightmare, openings, peers, pieces, positional, progress, recheck, repertoire, safety, stats, storage, tactics, training, upgrade, woodpecker
 from .config import FRONTEND_DIST, USERDATA, load_settings, save_settings
 
 
@@ -294,6 +294,10 @@ def get_game(game_id: str):
     record["end"] = analysis.game_end(record)
     record = coach.enrich(positional.enrich(tactics.enrich(record)), record["end"])
     record["habits"] = habits.game_habits(record)
+    try:
+        record["moveTimes"] = insights.move_times(record)
+    except (ValueError, KeyError):
+        record["moveTimes"] = None  # a PGN the clock reader can't follow: the review works without it
     return record
 
 
@@ -515,6 +519,12 @@ def bot_games():
 
 
 # ----- you vs the players at your rating -----
+@app.get("/api/progress")
+def progress_report():
+    """Slow library-wide jobs that are running right now (pages show them while they load)."""
+    return {"tasks": progress.snapshot()}
+
+
 @app.get("/api/peers")
 def peers_report(tc: str = "all", last: int = 0, band: int = peers.BAND, platform: str = "all"):
     return peers.compute(tc=tc, last=last, band=band, platform=platform)

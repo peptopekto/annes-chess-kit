@@ -15,7 +15,7 @@ export function coachLine(game: GameRecord): string {
   const you = game.me ? 'You' : (side === 'w' ? game.white : game.black)
   const b = c.brilliant ?? 0
   const g = c.great ?? 0
-  if (b > 1) return `${you} found ${b} brilliant moves. Absolute magic! ✨`
+  if (b > 1) return `${you} found ${b} brilliant moves. Absolute magic!`
   if (b === 1) return `${you} found a brilliant move! Let's go see it.`
   if (g > 0 && acc >= 80) return `${g} great move${g > 1 ? 's' : ''} and ${acc.toFixed(0)}% accuracy. Sharp game!`
   if (acc >= 90) return 'Super clean game. The engine barely had notes.'

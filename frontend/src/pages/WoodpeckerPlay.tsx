@@ -500,7 +500,7 @@ export function WoodpeckerPlay({ id }: { id: string }) {
   return (
     <div className="mx-auto flex h-full max-w-[1300px] flex-col gap-4 p-4 lg:flex-row lg:items-start lg:p-6">
       <div className="flex min-w-0 flex-1 justify-center">
-        <div className="flex flex-col gap-3" style={{ width: 'min(100%, calc(100vh - 7rem))' }}>
+        <div className="flex flex-col gap-3" style={{ width: 'calc(min(100%, calc(100vh - 7rem)) * var(--board-zoom, 1))' }}>
           <div className="flex items-center gap-3 px-1">
             <span className={clsx('size-4 rounded ring-1 ring-white/30', orientation === 'w' ? 'bg-white' : 'bg-ink-950')} />
             <span className="font-display text-lg font-semibold">{orientation === 'w' ? 'White' : 'Black'} to move</span>
@@ -511,7 +511,7 @@ export function WoodpeckerPlay({ id }: { id: string }) {
           <div className="flex gap-3">
           <EvalSlot ev={evNow} orientation={orientation} />
           <motion.div key={shake} className="min-w-0 flex-1" animate={shake ? { x: [0, -10, 10, -7, 7, 0] } : {}} transition={{ duration: 0.4 }}>
-            <Board wheelSteps ref={board} fen={fen} orientation={orientation} lastMove={lastUci ? uciSquares(lastUci) : null}
+            <Board wheelSteps resizable ref={board} fen={fen} orientation={orientation} lastMove={lastUci ? uciSquares(lastUci) : null}
               lastMoveColor={view === null ? lmColor : undefined}
               movable={drafting ? !still && feedback !== 'checking'
                 : view === null && !p.solved && playerTurn && feedback !== 'checking' && p.moveIndex > 0 && p.retryFrom == null}
@@ -687,7 +687,7 @@ function PreviousPuzzle({ index, total, puzzle, state, orientation: initial, onB
   return (
     <div className="mx-auto flex h-full max-w-[1300px] flex-col gap-4 p-4 lg:flex-row lg:items-start lg:p-6">
       <div className="flex min-w-0 flex-1 justify-center">
-        <div className="flex flex-col gap-3" style={{ width: 'min(100%, calc(100vh - 7rem))' }}>
+        <div className="flex flex-col gap-3" style={{ width: 'calc(min(100%, calc(100vh - 7rem)) * var(--board-zoom, 1))' }}>
           <div className="flex items-center gap-3 px-1">
             <span className="font-display text-lg font-semibold">Puzzle {index + 1}</span>
             <span className="rounded-md bg-great/15 px-2 py-0.5 text-xs font-bold text-great">Looking back {shown}/{last}</span>
@@ -695,7 +695,7 @@ function PreviousPuzzle({ index, total, puzzle, state, orientation: initial, onB
           </div>
           <div className="flex gap-3">
             <EvalSlot ev={ev} orientation={orientation} />
-            <div className="min-w-0 flex-1"><Board fen={fen} orientation={orientation} lastMove={lastUci ? uciSquares(lastUci) : null} movable={false} /></div>
+            <div className="min-w-0 flex-1"><Board resizable fen={fen} orientation={orientation} lastMove={lastUci ? uciSquares(lastUci) : null} movable={false} /></div>
           </div>
         </div>
       </div>

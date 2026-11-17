@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.0.2
+
+New:
+
+- Move times in the review: a chart under the evaluation graph shows how long each move took (White above,
+  Black below, key moves in their rating colour). Hover for the time a move took, click to jump to it.
+  Toggle with the clock button or T. Needs clock data in the PGN (Chess.com and Lichess exports have it).
+- Resizable board in every mode: drag the grip at the board's corner (or use the arrow keys on it);
+  double-click resets. The size is shared by all pages and remembered.
+- Loading notices with progress bars: pages that go through all your games (My mistakes, Coach, My
+  progress, Compared to others, Openings, converting won positions) now say what they are doing and how
+  far they are ("Reading your reviews: 812 of 2,712"), instead of showing empty placeholders.
+
+Fixes:
+
+- Time-control icons in the game library follow the usual symbols: a bullet for bullet, lightning for
+  blitz, a rabbit for rapid, a turtle for classical (bullet used a rabbit and blitz a flame before).
+- No emojis in the app's messages any more (the review summary and My mistakes had one each).
+
+Project page and README:
+
+- The review screenshot and the social preview image show a made-up opponent name instead of a real one.
+- New project page and README: what the kit offers that is usually paid elsewhere, with new screenshots of
+  the analysis pages and a new social preview image (upload `docs/img/social.png` under Settings > Social
+  preview on GitHub after pushing).
+
+Tests:
+
+- New tests for move times and the progress reports.
+
 ## 1.0.1
 
 Fixes:

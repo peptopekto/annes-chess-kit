@@ -4,22 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <title>Anne's Chess Kit – chess review and training on your own computer</title>
-  <meta name="description" content="Chess game review and training that runs on your own computer. Import games from Chess.com, Lichess or PGN; Stockfish rates every move. Free software, GPL-3.0.">
+  <title>Anne's Chess Kit – free chess game review and training</title>
+  <meta name="description" content="Review every game you play and train on your own mistakes. Move ratings, coach explanations, insights, puzzles from your games and a human-like training bot – free, unlimited and on your own computer.">
   <!-- Repository used for links when the page is not served from <owner>.github.io/<repo>/ -->
   <meta name="repository" content="peptopekto/annes-chess-kit">
-  <meta property="og:title" content="Anne's Chess Kit">
-  <meta property="og:description" content="Free chess game review and training from your own games. Runs on your computer, no account.">
+  <meta property="og:title" content="Anne's Chess Kit – free chess game review and training">
+  <meta property="og:description" content="Unlimited game reviews, coach explanations, insights and puzzles from your own mistakes. Free and open source, runs on your computer.">
   <meta property="og:image" content="https://peptopekto.github.io/annes-chess-kit/img/social.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<a class="skip" href="#main">Skip to content</a>
 
 <header class="top">
   <div class="wrap top-inner">
@@ -27,127 +29,174 @@
       <span class="mark" aria-hidden="true">!!</span>
       <span>Anne&rsquo;s Chess Kit</span>
     </a>
-    <nav>
-      <a href="#features">Features</a>
-      <a href="#ratings">Move ratings</a>
+    <nav aria-label="Page">
+      <a href="#free">What&rsquo;s free</a>
+      <a href="#tour">Tour</a>
+      <a href="#training">Training</a>
       <a href="#install">Install</a>
       <a data-gh="" href="#">GitHub</a>
     </nav>
   </div>
 </header>
 
-<main>
+<main id="main">
 
+  <!-- Hero ------------------------------------------------------------------>
   <section class="hero wrap">
-    <p class="kicker mono">v1.0.1 &middot; free and open source (GPL-3.0) &middot; Windows, macOS, Linux</p>
-    <h1>Chess game review and training that runs on your own computer.</h1>
-    <p class="lede">
-      Import your games from Chess.com, Lichess or a PGN file. Stockfish rates every move, explains what went
-      wrong and shows the better line. Your own mistakes then become training material: puzzle sets solved by
-      calculation, a blunder-check trainer, an opening trainer, endgame drills and a human-like opponent that
-      coaches you while you play.
+    <div class="hero-text">
+      <p class="version">Version 1.0.2 for Windows, macOS and Linux. Free software (GPL-3.0).</p>
+      <h1>Review every game you play. Train on your own mistakes.</h1>
+      <p class="lede">
+        Move ratings from Brilliant to Blunder, an explanation for every move, insights across your whole
+        history and puzzles made from your own errors. What chess sites sell as premium, without limits, on
+        your own computer.
+      </p>
+      <div class="actions">
+        <a class="btn primary" data-gh="releases/latest" href="#">Download for Windows</a>
+        <a class="btn" href="#free">See what&rsquo;s free</a>
+      </div>
+      <p class="req">Installer or portable zip. Stockfish, Lc0 and the Maia networks included; no account needed.</p>
+    </div>
+    <figure class="shot hero-shot">
+      <a href="img/review.webp"><img src="img/review.webp" width="2880" height="1800"
+        alt="Game review: a move rated brilliant on the board, the coach card explaining it, the evaluation graph and the rated move list."></a>
+    </figure>
+  </section>
+
+  <!-- Free here, paid elsewhere -------------------------------------------->
+  <section id="free" class="wrap section">
+    <h2>Free here, paid elsewhere</h2>
+    <p class="intro">
+      Most of what helps you improve is behind a subscription on the big sites, or capped per day.
+      Here it all runs on your own machine, so there is nothing to meter.
     </p>
-    <p class="lede">No account, no usage limits, nothing uploaded. Games and reviews stay on your machine.</p>
-    <div class="actions">
-      <a class="btn primary" data-gh="releases/latest" href="#">Download for Windows</a>
-      <a class="btn" data-gh="" href="#">Source on GitHub</a>
-    </div>
-    <p class="req mono">Windows 10/11: installer or portable zip, engines included. macOS and Linux: run from source.</p>
-  </section>
 
-  <figure class="shot hero-shot wrap">
-    <a href="img/review.webp"><img src="img/review.webp" width="2880" height="1800"
-      alt="Game review: board with a move rated brilliant, the coach card explaining it, the evaluation graph and the move list."></a>
-    <figcaption>Game review. Each move gets a rating, a short explanation and the engine's preferred line.</figcaption>
-  </figure>
+    <div class="sheet" role="table" aria-label="Comparison of premium chess services with Anne's Chess Kit">
+      <div class="sheet-head" role="row">
+        <span role="columnheader">Feature</span>
+        <span role="columnheader">Other premium services</span>
+        <span role="columnheader">Anne&rsquo;s Chess Kit</span>
+      </div>
 
-  <section id="features" class="wrap section">
-    <h2>Features</h2>
-    <div class="cols">
-      <div>
-        <h3>Review</h3>
-        <ul>
-          <li>Move ratings from Brilliant to Blunder, accuracy per side, evaluation bar and clickable evaluation graph.</li>
-          <li>An explanation for every move: the threat it created or allowed, the punishing reply, what it cost and what was better.</li>
-          <li>Retry your mistakes, play through the best line, explore your own variations with live engine lines.</li>
-          <li>Annotated PGN export and re-analysis at a higher depth.</li>
-        </ul>
+      <div class="sheet-row" role="row">
+        <span class="feat" role="rowheader">Full game review: move ratings, accuracy, best lines</span>
+        <span class="them" role="cell"><b class="glyph dubious" aria-label="limited">?!</b>One full review a day on the free tier; unlimited only on paid plans</span>
+        <span class="us" role="cell"><b class="glyph brilliant" aria-label="included">!!</b>Every game, reviewed in the background while you do something else</span>
       </div>
-      <div>
-        <h3>Your games</h3>
-        <ul>
-          <li>Imports your full Chess.com or Lichess history once; later syncs fetch only new games.</li>
-          <li>Batch analysis in the background, using as many CPU threads as you allow.</li>
-          <li>Progress: record, rating history, accuracy trends, personal records.</li>
-          <li>Insights and Coach: where you lose points by phase, piece, clock, opening and tactic, and the habits behind it, each with a drill of those positions.</li>
-        </ul>
+      <div class="sheet-row" role="row">
+        <span class="feat" role="rowheader">An explanation for every move</span>
+        <span class="them" role="cell"><b class="glyph dubious" aria-label="limited">?!</b>Only on the top-tier plan</span>
+        <span class="us" role="cell"><b class="glyph brilliant" aria-label="included">!!</b>Every move: the threat it made or allowed, what it cost, what was better</span>
       </div>
-      <div>
-        <h3>Training</h3>
-        <ul>
-          <li>Opening trainer built from opening theory, your own games and Stockfish.</li>
-          <li>Blunder check: decide whether a move is safe, on positions from your own games.</li>
-          <li>Woodpecker puzzle cycles from your mistakes or the Lichess puzzle database, with a calculation mode: enter the whole line before a move is played.</li>
-          <li>Endgames: basic mates, king and pawn endings, Lucena, Philidor and more, with explanations and an overlay of the squares each side controls.</li>
-          <li>Instructive bot: a Maia-based opponent at the strength you choose that rates your moves as you play, practises gambits with you and, in Nightmare mode, steers toward your weak openings and tactics.</li>
-        </ul>
+      <div class="sheet-row" role="row">
+        <span class="feat" role="rowheader">Statistics across all your games</span>
+        <span class="them" role="cell"><b class="glyph dubious" aria-label="limited">?!</b>Only on the top-tier plan</span>
+        <span class="us" role="cell"><b class="glyph brilliant" aria-label="included">!!</b>Your whole history: by phase, opening, clock, tactic, time of day, game in a session</span>
+      </div>
+      <div class="sheet-row" role="row">
+        <span class="feat" role="rowheader">Training built from your own games</span>
+        <span class="them" role="cell"><b class="glyph dubious" aria-label="limited">?!</b>A few reports of a few dozen games on the free tier; your full history and unlimited lessons as a monthly subscription</span>
+        <span class="us" role="cell"><b class="glyph brilliant" aria-label="included">!!</b>All your games, a coach that ranks your habits, and a drill for each one</span>
+      </div>
+      <div class="sheet-row" role="row">
+        <span class="feat" role="rowheader">Puzzles</span>
+        <span class="them" role="cell"><b class="glyph dubious" aria-label="limited">?!</b>3 rated puzzles a day on the free tier</span>
+        <span class="us" role="cell"><b class="glyph brilliant" aria-label="included">!!</b>Unlimited, made from your own mistakes, in Woodpecker cycles with a calculation mode</span>
+      </div>
+      <div class="sheet-row" role="row">
+        <span class="feat" role="rowheader">Games against a coaching bot</span>
+        <span class="them" role="cell"><b class="glyph dubious" aria-label="limited">?!</b>One game a month on the free tier</span>
+        <span class="us" role="cell"><b class="glyph brilliant" aria-label="included">!!</b>Unlimited, against a human-like opponent at your level that rates your moves as you play</span>
       </div>
     </div>
+
+    <p class="fine">
+      Free-tier limits of popular chess sites and training services, as they published them in November 2026.
+      Those services are good at what they do; the kit reads your games from the chess sites and adds what happens after the game.
+    </p>
   </section>
 
+  <!-- Tour ------------------------------------------------------------------>
+  <section id="tour" class="wrap section">
+    <h2>A look inside</h2>
+
+    <article class="feature">
+      <figure class="shot">
+        <a href="img/progress.webp" title="Open the full screenshot"><img src="img/tour-progress.webp" width="2380" height="1440" loading="lazy"
+          alt="Progress page: games reviewed, average accuracy, win record by colour and a rating chart per platform."></a>
+      </figure>
+      <div class="feature-text">
+        <h3>See where you stand</h3>
+        <p>Your record by colour, rating history per platform and time control, accuracy over time and your personal records, from every game you have played.</p>
+      </div>
+    </article>
+
+    <article class="feature flip">
+      <figure class="shot">
+        <a href="img/trends.webp" title="Open the full screenshot"><img src="img/tour-trends.webp" width="2380" height="1800" loading="lazy"
+          alt="Accuracy over time, and your score by game number in a session, time of day and day of the week."></a>
+      </figure>
+      <div class="feature-text">
+        <h3>Find out when you play your best</h3>
+        <p>Results by game number in a session, time of day, day of the week, after a win or a loss. Stop before the game that usually goes wrong.</p>
+      </div>
+    </article>
+
+    <article class="feature">
+      <figure class="shot">
+        <a href="img/tactics.webp" title="Open the full screenshot"><img src="img/tour-tactics.webp" width="2380" height="1500" loading="lazy"
+          alt="Accuracy by game phase, and the tactics you fell for next to the ones you missed."></a>
+      </figure>
+      <div class="feature-text">
+        <h3>Know which tactics cost you points</h3>
+        <p>Every mistake is sorted by what happened: a hanging piece, a fork, a pin, a back-rank mate. Both the tactics you fall for and the ones you miss, each with a drill of those exact positions.</p>
+      </div>
+    </article>
+
+    <article class="feature flip">
+      <figure class="shot">
+        <a href="img/openings.webp" title="Open the full screenshot"><img src="img/tour-openings.webp" width="2380" height="1470" loading="lazy"
+          alt="Opening trainer: positions from your repertoire where your usual move goes wrong, with the better move as an arrow."></a>
+      </figure>
+      <div class="feature-text">
+        <h3>Fix your openings where they actually break</h3>
+        <p>The opening trainer finds the positions where your usual move goes wrong, from your own games, the Lichess opening book and Stockfish, and makes you play the better move until it sticks.</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- Training -------------------------------------------------------------->
+  <section id="training" class="wrap section">
+    <h2>Training made from your games</h2>
+    <p class="intro">Each trainer works on positions from your own games, so you practise the mistakes you actually make.</p>
+    <dl class="trainers">
+      <div><dt>Coach</dt><dd>Ranks your habits by what they cost you lately, such as moving too fast or not punishing a mistake, and gives a daily plan.</dd></div>
+      <div><dt>Puzzles</dt><dd>Woodpecker cycles from your mistakes or the Lichess puzzle database. In calculation mode you enter the whole line before a move is played.</dd></div>
+      <div><dt>Blunder check</dt><dd>Decide whether a move is safe before you play it, on positions where you once gave material away.</dd></div>
+      <div><dt>Instructive bot</dt><dd>A human-like Maia opponent at the strength you choose. It rates your moves as you play, practises gambits with you, and lets you convert your own won positions.</dd></div>
+      <div><dt>Nightmare mode</dt><dd>The same bot, steering toward your weakest openings and the tactics you miss most.</dd></div>
+      <div><dt>Endgames</dt><dd>Basic mates, king and pawn endings, Lucena, Philidor and more, with explanations and an overlay of the squares each side controls.</dd></div>
+    </dl>
+  </section>
+
+  <!-- Privacy --------------------------------------------------------------->
   <section class="wrap section">
-    <div class="gallery">
-      <figure class="shot">
-        <a href="img/progress.webp"><img src="img/progress.webp" width="2880" height="1800" loading="lazy"
-          alt="Progress page with games reviewed, average accuracy, win record and a rating chart per platform."></a>
-        <figcaption>My progress: record, rating and accuracy over time</figcaption>
-      </figure>
-      <figure class="shot">
-        <a href="img/trends.webp"><img src="img/trends.webp" width="2880" height="1800" loading="lazy"
-          alt="Accuracy over time chart, and results by game number in a session, time of day and day of the week."></a>
-        <figcaption>When you play best: accuracy over time, sessions, time of day</figcaption>
-      </figure>
-      <figure class="shot">
-        <a href="img/tactics.webp"><img src="img/tactics.webp" width="2880" height="1800" loading="lazy"
-          alt="Accuracy by game phase, and bar charts of the tactics fallen for and the tactics missed."></a>
-        <figcaption>By game phase, and the tactics you fall for or miss</figcaption>
-      </figure>
-      <figure class="shot">
-        <a href="img/openings.webp"><img src="img/openings.webp" width="2880" height="1800" loading="lazy"
-          alt="Opening trainer showing the positions where the usual move goes wrong, with the better move as an arrow."></a>
-        <figcaption>Opening trainer: where your repertoire goes wrong</figcaption>
-      </figure>
+    <h2>Your games stay on your computer</h2>
+    <div class="cols two">
+      <p>
+        There is no account and no server. The program goes online only to fetch your games from the public
+        Chess.com and Lichess APIs, and to download extra piece sets if you ask for them. Reviews, games and training
+        records live in the <code>userdata</code> folder next to the program.
+      </p>
+      <p>
+        Analysis runs on your own processor: one engine per CPU thread, about 40 positions a second at depth 16
+        on an 8-core desktop. A history of a few thousand games is reviewed in the background in hours, not
+        weeks of daily limits.
+      </p>
     </div>
   </section>
 
-  <section id="ratings" class="wrap section">
-    <h2>How moves are rated</h2>
-    <p>
-      Every move is measured in expected points (win probability) lost compared with Stockfish's best move.
-      The win-probability curve depends on rating: at 1000 a +2 position is far from won, so the curve is flatter
-      for lower ratings. The played move is searched from the same position and depth as the best move, so a game
-      gets the same ratings every time it is analysed. Accuracy uses the Lichess formula.
-    </p>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Rating</th><th>Rule</th></tr></thead>
-        <tbody>
-          <tr><td><span class="dot" style="--c:#1ee3cf"></span>Brilliant</td><td>A best or excellent move that really sacrifices material: in the engine line you stay at least two pawns down for more than one move, or the piece cannot be taken without loss. Never a king move, and not when already winning. Re-checked at depth 22+.</td></tr>
-          <tr><td><span class="dot" style="--c:#5b8cff"></span>Great</td><td>The only good move: the next-best move is clearly worse, and it is not an obvious recapture.</td></tr>
-          <tr><td><span class="dot" style="--c:#7fd858"></span>Best</td><td>The engine's top move, or one that loses less than 0.5 %.</td></tr>
-          <tr><td><span class="dot" style="--c:#5fc46e"></span>Excellent / <span class="dot" style="--c:#93b39a"></span>Good</td><td>Loses less than 2 % / 5 %, scaled by the curve.</td></tr>
-          <tr><td><span class="dot" style="--c:#f7c845"></span>Inaccuracy</td><td>Loses less than 10 %.</td></tr>
-          <tr><td><span class="dot" style="--c:#ff9a3d"></span>Mistake</td><td>Loses less than 20 %.</td></tr>
-          <tr><td><span class="dot" style="--c:#ff3d55"></span>Blunder</td><td>Loses 20 % or more. Allowing a forced mate is always a blunder, even in a lost position.</td></tr>
-          <tr><td><span class="dot" style="--c:#ff6b81"></span>Miss</td><td>Letting a forced mate slip, or failing to punish the opponent's mistake without leaving yourself worse off than before it. A move that makes your own position worse, or hangs material, stays a mistake or blunder.</td></tr>
-          <tr><td><span class="dot" style="--c:#d0a272"></span>Book</td><td>The position is in the Lichess opening book.</td></tr>
-          <tr><td><span class="dot" style="--c:#94a3b8"></span>Forced</td><td>The only legal move.</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="note">Source: <a data-gh="blob/main/backend/app/classify.py" href="#" class="mono">backend/app/classify.py</a></p>
-  </section>
-
+  <!-- Install --------------------------------------------------------------->
   <section id="install" class="wrap section">
     <h2>Install</h2>
     <div class="cols two">
@@ -155,13 +204,12 @@
         <h3>Windows</h3>
         <ol>
           <li>From the <a data-gh="releases/latest" href="#">latest release</a>, download
-              <code>AnnesChessKit-X.Y.Z-setup.exe</code> (installer, no administrator rights needed) or
+              <code>AnnesChessKit-X.Y.Z-setup.exe</code> (no administrator rights needed) or
               <code>AnnesChessKit-X.Y.Z-windows.zip</code> (portable: unpack anywhere).</li>
-          <li>Start it from the Start menu, or with <code>AnnesChessKit.exe</code> in the unpacked folder. Python,
-              Stockfish, Lc0 and the Maia networks are included.</li>
-          <li>Windows SmartScreen may warn because the program isn't code-signed: choose
+          <li>Start it from the Start menu, or with <code>AnnesChessKit.exe</code> in the unpacked folder.</li>
+          <li>Windows SmartScreen may warn because the program isn&rsquo;t code-signed: choose
               <em>More info</em>, then <em>Run anyway</em>.</li>
-          <li>Enter your Chess.com and/or Lichess username in Settings.</li>
+          <li>Enter your Chess.com and/or Lichess username in Settings. Your games import and get reviewed in the background.</li>
         </ol>
       </div>
       <div>
@@ -173,53 +221,76 @@ npm ci &amp;&amp; npm run build
 cd ..
 <span class="c"># put Stockfish into engine/</span>
 ./annes-chess-kit.sh  <span class="c"># Windows: AnnesChessKit.bat</span></code></pre>
-        <p class="note">Needs Python 3.11+ and <a href="https://stockfishchess.org/download/">Stockfish</a> 16 or newer. <code>run.py</code> options: <code>--port</code>, <code>--browser</code>, <code>--no-open</code>, <code>--keep-running</code>.</p>
+        <p class="note">Needs Python 3.11+ and <a href="https://stockfishchess.org/download/">Stockfish</a> 16 or newer. Optional: <a href="https://github.com/LeelaChessZero/lc0/releases">Lc0</a> with the <a href="https://github.com/CSSLab/maia-chess">Maia networks</a> for the bot, <a href="https://syzygy-tables.info">Syzygy tablebases</a> for exact endgames, the <a href="https://database.lichess.org/#puzzles">Lichess puzzle database</a> for more puzzles.</p>
       </div>
     </div>
+  </section>
 
-    <h3>Optional components</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Component</th><th>Location</th><th>Enables</th></tr></thead>
-        <tbody>
-          <tr><td><a href="https://github.com/LeelaChessZero/lc0/releases">Lc0</a> + <a href="https://github.com/CSSLab/maia-chess">Maia networks</a></td><td><code>engine/lc0/</code>, <code>engine/maia/</code></td><td>Nightmare, human-like defenders in Endgames</td></tr>
-          <tr><td><a href="https://syzygy-tables.info">Syzygy tablebases</a> (3–5 pieces)</td><td><code>engine/syzygy/</code></td><td>Exact play in the Endgames trainer</td></tr>
-          <tr><td><a href="https://database.lichess.org/#puzzles">Lichess puzzle database</a></td><td>path in Settings</td><td>Woodpecker sets from Lichess puzzles</td></tr>
-        </tbody>
-      </table>
+  <!-- Move ratings ---------------------------------------------------------->
+  <section id="ratings" class="wrap section">
+    <h2>How moves are rated</h2>
+    <p class="intro">
+      Every move is measured in expected points (win probability) lost against Stockfish&rsquo;s best move. The
+      win-probability curve depends on rating: at 1000 a +2 position is far from won, so the curve is flatter for
+      lower ratings. A game gets the same ratings every time it is analysed. Accuracy uses the Lichess formula.
+    </p>
+    <details class="ratings">
+      <summary>Show the rules for each rating</summary>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Rating</th><th>Rule</th></tr></thead>
+          <tbody>
+            <tr><td><span class="dot" style="--c:#1ee3cf"></span>Brilliant</td><td>A best or excellent move that really sacrifices material: in the engine line you stay at least two pawns down for more than one move, or the piece cannot be taken without loss. Never a king move, and not when already winning. Re-checked at depth 22+.</td></tr>
+            <tr><td><span class="dot" style="--c:#5b8cff"></span>Great</td><td>The only good move: the next-best move is clearly worse, and it is not an obvious recapture.</td></tr>
+            <tr><td><span class="dot" style="--c:#7fd858"></span>Best</td><td>The engine&rsquo;s top move, or one that loses less than 0.5 %.</td></tr>
+            <tr><td><span class="dot" style="--c:#5fc46e"></span>Excellent / <span class="dot" style="--c:#93b39a"></span>Good</td><td>Loses less than 2 % / 5 %, scaled by the curve.</td></tr>
+            <tr><td><span class="dot" style="--c:#f7c845"></span>Inaccuracy</td><td>Loses less than 10 %.</td></tr>
+            <tr><td><span class="dot" style="--c:#ff9a3d"></span>Mistake</td><td>Loses less than 20 %.</td></tr>
+            <tr><td><span class="dot" style="--c:#ff3d55"></span>Blunder</td><td>Loses 20 % or more. Allowing a forced mate is always a blunder, even in a lost position.</td></tr>
+            <tr><td><span class="dot" style="--c:#ff6b81"></span>Miss</td><td>Letting a forced mate slip, or failing to punish the opponent&rsquo;s mistake without leaving yourself worse off than before it.</td></tr>
+            <tr><td><span class="dot" style="--c:#d0a272"></span>Book</td><td>The position is in the Lichess opening book.</td></tr>
+            <tr><td><span class="dot" style="--c:#94a3b8"></span>Forced</td><td>The only legal move.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Source: <a data-gh="blob/main/backend/app/classify.py" href="#" class="mono">backend/app/classify.py</a></p>
+    </details>
+  </section>
+
+  <!-- FAQ ------------------------------------------------------------------->
+  <section id="faq" class="wrap section">
+    <h2>Questions</h2>
+    <div class="faq">
+      <details>
+        <summary>Is it really free? What&rsquo;s the catch?</summary>
+        <p>There is none. It is free software under the GPL v3: no ads, no account, no tracking and no paid tier. It costs nothing to run because the analysis happens on your own computer instead of on a server someone has to pay for.</p>
+      </details>
+      <details>
+        <summary>Do I need to be online?</summary>
+        <p>Only to import new games from Chess.com or Lichess. Reviewing, training and playing the bot work offline. You can also load games from a PGN file.</p>
+      </details>
+      <details>
+        <summary>How long does it take to review all my games?</summary>
+        <p>It depends on your processor and the depth you choose. At the default depth an 8-core desktop reviews about one game every few seconds, in the background; you can use the app meanwhile and set how many CPU threads it may use.</p>
+      </details>
+      <details>
+        <summary>Does it use AI or send my games anywhere?</summary>
+        <p>No. Explanations come from rules applied to the engine&rsquo;s analysis, written for the position at hand. The bot uses the open Maia networks, which run locally like Stockfish.</p>
+      </details>
+      <details>
+        <summary>Is it affiliated with Chess.com or Lichess?</summary>
+        <p>No. It is an independent open-source project that reads your public games through their APIs.</p>
+      </details>
     </div>
   </section>
 
-  <section class="wrap section">
-    <h2>Performance</h2>
-    <p>
-      The app runs one single-threaded engine per hardware thread, each working through consecutive positions so
-      its hash table carries over. That is several times faster than one multi-threaded engine at the same depth:
-      roughly 40 positions per second at depth 16 on an 8-core desktop CPU. Analysis can run to a fixed depth
-      (reproducible) or for a fixed time per move.
-    </p>
-  </section>
-
-  <section class="wrap section">
-    <h2>Data and privacy</h2>
-    <p>
-      The server listens on <code>127.0.0.1</code> only. The program goes online only to fetch your games from the
-      public Chess.com and Lichess APIs. Reviews, imported games, settings and training records live in the
-      <code>userdata/</code> folder next to the program, or wherever <code>CHESSKIT_USERDATA</code> points.
-    </p>
-  </section>
-
-  <section class="wrap section">
-    <h2>Built with</h2>
-    <p>
-      Python, FastAPI and <a href="https://github.com/niklasf/python-chess">python-chess</a> on the backend;
-      React, Vite and <a href="https://github.com/lichess-org/chessground">chessground</a> for the interface;
-      <a href="https://stockfishchess.org">Stockfish</a>, <a href="https://lczero.org">Lc0</a> and
-      <a href="https://maiachess.com">Maia</a> for analysis and play; the
-      <a href="https://github.com/lichess-org/chess-openings">Lichess opening book</a> for opening names.
-      Full list, with licences and where to find each component's source, in
-      <a data-gh="blob/main/THIRD_PARTY_NOTICES.md" href="#">THIRD_PARTY_NOTICES.md</a>.
-    </p>
+  <!-- Closing CTA ----------------------------------------------------------->
+  <section class="wrap closing">
+    <p class="closing-line">Your next game deserves a review. So do the last thousand.</p>
+    <div class="actions">
+      <a class="btn primary" data-gh="releases/latest" href="#">Download for Windows</a>
+      <a class="btn" data-gh="" href="#">Source on GitHub</a>
+    </div>
   </section>
 
 </main>
@@ -229,10 +300,14 @@ cd ..
   <p>
     Anne&rsquo;s Chess Kit is free software under the <a data-gh="blob/main/LICENSE" href="#">GNU GPL v3.0 or later</a>.
     It is an independent project and is not affiliated with or endorsed by Chess.com, Lichess or the Stockfish, Lc0 or Maia projects.
+    Built with Python, FastAPI, <a href="https://github.com/niklasf/python-chess">python-chess</a>, React,
+    <a href="https://github.com/lichess-org/chessground">chessground</a>, <a href="https://stockfishchess.org">Stockfish</a>,
+    <a href="https://lczero.org">Lc0</a> and <a href="https://maiachess.com">Maia</a>; licences in
+    <a data-gh="blob/main/THIRD_PARTY_NOTICES.md" href="#">THIRD_PARTY_NOTICES.md</a>.
   </p>
-  <p class="mono">
-    <a data-gh="" href="#">Source</a> &middot;
-    <a data-gh="issues" href="#">Issues</a> &middot;
+  <p class="foot-links">
+    <a data-gh="" href="#">Source</a>
+    <a data-gh="issues" href="#">Issues</a>
     <a data-gh="blob/main/CHANGELOG.md" href="#">Changelog</a>
   </p>
   </div></div>

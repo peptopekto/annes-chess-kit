@@ -1,7 +1,7 @@
 {
   "name": "annes-chess-kit",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Local chess game review and training – the web UI",
   "license": "GPL-3.0-or-later",
   "type": "module",

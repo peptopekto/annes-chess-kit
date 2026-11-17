@@ -1,7 +1,7 @@
 import { useVirtualizer } from '@tanstack/react-virtual'
 import clsx from 'clsx'
-import { Check, Clock, CloudDownload, Flame, Layers, Rabbit, RefreshCw, Sparkles, Sun, Trophy } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { Check, Clock, CloudDownload, Layers, Rabbit, RefreshCw, Sparkles, Sun, Trophy, Turtle, Zap } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { api, type LibSource } from '../lib/api'
 import { accuracyColor } from '../lib/chess'
 import { go } from '../lib/router'
@@ -9,7 +9,24 @@ import { openJob, refreshQueue, toast, useQueue, useReviewsTick, useSettings } f
 import type { Library, LibraryGame, QueueJob } from '../lib/types'
 import { Button, Spinner, inputCls } from './ui'
 
-const TIME_ICON: Record<string, typeof Clock> = { bullet: Rabbit, blitz: Flame, rapid: Clock, daily: Sun, classical: Clock, correspondence: Sun }
+/** A bullet, in the style of the other icons (lucide has none). */
+function Bullet({ size = 24, className }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+      strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <g transform="rotate(45 12 12)">
+        <path d="M9 19v-9a3 5.5 0 0 1 6 0v9" />
+        <path d="M8 19h8" />
+        <path d="M9 15h6" />
+      </g>
+    </svg>
+  )
+}
+
+// The usual time-control symbols (as on Chess.com and Lichess): bullet, lightning, rabbit, turtle, sun.
+const TIME_ICON: Record<string, ComponentType<{ size?: number; className?: string }>> = {
+  bullet: Bullet, blitz: Zap, rapid: Rabbit, classical: Turtle, daily: Sun, correspondence: Sun,
+}
 const STALE_SECONDS = 5 * 60 // auto-sync when the local copy is older than this
 
 type ResultFilter = 'all' | 'win' | 'loss' | 'draw'

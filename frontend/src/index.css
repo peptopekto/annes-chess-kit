@@ -122,8 +122,16 @@ h1.font-display { letter-spacing: -0.035em; }
   border-radius: 10px;
 }
 
+/* A bar that moves while the length of the wait is unknown. */
+.progress-indeterminate { animation: progress-slide 1.3s cubic-bezier(.65, 0, .35, 1) infinite; }
+@keyframes progress-slide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(300%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .progress-indeterminate { animation: none; width: 100%; opacity: .45; }
 }
 
 /* ------------------------------------------------------------------ */
@@ -140,6 +148,17 @@ cg-container { border-radius: 10px; }
   padding: 0;
   box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.07);
 }
+/* Resize grip on the board's bottom-right corner (Board `resizable`); faint until you point at the board. */
+.board-grip {
+  position: absolute; right: -7px; bottom: -7px; z-index: 25;
+  display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px;
+  background: rgba(16, 19, 29, 0.9); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+  cursor: nwse-resize; touch-action: none; opacity: 0.35; transition: opacity 0.15s;
+}
+.board-frame:hover > .board-grip, .board-grip:focus-visible, .board-grip:active { opacity: 1; }
+.board-grip:focus-visible { outline: 2px solid var(--color-accent, #1ee3cf); outline-offset: 2px; }
+.board-grip svg { width: 10px; height: 10px; stroke: rgba(230, 233, 240, 0.85); stroke-width: 1.6; stroke-linecap: round; fill: none; }
+@media (hover: none) { .board-grip { opacity: 0.8; } }
 cg-board square.last-move { background-color: var(--lm); }
 cg-board square.selected { background-color: rgba(30, 227, 207, 0.45); }
 cg-board square.move-dest {

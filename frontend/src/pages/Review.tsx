@@ -3,13 +3,14 @@ import type { DrawShape } from 'chessground/draw'
 import type { Key } from 'chessground/types'
 import {
   ArrowLeftRight, ChevronFirst, ChevronLast, ChevronLeft, ChevronRight, Copy, Cpu, Download, ExternalLink,
-  ListOrdered, MoreHorizontal, Pause, Play, RefreshCw, Sparkles, Zap,
+  ListOrdered, MoreHorizontal, Pause, Play, RefreshCw, Sparkles, Timer, Zap,
 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Board, type BoardHandle } from '../components/Board'
 import { MaterialDiff } from '../components/MaterialDiff'
 import { EvalBar } from '../components/EvalBar'
 import { EvalGraph } from '../components/EvalGraph'
+import { MoveTimeChart } from '../components/MoveTimeChart'
 import {
   alpha, CARD_HEIGHT, CoachCard, EngineLines, LineCard, MateStrip, PrincipleStrip, RetryCard, type Line, type Playout, type Retry,
 } from '../components/review/Cards'
@@ -31,6 +32,8 @@ const ENGINE_KEY = 'brilliant.engineOn'
 const readEngineOn = () => { try { return localStorage.getItem(ENGINE_KEY) === '1' } catch { return false } }
 const PRINCIPLE_KEY = 'brilliant.principleOpen'
 const readPrincipleOpen = () => { try { return localStorage.getItem(PRINCIPLE_KEY) === '1' } catch { return false } }
+const TIMES_KEY = 'brilliant.moveTimes'
+const readTimesOn = () => { try { return localStorage.getItem(TIMES_KEY) !== '0' } catch { return true } }
 
 export function Review({ id, initialPly }: { id: string; initialPly?: number }) {
   const [game, setGame] = useState<GameRecord | null>(null)
@@ -43,6 +46,7 @@ export function Review({ id, initialPly }: { id: string; initialPly?: number }) 
   const [gamePlaying, setGamePlaying] = useState(false)
   const [retry, setRetry] = useState<Retry | null>(null)
   const [engineOn, setEngineOn] = useState(readEngineOn)
+  const [timesOn, setTimesOn] = useState(readTimesOn)
   const [engineCache, setEngineCache] = useState<Record<string, EngineResult>>({})
   const [shake, setShake] = useState(0)
   const [menu, setMenu] = useState(false)
@@ -65,6 +69,7 @@ export function Review({ id, initialPly }: { id: string; initialPly?: number }) 
   }, [id, initialPly])
 
   useEffect(() => { try { localStorage.setItem(ENGINE_KEY, engineOn ? '1' : '0') } catch { /* private mode */ } }, [engineOn])
+  useEffect(() => { try { localStorage.setItem(TIMES_KEY, timesOn ? '1' : '0') } catch { /* private mode */ } }, [timesOn])
   // For the "Getting started" checklist on Home: you've opened a review.
   useEffect(() => { try { localStorage.setItem('brilliant.openedReview', '1') } catch { /* private mode */ } }, [])
   const [principleOpen, setPrincipleOpen] = useState(readPrincipleOpen)
@@ -373,6 +378,7 @@ export function Review({ id, initialPly }: { id: string; initialPly?: number }) 
       else if (e.key === 'Escape') { exitLine(); setRetry(null) }
       else if (e.key === 'f') setOrientation(o => (o === 'w' ? 'b' : 'w'))
       else if (e.key === 'e') setEngineOn(v => !v)
+      else if (e.key === 't') setTimesOn(v => !v)
       else if (e.key === 'p') setPrincipleOpen(v => !v)
     }
     window.addEventListener('keydown', onKey)
@@ -468,12 +474,12 @@ export function Review({ id, initialPly }: { id: string; initialPly?: number }) 
     <div className="mx-auto flex h-full max-w-[1400px] flex-col gap-4 p-4 lg:flex-row lg:items-start lg:p-6">
       {/* ------------------------------------------------ board column */}
       <div className="flex min-w-0 flex-1 justify-center">
-        <div className="flex flex-col gap-2" style={{ width: 'min(100%, calc(100vh - 9.5rem + 2.25rem))' }}>
+        <div className="flex flex-col gap-2" style={{ width: 'calc(min(100%, calc(100vh - 9.5rem + 2.25rem)) * var(--board-zoom, 1))' }}>
           <PlayerStrip game={game} color={top} fen={fen} />
           <div className="flex gap-3">
             <div className="hidden sm:block"><EvalBar ev={evalNow} orientation={orientation} /></div>
             <div key={shake} className={clsx('relative min-w-0 flex-1', shake > 0 && 'animate-shake')}>
-              <Board wheelSteps ref={board} fen={fen} orientation={orientation} lastMove={lastMove} lastMoveColor={lmColor}
+              <Board wheelSteps resizable ref={board} fen={fen} orientation={orientation} lastMove={lastMove} lastMoveColor={lmColor}
                 movable={movable} onMove={onMove} shapes={shapes} badge={badge} />
               {game.end && ply === moves.length && !line && !retry && <EndBadge end={game.end} />}
             </div>
@@ -492,6 +498,12 @@ export function Review({ id, initialPly }: { id: string; initialPly?: number }) 
             className={clsx(engineOn && 'bg-great/15 text-great hover:text-great')}>
             <Cpu size={16} />
           </Button>
+          {game.moveTimes && (
+            <Button variant="ghost" size="sm" title={timesOn ? 'Hide move times (T)' : 'Show move times (T)'} aria-pressed={timesOn}
+              onClick={() => setTimesOn(v => !v)} className={clsx(timesOn && 'bg-great/15 text-great hover:text-great')}>
+              <Timer size={16} />
+            </Button>
+          )}
           <Button variant="ghost" size="sm" title="Flip board (F)" onClick={() => setOrientation(o => (o === 'w' ? 'b' : 'w'))}>
             <ArrowLeftRight size={16} />
           </Button>
@@ -573,6 +585,9 @@ export function Review({ id, initialPly }: { id: string; initialPly?: number }) 
             )}
             <div className="shrink-0 px-3 pb-2">
               <EvalGraph game={game} ply={ply} onSelect={p => goTo(p)} height={76} />
+              {timesOn && game.moveTimes && (
+                <div className="mt-1.5"><MoveTimeChart game={game} ply={ply} onSelect={p => goTo(p)} height={56} /></div>
+              )}
             </div>
             <MoveList moves={moves} ply={ply} onSelect={p => goTo(p)} end={game.end} />
           </div>

@@ -5,8 +5,8 @@
 <h1 align="center">Anne's Chess Kit</h1>
 
 <p align="center">
-  <b>Chess game review and training that runs entirely on your computer.</b><br>
-  Free and open source. No account, no limits, no uploads.
+  <b>Review every game you play. Train on your own mistakes.</b><br>
+  What chess sites sell as premium, free and unlimited, on your own computer.
 </p>
 
 <p align="center">
@@ -18,6 +18,7 @@
 <p align="center">
   <a href="../../releases/latest"><b>Download for Windows</b></a> ·
   <a href="https://peptopekto.github.io/annes-chess-kit/">Project page</a> ·
+  <a href="#free-here-paid-elsewhere">What's free</a> ·
   <a href="#features">Features</a> ·
   <a href="#getting-started">Getting started</a> ·
   <a href="#how-moves-are-rated">How moves are rated</a>
@@ -29,6 +30,20 @@ Then the kit turns your own mistakes into training: recurring habits, puzzle set
 opening trainer, an endgame trainer and a human-like opponent that plays for your weaknesses.
 
 Your games and reviews stay on your machine.
+
+## Free here, paid elsewhere
+
+| | Other premium services | Anne's Chess Kit |
+|---|---|---|
+| **Full game review** (move ratings, accuracy, best lines) | One full review a day on the free tier; unlimited only on paid plans | Every game, reviewed in the background |
+| **An explanation for every move** | Only on the top-tier plan | Every move: the threat it made or allowed, what it cost, what was better |
+| **Statistics across all your games** | Only on the top-tier plan | Your whole history: by phase, opening, clock, tactic, time of day, game in a session |
+| **Training built from your own games** | A few reports of a few dozen games on the free tier; your full history as a monthly subscription | All your games, a coach that ranks your habits, and a drill for each one |
+| **Puzzles** | 3 rated puzzles a day on the free tier | Unlimited, made from your own mistakes, with a calculation mode |
+| **Games against a coaching bot** | One game a month on the free tier | Unlimited, against a human-like opponent at your level that rates your moves as you play |
+
+<sub>Free-tier limits of popular chess sites and training services, as they published them in November 2026. Those
+services are good at what they do; the kit reads your games from the chess sites and adds what happens after the game.</sub>
 
 ![Game review: every move rated, with an explanation and the eval graph](docs/img/review.webp)
 

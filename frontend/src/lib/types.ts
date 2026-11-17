@@ -120,6 +120,8 @@ export interface GameRecord extends GameSummary {
   moves: MoveRec[]
   pgn: string
   habits?: { key: string; title: string; fix: string; plies: number[] }[]  // your bad habits seen in this game
+  /** Seconds spent on each move and the clock left after it (from the PGN's clock comments); null without clocks. */
+  moveTimes?: { spent: (number | null)[]; clock: (number | null)[]; base: number | null; inc: number } | null
   end?: GameEnd | null  // how the game ended (checkmate, stalemate, repetition, resignation…)
 }
 

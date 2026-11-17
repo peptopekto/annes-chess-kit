@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { api } from '../../lib/api'
 import { accuracyColor } from '../../lib/chess'
 import type { StatBucket, StatsReport } from '../../lib/types'
-import { Skeleton } from '../ui'
+import { LoadingNotice } from '../LoadingNotice'
 import { Section } from './Section'
 
 /** Score per bucket as horizontal bars, centred on your overall score – instantly shows the outliers. */
@@ -43,7 +43,7 @@ function Buckets({ title, rows, overall, note }: { title: string; rows: StatBuck
 export function WhenBest() {
   const [s, setS] = useState<StatsReport | null>(null)
   useEffect(() => { let alive = true; api.stats().then(r => { if (alive) setS(r) }).catch(() => {}); return () => { alive = false } }, [])
-  if (!s) return <Skeleton className="h-72 rounded-2xl" />
+  if (!s) return <LoadingNotice compact title="Working out when you play your best" tasks={['insights']} />
   if (!s.games) return null
   const overall = s.record.all.score ?? 50
   return (

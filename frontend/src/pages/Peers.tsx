@@ -2,7 +2,8 @@ import clsx from 'clsx'
 import { ArrowDownRight, ArrowUpRight, Minus, TrendingUp, Users } from 'lucide-react'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { Card, CardsSkeleton, EmptyState, ErrorNote, PageHeader, Segmented } from '../components/ui'
+import { LoadingNotice } from '../components/LoadingNotice'
+import { Card, EmptyState, ErrorNote, PageHeader, Segmented } from '../components/ui'
 import { api } from '../lib/api'
 import type { PeerFinding, PeerGroupInfo, PeerMetric, Peers } from '../lib/types'
 
@@ -62,7 +63,9 @@ export function PeersPage() {
       </div>
 
       {error && <ErrorNote>{error}</ErrorNote>}
-      {loading && !data && <CardsSkeleton count={3} className="grid gap-3 sm:grid-cols-3" h="h-28" />}
+      {loading && !data && !error && (
+        <LoadingNotice title="Comparing you with your opponents" tasks={['peers', 'insights', 'summaries']} note="The first time after new reviews this reads every game; after that the page opens straight away." />
+      )}
       {data && data.games === 0 && (
         <EmptyState icon={<Users />} title="No rated games to compare yet">
           This needs reviewed games with both players' ratings. Bot games don't count.

@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { AccuracyChart, timeClass, type AccPoint } from '../components/progress/AccuracyChart'
 import { TrophyRoom } from '../components/progress/TrophyRoom'
 import { ActivityCard, RatingCard, RecordCard, RecordsCard, TrendTable } from '../components/progress/Dashboard'
-import { Button, Card, CountUp, EmptyState, ErrorNote, PageHeader, PageSkeleton, Spinner } from '../components/ui'
+import { Button, Card, CountUp, EmptyState, ErrorNote, PageHeader, Spinner } from '../components/ui'
+import { LoadingNotice } from '../components/LoadingNotice'
 import { api } from '../lib/api'
 import { CLS, ClassIcon } from '../lib/classes'
 import { accuracyColor } from '../lib/chess'
@@ -64,7 +65,8 @@ export function Progress() {
     } catch (e) { setError((e as Error).message) } finally { setDrilling(false) }
   }
 
-  if (!games) return error ? <div className="flex h-full items-center justify-center"><ErrorNote>{error}</ErrorNote></div> : <PageSkeleton />
+  if (!games) return error ? <div className="flex h-full items-center justify-center"><ErrorNote>{error}</ErrorNote></div>
+    : <div className="mx-auto max-w-6xl px-4 py-8 lg:px-8"><LoadingNotice title="Loading your progress" tasks={['summaries', 'insights']} /></div>
   if (!games.length) {
     return (
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 lg:px-8">

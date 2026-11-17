@@ -8,7 +8,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Board } from '../components/Board'
 import { MaterialBalance } from '../components/MaterialDiff'
 import { Section } from '../components/insights/Section'
-import { Button, Card, CardsSkeleton, ErrorNote, Segmented, Spinner } from '../components/ui'
+import { Button, Card, ErrorNote, Segmented } from '../components/ui'
+import { LoadingNotice } from '../components/LoadingNotice'
 import { api } from '../lib/api'
 import { CLS } from '../lib/classes'
 import { playUci, uciSquares } from '../lib/chess'
@@ -85,13 +86,12 @@ export function Openings() {
           ))}
         </div>
       )}
-      {!mine && !error && <CardsSkeleton count={3} className="grid gap-3 sm:grid-cols-3" h="h-20" />}
+      {!mine && !error && <LoadingNotice compact title="Finding your openings" tasks={['summaries']} />}
       {mine && mine.length === 0 && <Card className="p-8 text-ink-300">Review some of your games first – the trainer is built from them.</Card>}
       {error && <ErrorNote>{error}</ErrorNote>}
       {loading && (
-        <Card className="flex items-center gap-3 p-6 text-ink-300">
-          <Spinner /> Building your {sel?.family} repertoire from your games… (first time takes ~15 s)
-        </Card>
+        <LoadingNotice title={`Building your ${sel?.family ?? ''} repertoire from your games`} tasks={['repertoire']}
+          note="The first time takes about 15 seconds: the engine checks the positions you reach. After that it opens straight away." />
       )}
 
       {rep && !loading && (
@@ -267,9 +267,9 @@ function LineTrainer({ rep, startAt }: { rep: Repertoire; startAt: string | null
         (<b>Most common</b>) or steers you towards positions you got wrong before (<b>Weak spots</b>). Theory moves and
         equally good engine moves are accepted; the line then continues with your repertoire move. After a wrong try you
         get a hint, after two the arrow.</>}>
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,520px)_1fr]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,calc(520px*var(--board-zoom,1)))_1fr]">
         <motion.div key={shake} animate={shake ? { x: [0, -10, 10, -7, 7, 0] } : {}} transition={{ duration: 0.4 }}>
-          <Board fen={fen} orientation={rep.color} movable={!!node?.user && feedback !== 'done'} onMove={onMove}
+          <Board resizable fen={fen} orientation={rep.color} movable={!!node?.user && feedback !== 'done'} onMove={onMove}
             lastMove={last.uci ? uciSquares(last.uci) : null} shapes={shapes} highlight={highlight} />
           <MaterialBalance fen={fen} className="mt-2 px-1" />
         </motion.div>

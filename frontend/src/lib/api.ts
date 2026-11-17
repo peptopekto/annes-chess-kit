@@ -2,6 +2,9 @@ import type { PieceSet, PieceSets, BotGame, BotGameResult, BotProgress, CheckRes
  Insights, Library, LibrarySync, MyOpening, QueueState, Repertoire, SafetyCard, SafetyHub, SafetySummary, Trend, Trophies, QueueGameIn, QueueJob, RunStats, SetSummary, Settings, NightmareMove, NightmareSummary, CoachReport, GameEnd, StatsReport, SystemInfo,
   EndgameMode, EndgamePosition, EndgameReply, EndgameSummary, EndgameModeRecord } from './types'
 
+/** A slow backend job that is running (backend/app/progress.py). */
+export interface ProgressTask { name: string; label: string; done: number; total: number; seconds: number }
+
 export type LibSource = 'chesscom' | 'lichess'
 /** How a queued review searches: omit both depth and moveTime to use the analysis settings. */
 export interface QueueOpts { depth?: number; moveTime?: number; front?: boolean; force?: boolean }
@@ -107,6 +110,7 @@ export const api = {
   stats: () => req<StatsReport>('GET', '/api/stats'),
   nightmare: () => req<NightmareSummary>('GET', '/api/nightmare'),
   botGames: () => req<BotGame[]>('GET', '/api/bots/games'),
+  progress: () => req<{ tasks: ProgressTask[] }>('GET', '/api/progress'),
   peers: (q: { tc: string; last: number; band: number; platform: string }) =>
     req<Peers>('GET', `/api/peers?tc=${q.tc}&last=${q.last}&band=${q.band}&platform=${encodeURIComponent(q.platform)}`),
   nightmareMove: (moves: string[], strength: number, focus: number, opts: { gambits?: string[]; variety?: boolean; fen?: string } = {}) =>

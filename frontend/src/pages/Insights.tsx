@@ -6,7 +6,8 @@ import {
 import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { WhenBest } from '../components/insights/WhenBest'
-import { Button, Card, CardsSkeleton, CountUp, ErrorNote, Segmented, Skeleton } from '../components/ui'
+import { Button, Card, CountUp, ErrorNote, Segmented } from '../components/ui'
+import { LoadingNotice } from '../components/LoadingNotice'
 import { api } from '../lib/api'
 import { CLS, ClassIcon } from '../lib/classes'
 import { accuracyColor, moveNumber } from '../lib/chess'
@@ -95,11 +96,7 @@ export function InsightsPage() {
 
       {error && <ErrorNote>{error}</ErrorNote>}
       {!data ? (
-        <div className="space-y-4">
-          <Skeleton className="h-36 rounded-2xl" />
-          <CardsSkeleton count={6} h="h-20" />
-          <CardsSkeleton count={4} className="grid grid-cols-2 gap-3 lg:grid-cols-4" />
-        </div>
+        !error && <LoadingNotice title="Finding where you lose the most" tasks={['insights', 'summaries']} note="The first time after new reviews this reads every game; after that the page opens straight away." />
       ) : data.games === 0 ? (
         <Card className="p-10 text-center text-ink-300">
           No reviewed games of yours match these filters. Set your username in Settings and analyse a few games first.
@@ -406,7 +403,7 @@ function Thrown({ data }: { data: Insights }) {
   return (
     <Section title={`Wins that slipped away${data.thrownCount ? ` (${data.thrownCount})` : ''}`} icon={<TrendingDown size={18} className="text-blunder" />}
       action={t.length > 0 && <Button size="sm" variant="ghost" className="text-accent" onClick={() => drill(all, 'Thrown wins')}><Dumbbell size={14} /> Drill</Button>}>
-      {t.length === 0 ? <p className="text-sm text-ink-400">None – you convert your winning positions. 👏</p> : (
+      {t.length === 0 ? <p className="text-sm text-ink-400">None – you convert your winning positions.</p> : (
         <div className="space-y-1.5">
           {t.map(x => (
             <button key={x.gameId} onClick={() => go(`/review/${x.gameId}/${x.ply}`)}
