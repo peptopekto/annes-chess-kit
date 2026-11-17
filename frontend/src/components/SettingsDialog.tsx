@@ -46,7 +46,7 @@ export function SettingsDialog({ open, onClose }: { open: boolean; onClose: () =
               <input className={inputCls} value={draft.lichess_username} onChange={e => set('lichess_username', e.target.value)} />
             </Field>
           </div>
-          <Field label="Other names you play as" hint="Comma-separated. Used to spot your side in pasted PGNs (e.g. OTB games).">
+          <Field label="Other names you play as" hint="Comma-separated. Used to spot your side in pasted PGNs (e.g. OTB games). When you rename an account, the old name is added here, so games played under it stay yours.">
             <input className={inputCls} value={draft.aliases.join(', ')}
               onChange={e => set('aliases', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} />
           </Field>

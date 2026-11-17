@@ -113,7 +113,17 @@ def _clean(key: str, value, current):
 
 def save_settings(patch: dict) -> dict:
     settings = load_settings()
+    old = {k: settings.get(k, "") for k in ("chesscom_username", "lichess_username")}
     settings.update({k: _clean(k, v, settings[k]) for k, v in patch.items() if k in DEFAULT_SETTINGS})
+    # A renamed account: keep the old name, so games played under it still count as yours.
+    for k, before in old.items():
+        before = (before or "").strip()
+        now = (settings.get(k) or "").strip()
+        if before and now and before.lower() != now.lower() \
+                and before.lower() not in {a.lower() for a in settings["aliases"]}:
+            settings["aliases"] = [*settings["aliases"], before]
+    current = {(settings.get(k) or "").strip().lower() for k in old}
+    settings["aliases"] = [a for a in settings["aliases"] if a.lower() not in current]  # a main name isn't an alias
     write_atomic(SETTINGS_FILE, json.dumps(settings, indent=2))
     return settings
 

@@ -64,6 +64,7 @@ class AnalysisQueue:
             limits = analysis.Limits(depth=limits)
         out = []
         reviews = storage.review_index()  # cached summaries, no full reads
+        addresses = storage.by_address(reviews)
         with self._cv:
             active = {j.key: j for j in self._jobs.values() if j.key and j.status in ("queued", "running")}
             new_ids = []
@@ -77,9 +78,9 @@ class AnalysisQueue:
                 if not gid:
                     job.status, job.error = "error", "Couldn't read this PGN."
                 else:
-                    cached = reviews.get(gid)
+                    cached = storage.find_review(reviews, addresses, gid, g.get("url"))
                     if cached and not force and limits.covers(cached):
-                        job.status, job.game_id = "done", gid
+                        job.status, job.game_id = "done", cached["id"]
                         job.summary = {"me": cached["me"], "accuracy": cached["accuracy"], "counts": {}}
                     else:
                         # Don't queue the same game twice; "analyse now" pulls a queued one forward.

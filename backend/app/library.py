@@ -89,11 +89,12 @@ def listing(source: str, user: str) -> dict:
     key = _key(source, user)
     data = _load(key)
     reviews = storage.review_index()
+    addresses = storage.by_address(reviews)
     games = []
     for g in data["games"]:
         row = {k: g.get(k) for k in LIST_KEYS}
-        rev = reviews.get(g.get("id") or "")
-        row["review"] = {"id": g["id"], "accuracy": rev["accuracy"]} if rev else None
+        rev = storage.find_review(reviews, addresses, g.get("id"), g.get("url"))
+        row["review"] = {"id": rev["id"], "accuracy": rev["accuracy"]} if rev else None
         games.append(row)
     return {"games": games, "syncedAt": data.get("syncedAt"), "status": status(source, user)}
 

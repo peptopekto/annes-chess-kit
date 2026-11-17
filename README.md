@@ -128,6 +128,9 @@ Good to know:
   choose **More info → Run anyway**.
 - Your reviews, settings and progress are in the `userdata` folder inside the program folder. To move
   to another PC, copy that folder; to back up, copy it.
+- Renamed your Chess.com or Lichess account? Enter the new name in **Settings**. The old one is kept under
+  *Other names you play as*, so your earlier games still count as yours and reviewed games stay marked as
+  reviewed. If you changed the name with version 1.0.2 or older, add the old name there yourself.
 - `AnnesChessKit.exe` only starts the app – it needs the folder around it. Make a shortcut to it rather than
   moving it out.
 

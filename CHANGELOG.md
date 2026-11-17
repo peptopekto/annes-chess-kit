@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+Fixes:
+
+- Renamed Chess.com or Lichess account: games reviewed under the old name showed as not reviewed in the
+  game list, because Chess.com re-sends old games under the new name. Reviews are now also matched by the
+  game's address, which never changes. Changing a username in Settings keeps the old one under "Other names
+  you play as", so those games still count as yours in Coach, My mistakes and the statistics.
+
 ## 1.0.2
 
 New:

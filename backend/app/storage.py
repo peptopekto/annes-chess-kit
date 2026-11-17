@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import os
 import pickle
+import re
 import threading
 import time
 from datetime import datetime, timezone
@@ -218,14 +219,38 @@ def summaries(limit: int | None = None) -> list[dict]:
     return out[:limit] if limit else out
 
 
+def game_key(url: str | None) -> str | None:
+    """A game's address without the parts that vary (scheme, www, trailing slash, Lichess colour suffix).
+
+    The address stays the same when a player renames their account; the game id (a hash that includes the
+    player names) does not.
+    """
+    if not url:
+        return None
+    u = re.sub(r"^https?://(www\.)?", "", url.strip().lower()).split("#")[0].split("?")[0].rstrip("/")
+    m = re.match(r"lichess\.org/([a-z0-9]{8})", u)
+    return f"lichess.org/{m.group(1)}" if m else u or None
+
+
 def review_index() -> dict[str, dict]:
-    """game id -> {accuracy (yours, or White's), me, depth} for marking games as reviewed."""
+    """game id -> {id, accuracy (yours, or White's), me, depth} for marking games as reviewed."""
     idx = {}
     for s in summaries():
         side = s.get("me") or "w"
-        idx[s["id"]] = {"accuracy": (s.get("accuracy") or {}).get(side), "me": s.get("me"), "depth": s.get("depth") or 0,
-                        "moveTime": s.get("moveTime"), "depthReached": s.get("depthReached")}
+        idx[s["id"]] = {"id": s["id"], "accuracy": (s.get("accuracy") or {}).get(side), "me": s.get("me"),
+                        "depth": s.get("depth") or 0, "moveTime": s.get("moveTime"), "depthReached": s.get("depthReached"),
+                        "key": game_key(s.get("url"))}
     return idx
+
+
+def by_address(index: dict[str, dict]) -> dict[str, dict]:
+    """The same reviews, looked up by game address (see game_key)."""
+    return {v["key"]: v for v in index.values() if v.get("key")}
+
+
+def find_review(index: dict[str, dict], addresses: dict[str, dict], game_id: str | None, url: str | None) -> dict | None:
+    """The review of a game: by id, else by its address (after an account rename the id changes)."""
+    return index.get(game_id or "") or addresses.get(game_key(url) or "")
 
 
 def highlights(classes: tuple[str, ...] = HIGHLIGHT_CLASSES) -> list[dict]:
