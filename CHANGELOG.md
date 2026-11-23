@@ -12,8 +12,14 @@ New:
   of an installed 1.0.x is found and used automatically. The licence texts are copied into the data folder
   (licenses\). Build it yourself with scripts\build-exe.ps1.
 
+Removed:
+
+- The installer (setup.exe) and the portable zip, and with them the bundled Python folder, the Inno Setup
+  script and package.bat. The exe replaces both; scripts\build-exe.ps1 builds it.
+
 Fixes:
 
+- When Stockfish can't be found, the start page names the exact folder it belongs in.
 - Renamed Chess.com or Lichess account: games reviewed under the old name showed as not reviewed in the
   game list, because Chess.com re-sends old games under the new name. Reviews are now also matched by the
   game's address, which never changes. Changing a username in Settings keeps the old one under "Other names

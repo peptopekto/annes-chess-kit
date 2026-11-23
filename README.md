@@ -155,9 +155,10 @@ compiler that comes with Windows; not the same as the single-file download).
 
 ### Building the Windows download yourself
 
-`scripts\build-exe.ps1` builds `dist\AnnesChessKit-X.Y.Z-windows.exe` on your own PC and starts it once to
-check it (run it from PowerShell in the project folder; it needs Node.js and Python 3.11+, and downloads
-PyInstaller and the packages into `dist\.cache`). The engines are copied from your `engine` folder;
+`scripts\build-exe.ps1` builds `dist\AnnesChessKit-X.Y.Z-windows.exe` on a Windows PC and starts it once to
+check it. Run `.\scripts\build-exe.ps1` from PowerShell in the project folder (if scripts are blocked:
+`powershell -ExecutionPolicy Bypass -File scripts\build-exe.ps1`). It needs Node.js 20.19+ or 22+ and
+Python 3.11+, and downloads PyInstaller and the packages into `dist\.cache`. The engines are copied from your `engine` folder;
 `-Engines download` fetches Stockfish, Lc0 and the Maia networks instead, and `-EngineSources` also packs the
 source code of the included engine versions into `dist\AnnesChessKit-X.Y.Z-engine-sources.zip`. The exe carries
 the licences of what it includes and copies them into its data folder (`licenses\`, `engine\ENGINES.txt`).
@@ -165,6 +166,10 @@ Pushing a tag like `v1.2.0` makes GitHub build both and attach them to a release
 (`.github/workflows/release.yml`); the tag has to match `__version__` in `backend/app/__init__.py`.
 
 ### Optional extras
+
+The Windows exe already contains Stockfish, Lc0 and the Maia networks. From source, add them to `engine/`.
+With the exe, extras go into the data folder: Syzygy tablebases into
+`%LOCALAPPDATA%\AnnesChessKit\engine\syzygy` (or `engine\syzygy` next to the exe in portable use).
 
 | Add | Unlocks |
 |---|---|
@@ -237,7 +242,8 @@ backend/app/     FastAPI + python-chess: analysis, classification, coaching, ins
 backend/tests/   pytest
 frontend/        React + Vite + Tailwind, chessground board
 engine/          engines and networks you download (not in the repository)
-scripts/         Windows packaging, launcher, icon, licence collector
+scripts/         Windows build of the exe (build-exe.ps1), launcher, icon, licence collector
+packaging/       PyInstaller recipe for the single exe
 docs/            project page (GitHub Pages) and screenshots
 run.py           starts the server and opens the app window
 userdata/        your data (created on first start)

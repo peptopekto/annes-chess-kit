@@ -12,18 +12,17 @@ __pycache__/
 *.pyc
 backend/data/openings.cache.json
 
-# Web UI: dependencies and build output (built by `npm run build` or the release zip)
+# Web UI: dependencies and build output (built by `npm run build`)
 frontend/node_modules/
 frontend/dist/
 .tools/
 
-# Windows launcher and shortcut (built locally with scripts/launcher/build.bat)
+# Launcher for a source checkout and shortcuts (built locally with scripts/launcher/build.bat)
 AnnesChessKit.exe
 *.lnk
 
-# Packaging output (package.bat): the ready-to-run folder, zip, installer and download cache
+# Build output (scripts/build-exe.ps1): the exe, its parts and the download cache
 dist/
-/python/
 
 # Editors, OS and tool files
 .claude/

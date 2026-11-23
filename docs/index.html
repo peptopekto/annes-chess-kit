@@ -211,6 +211,7 @@
               <em>More info</em>, then <em>Run anyway</em>.</li>
           <li>Enter your Chess.com and/or Lichess username in Settings. Your games import and get reviewed in the background.</li>
         </ol>
+        <p class="note">Your data is in <code>%LOCALAPPDATA%\AnnesChessKit</code>. To update, replace the exe with the new one. For portable use, create a folder named <code>userdata</code> next to the exe.</p>
       </div>
       <div>
         <h3>macOS, Linux, or from source</h3>
@@ -276,6 +277,14 @@ cd ..
       <details>
         <summary>Does it use AI or send my games anywhere?</summary>
         <p>No. Explanations come from rules applied to the engine&rsquo;s analysis, written for the position at hand. The bot uses the open Maia networks, which run locally like Stockfish.</p>
+      </details>
+      <details>
+        <summary>Where is my data, and how do I update?</summary>
+        <p>Reviews, games, settings and training records are in <code>%LOCALAPPDATA%\AnnesChessKit</code> (paste it into the Explorer address bar). To back up or move to another PC, copy that folder. To update, download the new exe and replace the old one; your data stays where it is. If there is a folder named <code>userdata</code> next to the exe, the app keeps everything there instead, for example on a USB stick.</p>
+      </details>
+      <details>
+        <summary>I used the installer or the zip of version 1.0.2 or older. What now?</summary>
+        <p>Download the new exe and start it: it finds the data of an installed version by itself. Then you can uninstall the old version; answer &ldquo;No&rdquo; when it asks whether to delete your data. With the portable zip, put the new exe into the old folder, next to its <code>userdata</code> folder.</p>
       </details>
       <details>
         <summary>I renamed my Chess.com or Lichess account. Are my reviews lost?</summary>

@@ -190,6 +190,8 @@ export interface SystemInfo {
   started?: number
   /** Code or UI changed after the server started: the app needs a restart. */
   outdated?: boolean
+  /** Where the app looks for its engines (the data folder's engine\\ for the exe). */
+  engineDir?: string
 }
 
 export interface QueueJob {

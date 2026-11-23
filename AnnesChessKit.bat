@@ -1,12 +1,8 @@
 @echo off
-rem Double-click to start Anne's Chess Kit (or use AnnesChessKit.exe). Uses the Python that comes with the download (python\), else sets up
-rem a Python environment on the first run (in this window). The app then starts without a console:
-rem close its window to quit. Need the console for debugging? Use "AnnesChessKit (debug).bat".
+rem Starts Anne's Chess Kit from the source folder. Sets up a Python environment (.venv) on the first run
+rem (in this window); the app then starts without a console: close its window to quit. Need the console
+rem for debugging? Use "AnnesChessKit (debug).bat".
 cd /d "%~dp0"
-if exist "python\pythonw.exe" (
-  start "" "python\pythonw.exe" run.py %*
-  goto :eof
-)
 if not exist ".venv\Scripts\python.exe" (
   echo Setting up Python environment...
   python -m venv .venv || goto :error

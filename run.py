@@ -112,8 +112,8 @@ def _health(url: str) -> dict | None:
 
 
 def _same_folder(running: dict) -> bool:
-    """Is the running server this one (same folder, same data)? Another copy – the portable folder, an
-    installed version – answers on the same address but shows *its* data, not yours."""
+    """Is the running server this one (same folder, same data)? Another copy – the exe in another folder, a
+    source checkout – answers on the same address but shows *its* data, not yours."""
     root, data = running.get("root"), running.get("userdata")
     if not root or not data:
         return False  # too old to say: treat it as another copy (it gets restarted, which is harmless)

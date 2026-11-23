@@ -7,13 +7,13 @@
   engines. The engines are unpacked once into the data folder on the first start; the PC it runs on needs
   nothing installed.
 
-  1. The web UI, the engines and the licences come from package.ps1 -NoPython.
+  1. package.ps1 builds the web UI and gathers the engines and their licences (dist\.exe-parts).
   2. The engines are packed into one archive, and the licences of Python and its packages are collected.
   3. A build Python (dist\.cache\exe-venv) with the app's packages and PyInstaller packs it all into one file.
   4. The exe is started once, with a scratch data folder, to check that it runs and finds its engines.
 
-  Run it from the project folder. Needs Python 3.10 or newer (the py launcher or python on the PATH) and
-  internet for the packages (and for the engines with -Engines download).
+  Run it from the project folder. Needs Node.js 20.19+ or 22+, Python 3.11 or newer (the py launcher or
+  python on the PATH) and internet for the packages (and for the engines with -Engines download).
 
 .PARAMETER Engines
   local (default), download or none - as for package.ps1.
@@ -42,7 +42,7 @@ Set-Location $Root
 $Version = ([regex]::Match((Get-Content backend\app\__init__.py -Raw), '__version__\s*=\s*"([^"]+)"')).Groups[1].Value
 if (-not $Version) { throw 'Could not read the version from backend\app\__init__.py' }
 $Dist = Join-Path $Root 'dist'
-$Folder = Join-Path $Dist 'AnnesChessKit'
+$Folder = Join-Path $Dist '.exe-parts'
 $Stage = Join-Path $Dist '.exe-stage'
 $Venv = Join-Path $Dist '.cache\exe-venv'
 $Result = Join-Path $Dist "AnnesChessKit-$Version-windows.exe"
@@ -53,8 +53,8 @@ function Warn($text) { Write-Host "   ! $text" -ForegroundColor Yellow }
 function Check($what) { if ($LASTEXITCODE) { throw "$what failed - see the messages above" } }
 
 # --------------------------------------------------------------------------- 1. UI, engines, licences
-Step 'Web UI, engines and licences (package.ps1 -NoPython)'
-& (Join-Path $PSScriptRoot 'package.ps1') -Engines $Engines -SkipUi:$SkipUi -EngineSources:$EngineSources -NoPython
+Step 'Web UI, engines and licences (package.ps1)'
+& (Join-Path $PSScriptRoot 'package.ps1') -Engines $Engines -SkipUi:$SkipUi -EngineSources:$EngineSources
 
 # --------------------------------------------------------------------------- 2. build Python
 Step 'Build Python with the packages and PyInstaller'

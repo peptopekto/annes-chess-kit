@@ -1,6 +1,6 @@
 // Writes the licence texts of every package that ends up in the built web UI (frontend/dist) into one file.
 // Most of them (MIT, ISC, BSD) require their copyright notice to travel with the code, and the bundler
-// strips it; this file puts it back next to the app. scripts/package.ps1 runs it for the release downloads.
+// strips it; this file puts it back next to the app. scripts/package.ps1 runs it for the exe.
 //
 //   node scripts/collect-licenses.mjs [output file]      (default: licenses/web-ui.txt)
 //

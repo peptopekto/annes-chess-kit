@@ -102,7 +102,7 @@ export function Home() {
         <LoadingNotice compact className="mb-6" title="Getting the chess engines ready" tasks={['engines']}
           note="This happens once, on the first start. Reviews and training can start as soon as it's done." />
       )}
-      {system && !system.preparing && !system.engine && <EngineMissing />}
+      {system && !system.preparing && !system.engine && <EngineMissing dir={system.engineDir} />}
 
       <Card className="p-5 sm:p-6">
         <div className="mb-4">
@@ -214,15 +214,16 @@ function NextSteps({ latest }: { latest: GameSummary }) {
 }
 
 /** First start without Stockfish: nothing can be analysed yet, so say exactly what to do. */
-function EngineMissing() {
+function EngineMissing({ dir }: { dir?: string }) {
   return (
     <div role="alert" className="mb-6 rounded-2xl bg-mistake/10 p-5 text-sm ring-1 ring-inset ring-mistake/30">
       <div className="font-display text-base font-semibold text-mistake">Stockfish isn't installed yet</div>
       <p className="mt-1.5 leading-relaxed text-ink-200">
         This app needs the free Stockfish engine to analyse games. Download it from{' '}
         <a className="text-accent underline underline-offset-2" href="https://stockfishchess.org/download/" target="_blank" rel="noreferrer">stockfishchess.org/download</a>,
-        unpack it and put the program into the <code className="rounded bg-black/30 px-1">engine</code> folder of the app
-        (any name starting with “stockfish” works), then restart the app. Already have it installed? It's used
+        unpack it and put the program into the app's engine folder,{' '}
+        <code className="rounded bg-black/30 px-1 break-all">{dir ?? 'engine'}</code> (any name starting with
+        “stockfish” works), then restart the app. Already have it installed? It's used
         automatically if it's on your PATH, or set <code className="rounded bg-black/30 px-1">STOCKFISH_PATH</code>.
       </p>
     </div>

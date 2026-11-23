@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import __version__, analysis, botprogress, bundled, cards, coach, endgames, engine, habits, importers, insights, jobs, library, nightmare, openings, peers, pieces, positional, progress, recheck, repertoire, safety, stats, storage, tactics, training, upgrade, woodpecker
-from .config import FROZEN, FRONTEND_DIST, ROOT, USERDATA, load_settings, save_settings
+from .config import ENGINE_DIR, FROZEN, FRONTEND_DIST, ROOT, USERDATA, load_settings, save_settings
 
 
 @asynccontextmanager
@@ -150,8 +150,9 @@ def health():
             "maia": nightmare.available(), "tablebase": endgames.tablebase_ready(),
             "cpus": engine.CPUS, "autoEngines": engine.AUTO_ENGINES, "engines": engine.batch.size,
             "started": STARTED, "outdated": _outdated(), "preparing": bundled.busy(),
-            # Which copy this is: a second copy (the portable folder, an install) uses the same address.
-            "root": str(ROOT), "userdata": str(USERDATA)}
+            # Which copy this is: a second copy (the exe in another folder, a source checkout) uses the
+            # same address.
+            "root": str(ROOT), "userdata": str(USERDATA), "engineDir": str(ENGINE_DIR)}
 
 
 @app.get("/api/settings")
@@ -830,7 +831,7 @@ href="https://nodejs.org">Node.js</a> 20.19+ or 22+):</p>
 <pre style="background:#16171c;padding:1rem;border-radius:8px">cd frontend
 npm ci
 npm run build</pre>
-<p>Then reload this page. Or download a release zip, which comes with the UI already built.</p>
+<p>Then reload this page. Or download AnnesChessKit.exe from the releases page, which has the UI built in.</p>
 </body>"""
 
 

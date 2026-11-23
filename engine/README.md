@@ -1,5 +1,10 @@
 # Engines
 
+Using the Windows download (`AnnesChessKit-X.Y.Z-windows.exe`)? Then you don't need this folder: Stockfish, Lc0
+and the Maia networks are inside the exe and are unpacked into the `engine` folder of its data folder
+(`%LOCALAPPDATA%\AnnesChessKit\engine`, or `engine` next to the exe in portable use). Syzygy tablebases go
+into `syzygy` there. This folder is for running from source and for building the exe.
+
 Put the chess engines here. Only **Stockfish** is required; the rest unlocks optional features.
 Nothing in this folder is part of the repository (it's in `.gitignore`). All of these are free software or free data
 under their own licences (Stockfish, Lc0 and Maia: GPL v3) – see `THIRD_PARTY_NOTICES.md`.

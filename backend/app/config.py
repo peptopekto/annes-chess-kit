@@ -12,11 +12,12 @@ APP_FOLDER = "AnnesChessKit"
 def choose_home(exe_dir: Path, local_appdata: Path) -> Path:
     """Where the single-file app keeps its data (userdata/) and unpacked engines (engine/).
 
-    1. A userdata folder next to AnnesChessKit.exe: the portable way, and what the installer sets up – it is
-       also where the zip download and older installs keep their data, so dropping the new exe into such a
-       folder carries on with the same data.
+    1. A userdata folder next to AnnesChessKit.exe: the portable way. It is also where the zip download and
+       the installer of version 1.0.2 and older keep their data, so dropping the exe into such a folder
+       carries on with the same data.
     2. Otherwise the per-user folder %LOCALAPPDATA%\\AnnesChessKit – unless only an installed copy has data
-       (%LOCALAPPDATA%\\Programs\\AnnesChessKit\\userdata): then the exe uses that, so you keep one set of data.
+       (%LOCALAPPDATA%\\Programs\\AnnesChessKit\\userdata, from the installer of 1.0.2 and older): then the
+       exe uses that, so you keep one set of data.
     """
     if (exe_dir / "userdata").is_dir():
         return exe_dir

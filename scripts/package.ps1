@@ -1,32 +1,24 @@
 <#
 .SYNOPSIS
-  Builds the ready-to-run Anne's Chess Kit for Windows: dist\AnnesChessKit (a folder you can copy anywhere)
-  and dist\AnnesChessKit-<version>-windows.zip. Optionally the installer (dist\AnnesChessKit-<version>-setup.exe).
+  Collects what goes into the single-file AnnesChessKit.exe besides the app itself: the built web UI, the
+  chess engines and the licence texts, in dist\.exe-parts. scripts\build-exe.ps1 runs it first; there is no
+  need to run it on its own.
 
 .DESCRIPTION
-  The folder contains everything the app needs - its own Python with the packages installed, the built
-  web UI, the launcher (AnnesChessKit.exe) and, if asked for, the chess engines - so the target PC needs
-  nothing installed. Your data lives in the folder's "userdata" (created on first start).
-  The licences of everything included go along: LICENSE (the app), licenses\ (web UI packages, Python),
-  engine\ENGINES.txt plus each engine's own licence file.
+  1. Builds the web UI (frontend\dist), unless -SkipUi.
+  2. Puts the engines into dist\.exe-parts\engine, with ENGINES.txt (versions, licences, where the source is)
+     and each engine's licence file.
+  3. Collects the licence texts of the web UI packages into dist\.exe-parts\licenses\web-ui.txt.
 
-  Run it from the project folder (or double-click package.bat). Works with Windows PowerShell 5.1 and
-  PowerShell 7. Needs internet for Python and the packages (and the engines with -Engines download).
+  Works with Windows PowerShell 5.1 and PowerShell 7. Needs internet for -Engines download.
 
 .PARAMETER Engines
   local    (default) copy the engines from this checkout's engine\ folder, if there are any
   download fetch Stockfish, Lc0 and the Maia networks from their official release pages
-  none     leave engine\ empty (the user adds Stockfish - see engine\README.md)
-
-.PARAMETER Installer
-  Also build the setup program with Inno Setup (iscc.exe on PATH or in its default folder).
+  none     no engines (the exe then asks for Stockfish - see engine\README.md)
 
 .PARAMETER SkipUi
   Don't rebuild the web UI (use frontend\dist as it is).
-
-.PARAMETER NoPython
-  Only the web UI, the engines and the licences (no launcher, no bundled Python, no zip): what
-  scripts\build-exe.ps1 packs into the single-file AnnesChessKit.exe.
 
 .PARAMETER EngineSources
   Also download the source code of the included Stockfish and Lc0 versions into
@@ -35,11 +27,8 @@
 #>
 param(
     [ValidateSet('local', 'download', 'none')] [string]$Engines = 'local',
-    [switch]$Installer,
     [switch]$SkipUi,
-    [switch]$EngineSources,
-    [switch]$NoPython,
-    [string]$PythonVersion = '3.12.10'
+    [switch]$EngineSources
 )
 
 $ErrorActionPreference = 'Stop'
@@ -51,7 +40,7 @@ Set-Location $Root
 $Version = ([regex]::Match((Get-Content backend\app\__init__.py -Raw), '__version__\s*=\s*"([^"]+)"')).Groups[1].Value
 if (-not $Version) { throw 'Could not read the version from backend\app\__init__.py' }
 $Dist = Join-Path $Root 'dist'
-$Out = Join-Path $Dist 'AnnesChessKit'
+$Out = Join-Path $Dist '.exe-parts'
 $Cache = Join-Path $Dist '.cache'          # downloads are kept between runs
 
 function Step($text) { Write-Host "`n== $text" -ForegroundColor Cyan }
@@ -114,76 +103,15 @@ if ($SkipUi) {
 }
 if (-not (Test-Path 'frontend\dist\index.html')) { throw 'frontend\dist is missing: build the UI first (build-frontend.bat)' }
 
-# --------------------------------------------------------------------------- 2. launcher
-Step 'Launcher (AnnesChessKit.exe)'
-$csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-if ($NoPython) {
-    Note 'skipped (-NoPython)'
-} elseif (Test-Path $csc) {
-    & $csc /nologo /target:winexe /optimize+ /win32icon:app.ico /reference:System.Windows.Forms.dll /out:AnnesChessKit.exe scripts\launcher\Launcher.cs
-    if ($LASTEXITCODE) { throw 'Building AnnesChessKit.exe failed' }
-} elseif (-not (Test-Path 'AnnesChessKit.exe')) {
-    throw "The C# compiler wasn't found ($csc) and there is no AnnesChessKit.exe yet"
-} else { Warn 'C# compiler not found - using the existing AnnesChessKit.exe' }
-
-# --------------------------------------------------------------------------- 3. the folder
-Step "Folder dist\AnnesChessKit (version $Version)"
-if (Test-Path $Out) { Remove-Item -Recurse -Force $Out }
-New-Item -ItemType Directory -Force $Out | Out-Null
-foreach ($item in 'backend', 'run.py', 'AnnesChessKit.exe', 'AnnesChessKit.bat', 'AnnesChessKit (debug).bat', 'app.ico',
-                  'requirements.txt', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'CHANGELOG.md') {
-    if (Test-Path $item) { Copy-Item -Recurse $item $Out } else { Warn "$item not found - left out" }
-}
-New-Item -ItemType Directory -Force "$Out\frontend" | Out-Null
-Copy-Item -Recurse frontend\dist "$Out\frontend\dist"
-New-Item -ItemType Directory -Force "$Out\engine" | Out-Null
-Copy-Item engine\README.md "$Out\engine\README.md"
-Get-ChildItem $Out -Recurse -Directory -Filter __pycache__ | Remove-Item -Recurse -Force
-foreach ($junk in 'backend\tests', 'backend\.pytest_cache', 'backend\data\openings.cache.json') {
-    if (Test-Path "$Out\$junk") { Remove-Item -Recurse -Force "$Out\$junk" }
-}
-
-# --------------------------------------------------------------------------- 4. Python
-Step "Python $PythonVersion with the packages"
-$py = Join-Path $Out 'python'
-if ($NoPython) { Note 'skipped (-NoPython)' } else {
-$zip = Get-File "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-embed-amd64.zip" "python-$PythonVersion-embed-amd64.zip"
-Expand-Archive -Path $zip -DestinationPath $py -Force
-# The embedded Python only looks where its ._pth file says: add site-packages (for the packages below).
-$pth = Get-ChildItem $py -Filter 'python*._pth' | Select-Object -First 1
-if (-not $pth) { throw 'Unexpected Python download: no ._pth file' }
-$stdlib = (Get-ChildItem $py -Filter 'python*.zip' | Select-Object -First 1).Name
-Set-Content -Path $pth.FullName -Encoding ASCII -Value @($stdlib, '.', 'Lib\site-packages', 'import site')
-$getPip = Get-File 'https://bootstrap.pypa.io/get-pip.py' 'get-pip.py'
-& "$py\python.exe" $getPip --no-warn-script-location --quiet
-if ($LASTEXITCODE) { throw 'Installing pip into the bundled Python failed' }
-# python-chess is published as source only (it's pure Python), so pip has to build it - with setuptools, in
-# this Python itself: pip's usual separate build environment doesn't work in the embedded Python (its ._pth
-# file ignores the paths pip sets up). --no-cache-dir: build the same way as on a fresh PC (GitHub's builder),
-# instead of reusing a wheel pip built earlier on this one.
-& "$py\python.exe" -m pip install --no-warn-script-location --quiet --no-cache-dir setuptools wheel
-if ($LASTEXITCODE) { throw 'Installing setuptools into the bundled Python failed' }
-& "$py\python.exe" -m pip install --no-warn-script-location --quiet --no-cache-dir --prefer-binary --no-build-isolation -r requirements.txt
-if ($LASTEXITCODE) { throw 'Installing the Python packages failed' }
-& "$py\python.exe" -m pip uninstall --quiet --yes setuptools wheel   # only needed for building
-# Check that it really starts, then drop what isn't needed at run time (pip, caches, launch scripts).
-& "$py\python.exe" -c "import sys; sys.path.insert(0, r'$Out\backend'); import chess, fastapi, uvicorn, httpx, yaml; import app.main"
-if ($LASTEXITCODE) { throw 'The packaged Python cannot import the app - see the error above' }
-foreach ($drop in 'Scripts', 'Lib\site-packages\pip', 'Lib\site-packages\setuptools', 'Lib\site-packages\wheel') {
-    if (Test-Path "$py\$drop") { Remove-Item -Recurse -Force "$py\$drop" }
-}
-Get-ChildItem "$py\Lib\site-packages" -Directory -Filter 'pip-*.dist-info' | Remove-Item -Recurse -Force
-Get-ChildItem $Out -Recurse -Directory -Filter __pycache__ | Remove-Item -Recurse -Force
-if (Test-Path "$Out\userdata") { Remove-Item -Recurse -Force "$Out\userdata" }   # created by the import check
-}   # -NoPython
-
-# --------------------------------------------------------------------------- 5. engines
+# --------------------------------------------------------------------------- 2. engines
 Step "Engines ($Engines)"
+if (Test-Path $Out) { Remove-Item -Recurse -Force $Out }
 $eng = Join-Path $Out 'engine'
+New-Item -ItemType Directory -Force $eng | Out-Null
 if ($Engines -eq 'local') {
     $sf = @(Get-ChildItem engine -File -Filter 'stockfish*' -ErrorAction SilentlyContinue)
     if (-not $sf) {
-        Warn 'no Stockfish in engine\ - the folder ships without engines (use -Engines download to fetch them)'
+        Warn 'no Stockfish in engine\ - the exe will come without engines (use -Engines download to fetch them)'
     } else {
         # One fast and one that runs everywhere is enough (each build is ~80 MB).
         $pick = @($sf | Where-Object { $_.Name -match 'avx2' } | Select-Object -First 1) +
@@ -226,10 +154,10 @@ if ($Engines -eq 'local') {
         Note 'Maia networks 1100-1900'
     } catch { Warn "Lc0 / Maia: $($_.Exception.Message) - the Instructive bot will be unavailable until they are added" }
 } else {
-    Note 'none - see engine\README.md in the folder'
+    Note 'none - see engine\README.md'
 }
 
-# --------------------------------------------------------------------------- 6. licences
+# --------------------------------------------------------------------------- 3. licences
 Step 'Licences'
 $lic = Join-Path $Out 'licenses'
 New-Item -ItemType Directory -Force $lic | Out-Null
@@ -239,18 +167,6 @@ if ($node) {
     & $node scripts\collect-licenses.mjs "$lic\web-ui.txt"
     if ($LASTEXITCODE) { Warn 'collecting the web UI licences failed (run npm ci in frontend, then package again)' }
 } else { Warn 'node not found - licenses\web-ui.txt left out' }
-# Python and its packages: their licence files stay where they are installed.
-Set-Content -Encoding ASCII -Path "$lic\README.txt" -Value @(
-    'Licences of the third-party software in this folder',
-    '',
-    '  ..\LICENSE                       Anne''s Chess Kit itself (GNU GPL v3 or later)',
-    '  ..\THIRD_PARTY_NOTICES.md        overview: what is included, its licence and where its source is',
-    '  web-ui.txt                       the packages bundled into the web interface (frontend\dist)',
-    '  ..\python\LICENSE.txt            Python (PSF License)',
-    '  ..\python\Lib\site-packages\*.dist-info\   each Python package (its licence file or METADATA)',
-    '  ..\engine\ENGINES.txt            the chess engines and networks: versions, licences, source code',
-    '  ..\frontend\dist\sounds\LICENSE.txt   the sound effects (CC0)')
-
 # Engines: which versions are included, their licences and where their exact source code is.
 function Get-Banner($exe) {
     # What a UCI engine prints first names its version ("Stockfish 17.1 by ...", lc0: "... v0.31.2 built ...").
@@ -259,7 +175,7 @@ function Get-Banner($exe) {
     catch { return '' }
     finally { $ErrorActionPreference = $prev }
 }
-$engineInfo = @('Chess engines and networks included in this folder', '')
+$engineInfo = @('Chess engines and networks included in AnnesChessKit.exe', '')
 $sources = @{}   # name -> source archive of the exact version
 $sfExe = @(Get-ChildItem $eng -File -Filter 'stockfish*.exe' -ErrorAction SilentlyContinue)
 if ($sfExe) {
@@ -306,42 +222,4 @@ if ($EngineSources -and $sources.Count) {
     Note "engine sources: $srcZip"
 }
 
-if ($NoPython) {
-    Write-Host "`nDone: dist\AnnesChessKit has the UI, the engines and the licences (for build-exe.ps1)." -ForegroundColor Green
-    return
-}
-
-# --------------------------------------------------------------------------- 7. zip (+ installer)
-Step 'Zip'
-$zipOut = Join-Path $Dist "AnnesChessKit-$Version-windows.zip"
-if (Test-Path $zipOut) { Remove-Item -Force $zipOut }
-Compress-Archive -Path $Out -DestinationPath $zipOut
-$mb = { param($p) '{0:N0} MB' -f ((Get-ChildItem $p -Recurse -File | Measure-Object Length -Sum).Sum / 1MB) }
-Note "folder: $Out  ($(& $mb $Out))"
-Note "zip:    $zipOut  ($('{0:N0} MB' -f ((Get-Item $zipOut).Length / 1MB)))"
-
-if ($Installer) {
-    Step 'Installer'
-    $iscc = (Get-Command iscc -ErrorAction SilentlyContinue).Source
-    if (-not $iscc) {
-        # Installed for all users (Program Files) or just for you (winget without admin: AppData\Local\Programs),
-        # else wherever the uninstall entry in the registry says.
-        $roots = @(${env:ProgramFiles(x86)}, $env:ProgramFiles, (Join-Path $env:LOCALAPPDATA 'Programs')) | Where-Object { $_ }
-        $iscc = @(foreach ($r in $roots) { foreach ($v in '6', '7') { Join-Path $r "Inno Setup $v\ISCC.exe" } }) |
-            Where-Object { Test-Path $_ } | Select-Object -First 1
-        if (-not $iscc) {
-            $keys = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup*_is1',
-                    'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup*_is1',
-                    'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup*_is1'
-            $iscc = Get-ItemProperty $keys -ErrorAction SilentlyContinue |
-                ForEach-Object { if ($_.InstallLocation) { Join-Path $_.InstallLocation 'ISCC.exe' } } |
-                Where-Object { Test-Path $_ } | Select-Object -First 1
-        }
-    }
-    if (-not $iscc) { throw 'Inno Setup not found - install it from https://jrsoftware.org/isdl.php (free), then run this again with -Installer' }
-    & $iscc /Qp "/DAppVersion=$Version" packaging\installer.iss
-    if ($LASTEXITCODE) { throw 'Building the installer failed' }
-    Note "setup:  $(Join-Path $Dist "AnnesChessKit-$Version-setup.exe")"
-}
-
-Write-Host "`nDone. Test it: start dist\AnnesChessKit\AnnesChessKit.exe" -ForegroundColor Green
+Write-Host "`nDone: dist\.exe-parts has the web UI licences and the engines (for build-exe.ps1)." -ForegroundColor Green

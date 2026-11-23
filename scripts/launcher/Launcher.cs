@@ -1,9 +1,6 @@
-// AnnesChessKit.exe – the double-clickable app. A tiny windowless launcher: it starts the app
-// (pythonw.exe run.py) hidden, so no console window ever appears.
-//
-// Which Python: the one that comes with the download (python\pythonw.exe – the portable zip and the
-// installer bring it), else the environment of a source checkout (.venv\Scripts\pythonw.exe). With
-// neither (first start from source) it opens AnnesChessKit.bat, which sets Python up in a visible window.
+// AnnesChessKit.exe for a source checkout (not the single-file download): a tiny windowless launcher that
+// starts the app (.venv\Scripts\pythonw.exe run.py) hidden, so no console window appears. Before the first
+// start there is no .venv yet: then it opens AnnesChessKit.bat, which sets Python up in a visible window.
 //
 // Build (no extra tools – the C# compiler ships with Windows' .NET Framework):
 //   scripts\launcher\build.bat
@@ -21,12 +18,8 @@ static class Launcher
     static void Main(string[] args)
     {
         string root = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\');
-        string[] candidates =
-        {
-            Path.Combine(root, "python", "pythonw.exe"),
-            Path.Combine(root, ".venv", "Scripts", "pythonw.exe"),
-        };
-        string pythonw = candidates.FirstOrDefault(File.Exists);
+        string pythonw = Path.Combine(root, ".venv", "Scripts", "pythonw.exe");
+        if (!File.Exists(pythonw)) pythonw = null;
         string runPy = Path.Combine(root, "run.py");
         try
         {
