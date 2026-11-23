@@ -180,6 +180,8 @@ export interface Settings {
 export interface SystemInfo {
   version: string
   engine: boolean; enginePath: string | null
+  /** The single-file app is unpacking its engines (first start): engine/maia aren't final yet. */
+  preparing?: boolean
   /** Lc0 + Maia networks present (Nightmare, human opponents in Endgames). */
   maia: boolean
   tablebase: boolean

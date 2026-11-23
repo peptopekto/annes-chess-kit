@@ -1,20 +1,54 @@
 """Paths and persisted user settings."""
 import json
 import os
+import sys
 import threading
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-BACKEND = ROOT / "backend"
+APP_FOLDER = "AnnesChessKit"
+
+
+def choose_home(exe_dir: Path, local_appdata: Path) -> Path:
+    """Where the single-file app keeps its data (userdata/) and unpacked engines (engine/).
+
+    1. A userdata folder next to AnnesChessKit.exe: the portable way, and what the installer sets up – it is
+       also where the zip download and older installs keep their data, so dropping the new exe into such a
+       folder carries on with the same data.
+    2. Otherwise the per-user folder %LOCALAPPDATA%\\AnnesChessKit – unless only an installed copy has data
+       (%LOCALAPPDATA%\\Programs\\AnnesChessKit\\userdata): then the exe uses that, so you keep one set of data.
+    """
+    if (exe_dir / "userdata").is_dir():
+        return exe_dir
+    own = local_appdata / APP_FOLDER
+    installed = local_appdata / "Programs" / APP_FOLDER
+    if not (own / "userdata").is_dir() and (installed / "userdata").is_dir():
+        return installed
+    return own
+
+
+# Run from the single-file AnnesChessKit.exe (PyInstaller), the program files are unpacked to a temporary
+# folder for each run (BUNDLE) and the data lives elsewhere (HOME). From the source folder both are the folder.
+FROZEN = bool(getattr(sys, "frozen", False))
+if FROZEN:
+    BUNDLE = Path(getattr(sys, "_MEIPASS", Path(sys.executable).parent))
+    ROOT = Path(sys.executable).resolve().parent
+    _local = os.environ.get("LOCALAPPDATA") or os.environ.get("XDG_DATA_HOME") or str(Path.home() / ".local" / "share")
+    # CHESSKIT_HOME: somewhere else entirely (the build's self-test uses a scratch folder).
+    HOME = Path(os.environ["CHESSKIT_HOME"]) if os.environ.get("CHESSKIT_HOME") else choose_home(ROOT, Path(_local))
+else:
+    ROOT = Path(__file__).resolve().parents[2]
+    BUNDLE = ROOT
+    HOME = ROOT
+BACKEND = BUNDLE / "backend"
 DATA = BACKEND / "data"
 # Override with CHESSKIT_USERDATA (e.g. to try things on a copy of your data); BRILLIANT_USERDATA, the old name, still works.
-USERDATA = Path(os.environ.get("CHESSKIT_USERDATA") or os.environ.get("BRILLIANT_USERDATA") or ROOT / "userdata")
+USERDATA = Path(os.environ.get("CHESSKIT_USERDATA") or os.environ.get("BRILLIANT_USERDATA") or HOME / "userdata")
 GAMES_DIR = USERDATA / "games"
 SETS_DIR = USERDATA / "woodpecker_sets"
 SETTINGS_FILE = USERDATA / "settings.json"
-FRONTEND_DIST = ROOT / "frontend" / "dist"
-ENGINE_DIR = ROOT / "engine"
+FRONTEND_DIST = BUNDLE / "frontend" / "dist"
+ENGINE_DIR = HOME / "engine"
 # A Stockfish somewhere else (otherwise engine/ is searched, then the PATH).
 STOCKFISH_PATH = os.environ.get("STOCKFISH_PATH") or None
 

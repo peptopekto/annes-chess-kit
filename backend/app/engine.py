@@ -13,6 +13,7 @@ from pathlib import Path
 import chess
 import chess.engine
 
+from . import bundled
 from .config import ENGINE_DIR, STOCKFISH_PATH
 
 
@@ -48,6 +49,8 @@ def engine_path() -> Path:
     CPUs without those instructions, so each candidate is probed once.
     """
     global _chosen
+    if _chosen is None and not STOCKFISH_PATH:
+        bundled.wait()  # the single-file app unpacks its engines on the first start
     with _choose_lock:
         if _chosen is None:
             if STOCKFISH_PATH:

@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased
+## 1.0.3
+
+New:
+
+- One file instead of an installer or a zip: the Windows download is now AnnesChessKit-1.0.3-windows.exe,
+  with Python, the web UI, Stockfish, Lc0 and the Maia networks inside. Put it anywhere and double-click it.
+  The first start unpacks the engines once into the data folder (a progress bar on the start page shows it);
+  they are unpacked again only after an update, or when files are missing. The data goes to a userdata
+  folder next to the exe if there is one (portable use), otherwise to %LOCALAPPDATA%\AnnesChessKit. The data
+  of an installed 1.0.x is found and used automatically. The licence texts are copied into the data folder
+  (licenses\). Build it yourself with scripts\build-exe.ps1.
 
 Fixes:
 

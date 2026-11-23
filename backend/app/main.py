@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 import threading
 import time
 from pathlib import Path
@@ -14,12 +15,13 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTex
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import __version__, analysis, botprogress, cards, coach, endgames, engine, habits, importers, insights, jobs, library, nightmare, openings, peers, pieces, positional, progress, recheck, repertoire, safety, stats, storage, tactics, training, upgrade, woodpecker
-from .config import FRONTEND_DIST, USERDATA, load_settings, save_settings
+from . import __version__, analysis, botprogress, bundled, cards, coach, endgames, engine, habits, importers, insights, jobs, library, nightmare, openings, peers, pieces, positional, progress, recheck, repertoire, safety, stats, storage, tactics, training, upgrade, woodpecker
+from .config import FROZEN, FRONTEND_DIST, ROOT, USERDATA, load_settings, save_settings
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    bundled.start()  # single-file app: unpack the engines in the background on the first start
     engine.batch.resize(engine.engines_for(load_settings()["engine_threads"]))
 
     def warm():
@@ -108,6 +110,11 @@ _WATCHED = (_CODE, _CODE.parent / "data" / "coach")
 
 def _outdated() -> bool:
     """True when the app's code or the built UI changed after this server started: it needs a restart."""
+    if FROZEN:  # the single-file app: replaced by a newer AnnesChessKit.exe
+        try:
+            return Path(sys.executable).stat().st_mtime > STARTED + 1
+        except OSError:
+            return False
     newest = 0.0
     for folder in _WATCHED:
         for f in folder.glob("*.py" if folder == _CODE else "*.yaml"):
@@ -133,16 +140,18 @@ def ping():
 
 @app.get("/api/health")
 def health():
-    try:
-        path = str(engine.engine_path())
-    except RuntimeError:
-        path = None
+    path = None
+    if not bundled.busy():  # while the engines are unpacked, answer at once instead of waiting for them
+        try:
+            path = str(engine.engine_path())
+        except RuntimeError:
+            path = None
     return {"version": __version__, "engine": path is not None, "enginePath": path,
             "maia": nightmare.available(), "tablebase": endgames.tablebase_ready(),
             "cpus": engine.CPUS, "autoEngines": engine.AUTO_ENGINES, "engines": engine.batch.size,
-            "started": STARTED, "outdated": _outdated(),
+            "started": STARTED, "outdated": _outdated(), "preparing": bundled.busy(),
             # Which copy this is: a second copy (the portable folder, an install) uses the same address.
-            "root": str(_CODE.parents[1]), "userdata": str(USERDATA)}
+            "root": str(ROOT), "userdata": str(USERDATA)}
 
 
 @app.get("/api/settings")

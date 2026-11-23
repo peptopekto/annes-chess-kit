@@ -109,30 +109,30 @@ Everything works with the keyboard and the mouse wheel; `Ctrl/⌘ + K` opens the
 
 ### Windows: download and start (easiest)
 
-From the [Releases](../../releases) page, take one of the two downloads. Both come with everything
-the app needs – their own Python, Stockfish, and Lc0 with the Maia networks for the Instructive bot –
-so there is nothing else to install:
+From the [Releases](../../releases) page, download **`AnnesChessKit-X.Y.Z-windows.exe`**. It is the whole
+app in one file – Python, Stockfish, and Lc0 with the Maia networks for the Instructive bot are inside – so
+there is nothing to install. Put it anywhere you like (the desktop, a programs folder) and double-click it.
 
-- **`AnnesChessKit-X.Y.Z-setup.exe`** – the installer. Installs for your user only (no administrator rights),
-  adds a Start-menu entry and, if you like, a desktop shortcut. Installing a newer version over it keeps
-  your data.
-- **`AnnesChessKit-X.Y.Z-windows.zip`** – the portable version. Unpack it anywhere (a USB stick works) and
-  double-click `AnnesChessKit.exe` in the folder.
-
-The app opens in its own window; closing the window quits it. Then open **Settings** and enter your
+The app opens in its own window; closing the window quits it. The first start takes a little longer, because
+the chess engines are unpacked once (the start page shows the progress). Then open **Settings** and enter your
 Chess.com and/or Lichess username, so the statistics focus on *your* moves.
 
 Good to know:
 
 - Windows may show "Windows protected your PC" on the first start, because the download isn't signed:
   choose **More info → Run anyway**.
-- Your reviews, settings and progress are in the `userdata` folder inside the program folder. To move
-  to another PC, copy that folder; to back up, copy it.
+- Your reviews, settings and progress are in `%LOCALAPPDATA%\AnnesChessKit\userdata` (paste
+  `%LOCALAPPDATA%\AnnesChessKit` into the Explorer address bar to open it). To back up or move to another
+  PC, copy that folder.
+- Portable use (e.g. on a USB stick): create an empty folder called `userdata` next to the exe. The app then
+  keeps everything next to itself.
+- Updating: download the new exe and replace the old one. Your data stays where it is.
+- Coming from version 1.0.2 or older (setup.exe or zip): the exe finds the data of an installed version by
+  itself. You can then uninstall the old version; answer **No** when it asks whether to delete your data.
+  For the portable zip, put the new exe into the old folder (next to its `userdata`) instead.
 - Renamed your Chess.com or Lichess account? Enter the new name in **Settings**. The old one is kept under
   *Other names you play as*, so your earlier games still count as yours and reviewed games stay marked as
   reviewed. If you changed the name with version 1.0.2 or older, add the old name there yourself.
-- `AnnesChessKit.exe` only starts the app – it needs the folder around it. Make a shortcut to it rather than
-  moving it out.
 
 ### macOS / Linux, or without the downloads
 
@@ -150,18 +150,19 @@ cd frontend && npm ci && npm run build && cd ..   # build the UI once (Node.js 2
 
 `run.py` options: `--port 8800`, `--browser` (a normal browser tab instead of an app window), `--no-open`,
 `--keep-running` (don't quit when the window closes). On Windows, `AnnesChessKit (debug).bat` starts it with
-a console and `scripts/launcher/build.bat` builds `AnnesChessKit.exe` (it uses the C# compiler that comes with Windows).
+a console and `scripts/launcher/build.bat` builds a small windowless starter for a source checkout (it uses the C#
+compiler that comes with Windows; not the same as the single-file download).
 
-### Building the Windows downloads yourself
+### Building the Windows download yourself
 
-`package.bat` builds the ready-to-run folder `dist\AnnesChessKit` and `dist\AnnesChessKit-X.Y.Z-windows.zip` on
-your own PC (it downloads Python and the packages; the engines are copied from your `engine` folder).
-`package.bat -Engines download` fetches Stockfish, Lc0 and the Maia networks instead, and
-`package.bat -Installer` also builds the setup program (needs the free [Inno Setup](https://jrsoftware.org/isdl.php)).
-`package.bat -EngineSources` also packs the source code of the included engine versions into
-`dist\AnnesChessKit-X.Y.Z-engine-sources.zip`. Every build carries the licences of what it includes
-(`licenses\`, `engine\ENGINES.txt`). Pushing a tag like `v1.2.0` makes GitHub build all of it and attach it to
-a release (`.github/workflows/release.yml`); the tag has to match `__version__` in `backend/app/__init__.py`.
+`scripts\build-exe.ps1` builds `dist\AnnesChessKit-X.Y.Z-windows.exe` on your own PC and starts it once to
+check it (run it from PowerShell in the project folder; it needs Node.js and Python 3.11+, and downloads
+PyInstaller and the packages into `dist\.cache`). The engines are copied from your `engine` folder;
+`-Engines download` fetches Stockfish, Lc0 and the Maia networks instead, and `-EngineSources` also packs the
+source code of the included engine versions into `dist\AnnesChessKit-X.Y.Z-engine-sources.zip`. The exe carries
+the licences of what it includes and copies them into its data folder (`licenses\`, `engine\ENGINES.txt`).
+Pushing a tag like `v1.2.0` makes GitHub build both and attach them to a release
+(`.github/workflows/release.yml`); the tag has to match `__version__` in `backend/app/__init__.py`.
 
 ### Optional extras
 
@@ -218,7 +219,8 @@ Accuracy uses Lichess's formula (volatility-weighted and harmonic mean of per-mo
 The app only listens on `127.0.0.1`, so nothing on your network can reach it. It goes online only to fetch
 games from the Chess.com and Lichess public APIs when you import them. Everything else – reviews, imported
 games, settings, training records – is in the `userdata/` folder, which is never part of the repository.
-Back it up or move it with the program; set `CHESSKIT_USERDATA` to keep it elsewhere.
+With the Windows exe it is in `%LOCALAPPDATA%\AnnesChessKit` (or next to the exe, see above); from source it
+is in the project folder. Set `CHESSKIT_USERDATA` to keep it elsewhere.
 
 ## Development
 

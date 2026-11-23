@@ -1,15 +1,14 @@
 name: Release
 
-# Push a tag like v1.0.0 to build the Windows downloads and attach them to a GitHub release:
-#   AnnesChessKit-<version>-setup.exe           installer (per user, no admin rights)
-#   AnnesChessKit-<version>-windows.zip         the same as a portable folder: unpack anywhere, start AnnesChessKit.exe
+# Push a tag like v1.0.0 to build the Windows download and attach it to a GitHub release:
+#   AnnesChessKit-<version>-windows.exe         the whole app in one file: Python, the web UI, Stockfish,
+#                                               Lc0 and the Maia networks inside, nothing to install
 #   AnnesChessKit-<version>-engine-sources.zip  source code of the included Stockfish and Lc0 versions (GPL)
-# Both come with their own Python, the built UI and the engines (Stockfish, Lc0, Maia networks) – nothing
-# else to install. scripts/package.ps1 does the work; run package.bat to build the same thing locally.
+# scripts/build-exe.ps1 does the work (and starts the exe once to check it); run it to build the same locally.
 on:
   push:
     tags: ["v*"]
-  workflow_dispatch:   # "Run workflow" button: builds the downloads as an artifact, without a release
+  workflow_dispatch:   # "Run workflow" button: builds the exe as an artifact of the run, without a release
 
 permissions:
   contents: write
@@ -24,58 +23,46 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: frontend/package-lock.json
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - name: Check that the tag matches the version
         if: startsWith(github.ref, 'refs/tags/v')
         shell: pwsh
         run: |
           $v = ([regex]::Match((Get-Content backend/app/__init__.py -Raw), '__version__\s*=\s*"([^"]+)"')).Groups[1].Value
           if ("v$v" -ne "${{ github.ref_name }}") { throw "Tag ${{ github.ref_name }} doesn't match __version__ $v in backend/app/__init__.py" }
-      - name: Install Inno Setup (no longer on the windows-latest image)
-        shell: pwsh
-        run: choco install innosetup --yes --no-progress
-      - name: Build the folder, the zip and the installer
+      - name: Build and test AnnesChessKit.exe
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./scripts/package.ps1 -Engines download -Installer -EngineSources
-      - name: Smoke test – the packaged app starts and answers
-        shell: pwsh
-        run: |
-          $p = Start-Process -FilePath dist/AnnesChessKit/python/python.exe -ArgumentList 'run.py', '--no-open', '--port', '8799' -WorkingDirectory dist/AnnesChessKit -PassThru
-          try {
-            $ok = $false
-            foreach ($i in 1..60) {
-              Start-Sleep -Milliseconds 500
-              try { $h = Invoke-RestMethod http://127.0.0.1:8799/api/health -TimeoutSec 2; $ok = $true; break } catch {}
-            }
-            if (-not $ok) { throw 'The packaged app did not start' }
-            $h | ConvertTo-Json
-            if (-not $h.engine) { throw 'Stockfish was not found in the package' }
-          } finally { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue }
-          Remove-Item -Recurse -Force dist/AnnesChessKit/userdata -ErrorAction SilentlyContinue
+        run: ./scripts/build-exe.ps1 -Engines download -EngineSources
       - uses: actions/upload-artifact@v7
         with:
           name: annes-chess-kit-windows
           path: |
-            dist/AnnesChessKit-*-windows.zip
-            dist/AnnesChessKit-*-setup.exe
+            dist/AnnesChessKit-*-windows.exe
             dist/AnnesChessKit-*-engine-sources.zip
+          compression-level: 0   # already compressed
       - uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           files: |
-            dist/AnnesChessKit-*-windows.zip
-            dist/AnnesChessKit-*-setup.exe
+            dist/AnnesChessKit-*-windows.exe
             dist/AnnesChessKit-*-engine-sources.zip
           generate_release_notes: true
           body: |
             ## Download (Windows 10/11, 64-bit)
 
-            - **AnnesChessKit-…-setup.exe** (installer, no administrator rights needed)
-            - **AnnesChessKit-…-windows.zip** (portable: unpack anywhere and start `AnnesChessKit.exe`)
-
-            Both include Python, Stockfish, Lc0 and the Maia networks; nothing else to install.
+            **AnnesChessKit-…-windows.exe** is the whole app in one file: Python, the web UI, Stockfish, Lc0 and
+            the Maia networks are inside. Download it, put it anywhere and double-click it; nothing to install.
             Windows SmartScreen may warn because the program is not code-signed: choose "More info", then "Run anyway".
 
+            The first start takes a little longer: the chess engines are unpacked once into the data folder.
+            Your data goes to `%LOCALAPPDATA%\AnnesChessKit`, or to a `userdata` folder next to the exe if you
+            create one (portable use, e.g. on a USB stick). Data of an earlier installed version is found and
+            used automatically; you can then uninstall the old version and keep its data when asked.
+
             `AnnesChessKit-…-engine-sources.zip` holds the source code of the included engine versions (GPL v3).
-            Licences of everything included: `THIRD_PARTY_NOTICES.md`, the `licenses` folder and `engine/ENGINES.txt`.
+            Licences of everything included: `THIRD_PARTY_NOTICES.md`, and the `licenses` folder that the exe
+            puts into its data folder.

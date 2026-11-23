@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { BotGames } from '../components/BotGames'
 import { openHelp } from '../components/HelpDialog'
 import { LibraryImport } from '../components/LibraryImport'
+import { LoadingNotice } from '../components/LoadingNotice'
 import { QueuePanel } from '../components/QueuePanel'
 import { Button, Card, ErrorNote, Segmented, Spinner, inputCls } from '../components/ui'
 import { api } from '../lib/api'
@@ -60,6 +61,12 @@ export function Home() {
   const tick = useReviewsTick()
   const [system, setSystem] = useState<SystemInfo | null>(null)
   useEffect(() => { api.system().then(setSystem).catch(() => {}) }, [])
+  // First start of the single-file app: the engines are being unpacked – ask again until they're ready.
+  useEffect(() => {
+    if (!system?.preparing) return
+    const t = setTimeout(() => { api.system().then(setSystem).catch(() => {}) }, 1500)
+    return () => clearTimeout(t)
+  }, [system])
   // Refresh the "recently reviewed" grid as queued games finish.
   useEffect(() => {
     api.games(6).then(setRecent).catch(() => {})
@@ -91,7 +98,11 @@ export function Home() {
       <GettingStarted hasAccount={!!(settings?.chesscom_username || settings?.lichess_username)} recent={recent} />
       {recent.length > 0 && <NextSteps latest={recent[0]} />}
 
-      {system && !system.engine && <EngineMissing />}
+      {system?.preparing && (
+        <LoadingNotice compact className="mb-6" title="Getting the chess engines ready" tasks={['engines']}
+          note="This happens once, on the first start. Reviews and training can start as soon as it's done." />
+      )}
+      {system && !system.preparing && !system.engine && <EngineMissing />}
 
       <Card className="p-5 sm:p-6">
         <div className="mb-4">

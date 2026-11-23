@@ -9,15 +9,17 @@ from functools import lru_cache
 import chess
 import chess.pgn
 
-from .config import DATA
+from .config import DATA, FROZEN, USERDATA
 
 TSV = DATA / "openings.tsv"
-CACHE = DATA / "openings.cache.json"
+# The single-file app unpacks its program files afresh for every run (with new dates), so its cache lives in
+# the data folder, named after the book's size: a different book in an update gets its own cache.
+CACHE = USERDATA / "cache" / f"openings-{TSV.stat().st_size}.json" if FROZEN else DATA / "openings.cache.json"
 
 
 @lru_cache(maxsize=1)
 def book() -> dict[str, tuple[str, str]]:
-    if CACHE.exists() and CACHE.stat().st_mtime >= TSV.stat().st_mtime:
+    if CACHE.exists() and (FROZEN or CACHE.stat().st_mtime >= TSV.stat().st_mtime):
         return {k: tuple(v) for k, v in json.loads(CACHE.read_text(encoding="utf-8")).items()}
 
     positions: dict[str, tuple[str, str]] = {}
@@ -34,6 +36,7 @@ def book() -> dict[str, tuple[str, str]]:
             positions.setdefault(board.epd(), ("", ""))
         positions[board.epd()] = (eco, name)
 
+    CACHE.parent.mkdir(parents=True, exist_ok=True)
     CACHE.write_text(json.dumps(positions), encoding="utf-8")
     return positions
 

@@ -37,28 +37,32 @@ Web UI (`frontend/package.json`), bundled into `frontend/dist` when built:
 | [Tailwind CSS](https://tailwindcss.com), [Vite](https://vite.dev), [TypeScript](https://www.typescriptlang.org), [oxlint](https://oxc.rs) (build tools only) | MIT, Apache-2.0 |
 
 The full licence texts of every package bundled into the web UI are collected by
-`scripts/collect-licenses.mjs` into `licenses/web-ui.txt` of the Windows downloads.
+`scripts/collect-licenses.mjs` into `licenses/web-ui.txt` of the Windows download.
 
-## Included in the Windows downloads (installer and portable zip)
+## Included in the Windows download (AnnesChessKit-X.Y.Z-windows.exe)
 
-The release downloads are built by `scripts/package.ps1` and contain, unchanged and in their original form:
+The release download is built by `scripts/build-exe.ps1` and contains, unchanged and in their original form:
 
-| Component | Where in the folder | License | Source code |
+| Component | Where | License | Source code |
 |---|---|---|---|
-| [Python](https://www.python.org) (embeddable package) and the packages listed above | `python/` | PSF License; packages as above | [python.org](https://www.python.org/downloads/source/) |
-| [Stockfish](https://stockfishchess.org) | `engine/stockfish-*.exe` | GPL-3.0 | [official-stockfish/Stockfish](https://github.com/official-stockfish/Stockfish) |
+| [Python](https://www.python.org) runtime and the packages listed above | inside the exe | PSF License; packages as above | [python.org](https://www.python.org/downloads/source/) |
+| [PyInstaller](https://pyinstaller.org) bootloader (starts the exe and unpacks it) | inside the exe | GPL-2.0-or-later with the bootloader exception, which allows this use | [pyinstaller/pyinstaller](https://github.com/pyinstaller/pyinstaller) |
+| [Stockfish](https://stockfishchess.org) | `engine/stockfish-*.exe` in the data folder | GPL-3.0 | [official-stockfish/Stockfish](https://github.com/official-stockfish/Stockfish) |
 | [Lc0 (Leela Chess Zero)](https://lczero.org) | `engine/lc0/` | GPL-3.0 | [LeelaChessZero/lc0](https://github.com/LeelaChessZero/lc0) |
 | [Maia](https://maiachess.com) networks by the CSSLab, University of Toronto | `engine/maia/` | GPL-3.0 | [CSSLab/maia-chess](https://github.com/CSSLab/maia-chess) |
 
 Anne's Chess Kit itself is GPL-3.0-or-later; its source is this repository. The engines run as separate
 programs that the app talks to over the UCI protocol; they are distributed alongside it, unchanged, under their
-own licences. Each download says exactly which versions it contains and where their source is
+own licences. The download says exactly which versions it contains and where their source is
 (`engine/ENGINES.txt`, with the licence texts next to the engines), and every GitHub release has the source code
 of those exact engine versions attached (`AnnesChessKit-<version>-engine-sources.zip`).
 
-Where to find the licence texts in a download: `LICENSE` (the app and the GPL v3 text), `licenses/web-ui.txt`
-(web UI packages), `python/LICENSE.txt` (Python), `python/Lib/site-packages/*.dist-info/` (Python packages),
-`engine/ENGINES.txt` and the licence files in `engine/` (engines and networks).
+Where to find the licence texts: the exe carries them and copies them into its data folder on every new
+version (`%LOCALAPPDATA%\AnnesChessKit`, or the folder next to the exe when you keep a `userdata` folder
+there). In `licenses/`: `LICENSE` (the app and the GPL v3 text), `THIRD_PARTY_NOTICES.md` (this file),
+`web-ui.txt` (web UI packages), `python-LICENSE.txt` (Python), `python-packages.txt` (Python packages, with
+their licence texts) and `ENGINES.txt`; in `engine/`: `ENGINES.txt` and the licence files of the engines and
+networks.
 
 ## Downloaded separately by you (not in this repository; a source checkout needs them)
 

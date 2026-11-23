@@ -24,6 +24,10 @@
 .PARAMETER SkipUi
   Don't rebuild the web UI (use frontend\dist as it is).
 
+.PARAMETER NoPython
+  Only the web UI, the engines and the licences (no launcher, no bundled Python, no zip): what
+  scripts\build-exe.ps1 packs into the single-file AnnesChessKit.exe.
+
 .PARAMETER EngineSources
   Also download the source code of the included Stockfish and Lc0 versions into
   dist\AnnesChessKit-<version>-engine-sources.zip (to publish next to the release: the GPL asks whoever
@@ -34,6 +38,7 @@ param(
     [switch]$Installer,
     [switch]$SkipUi,
     [switch]$EngineSources,
+    [switch]$NoPython,
     [string]$PythonVersion = '3.12.10'
 )
 
@@ -112,7 +117,9 @@ if (-not (Test-Path 'frontend\dist\index.html')) { throw 'frontend\dist is missi
 # --------------------------------------------------------------------------- 2. launcher
 Step 'Launcher (AnnesChessKit.exe)'
 $csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-if (Test-Path $csc) {
+if ($NoPython) {
+    Note 'skipped (-NoPython)'
+} elseif (Test-Path $csc) {
     & $csc /nologo /target:winexe /optimize+ /win32icon:app.ico /reference:System.Windows.Forms.dll /out:AnnesChessKit.exe scripts\launcher\Launcher.cs
     if ($LASTEXITCODE) { throw 'Building AnnesChessKit.exe failed' }
 } elseif (-not (Test-Path 'AnnesChessKit.exe')) {
@@ -139,6 +146,7 @@ foreach ($junk in 'backend\tests', 'backend\.pytest_cache', 'backend\data\openin
 # --------------------------------------------------------------------------- 4. Python
 Step "Python $PythonVersion with the packages"
 $py = Join-Path $Out 'python'
+if ($NoPython) { Note 'skipped (-NoPython)' } else {
 $zip = Get-File "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-embed-amd64.zip" "python-$PythonVersion-embed-amd64.zip"
 Expand-Archive -Path $zip -DestinationPath $py -Force
 # The embedded Python only looks where its ._pth file says: add site-packages (for the packages below).
@@ -167,6 +175,7 @@ foreach ($drop in 'Scripts', 'Lib\site-packages\pip', 'Lib\site-packages\setupto
 Get-ChildItem "$py\Lib\site-packages" -Directory -Filter 'pip-*.dist-info' | Remove-Item -Recurse -Force
 Get-ChildItem $Out -Recurse -Directory -Filter __pycache__ | Remove-Item -Recurse -Force
 if (Test-Path "$Out\userdata") { Remove-Item -Recurse -Force "$Out\userdata" }   # created by the import check
+}   # -NoPython
 
 # --------------------------------------------------------------------------- 5. engines
 Step "Engines ($Engines)"
@@ -295,6 +304,11 @@ if ($EngineSources -and $sources.Count) {
     if (Test-Path $srcZip) { Remove-Item -Force $srcZip }
     Compress-Archive -Path "$srcDir\*" -DestinationPath $srcZip
     Note "engine sources: $srcZip"
+}
+
+if ($NoPython) {
+    Write-Host "`nDone: dist\AnnesChessKit has the UI, the engines and the licences (for build-exe.ps1)." -ForegroundColor Green
+    return
 }
 
 # --------------------------------------------------------------------------- 7. zip (+ installer)

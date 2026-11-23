@@ -31,11 +31,11 @@ import chess.engine
 import yaml
 
 from . import classify as C
-from . import engine, insights, openings, storage, tactics
-from .config import DATA, ROOT, USERDATA, write_atomic
+from . import bundled, engine, insights, openings, storage, tactics
+from .config import DATA, ENGINE_DIR, USERDATA, write_atomic
 
-LC0_DIR = ROOT / "engine" / "lc0"
-MAIA_DIR = ROOT / "engine" / "maia"
+LC0_DIR = ENGINE_DIR / "lc0"
+MAIA_DIR = ENGINE_DIR / "maia"
 LEVELS = list(range(1100, 2000, 100))
 STATS_FILE = USERDATA / "nightmare.json"
 CHESSCOM_SHIFT = 350
@@ -57,11 +57,14 @@ MAX_ALTS = 4         # …and is one of the next few most likely moves
 
 def lc0_path() -> Path | None:
     """Lc0 in engine/lc0/ (Windows build with its DLLs) or on the PATH (e.g. installed with a package manager)."""
+    bundled.wait()
     found = engine.find_binary("lc0", LC0_DIR, ("lc0",))
     return found[0] if found else None
 
 
 def available() -> bool:
+    if bundled.busy():  # being unpacked: answer from the archive instead of waiting (health checks call this)
+        return bundled.includes("lc0/") and bundled.includes("maia/")
     return lc0_path() is not None and any((MAIA_DIR / f"maia-{lv}.pb.gz").exists() for lv in LEVELS)
 
 

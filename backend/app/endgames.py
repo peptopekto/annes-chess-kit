@@ -24,10 +24,10 @@ import chess.syzygy
 import yaml
 
 from . import engine, nightmare
-from .config import DATA, ROOT, USERDATA, write_atomic
+from .config import DATA, ENGINE_DIR, USERDATA, write_atomic
 
 STATS_FILE = USERDATA / "endgames.json"
-TB_DIR = ROOT / "engine" / "syzygy"
+TB_DIR = ENGINE_DIR / "syzygy"
 WIN_CP = 250          # Stockfish score (pawns x100) that counts as "winning"
 DRAW_CP = 90          # |score| below this counts as "drawn" for the defence drills
 

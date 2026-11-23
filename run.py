@@ -15,7 +15,7 @@ import webbrowser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT / "backend"))
+sys.path.insert(0, str(ROOT / "backend"))  # from the source folder; the single-file exe has the app built in
 
 HANDOFF_SECONDS = 5      # a window process that exits this fast handed the window to another browser process
 PING_TIMEOUT = 180       # fallback: no ping from the window for this long → it's gone (background tabs ping slowly)
@@ -118,7 +118,8 @@ def _same_folder(running: dict) -> bool:
     if not root or not data:
         return False  # too old to say: treat it as another copy (it gets restarted, which is harmless)
     try:
-        return Path(root).resolve() == ROOT and Path(data).resolve() == _userdata().resolve()
+        from app.config import ROOT as APP_ROOT  # the exe's folder for the single-file app
+        return Path(root).resolve() == APP_ROOT.resolve() and Path(data).resolve() == _userdata().resolve()
     except OSError:
         return False
 
@@ -160,7 +161,8 @@ def main() -> None:
 
     import uvicorn
 
-    if not (ROOT / "frontend" / "dist" / "index.html").exists():
+    from app.config import FRONTEND_DIST
+    if not (FRONTEND_DIST / "index.html").exists():
         print("UI not built yet – run:  cd frontend && npm install && npm run build")
 
     url = f"http://127.0.0.1:{args.port}/"
