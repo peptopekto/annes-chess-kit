@@ -160,7 +160,7 @@ WINNING_PCT, LOSING_PCT = 85, 15
 
 
 CACHE_FILE = USERDATA / "cache" / "insights.pkl"
-CACHE_VERSION = 8  # bump when per-game features change
+CACHE_VERSION = 9  # bump when per-game features change
 _loaded_from_disk = False
 
 
@@ -330,7 +330,7 @@ def _build(record: dict) -> Game | None:
             continue
         board = chess.Board(m["fenBefore"])
         before, after = wins[i], wins[i + 1]
-        acc = C.move_accuracy(before, after) if m["cls"] not in (C.BEST, C.BRILLIANT, C.GREAT, C.BOOK, C.FORCED) else 100.0
+        acc = C.lichess_move_accuracy(before, after) if m["cls"] not in (C.BEST, C.BRILLIANT, C.GREAT, C.BOOK, C.FORCED) else 100.0
         # Clock: remaining before this move = my clock after my previous move.
         remaining = spent = None
         if len(clocks) > i and clocks[i] is not None:
@@ -352,7 +352,7 @@ def _build(record: dict) -> Game | None:
             "fellFor": _fell_for(record["moves"], i) if m["cls"] in SEVERE else None,
             "missed": (tactics.theme_of_line(board, m.get("bestLine") or [m["bestSan"]],
                                              tactics.exchange_start(record["moves"], i))
-                       if m["cls"] in SEVERE and (m["loss"] >= 0.10 or m["cls"] == C.MISS) else None),
+                       if m["cls"] in SEVERE else None),
         })
 
     elo_raw = str(record.get("whiteElo" if mover_white else "blackElo") or "")

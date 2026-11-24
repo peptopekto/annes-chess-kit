@@ -502,23 +502,40 @@ def _taken_soon(board: chess.Board, pv: list[chess.Move] | None, sq: chess.Squar
 #  Accuracy (Lichess algorithm)
 # --------------------------------------------------------------------------- #
 
-def move_accuracy(win_before: float, win_after: float) -> float:
-    """Per-move accuracy from win% (0..100, mover's POV) before/after."""
-    import math
+# Lichess caps evaluations at ±10 pawns (a mate counts as +10 / -10) before turning them into win%, so
+# accuracy doesn't fall for "only" going from +25 to +12 or from a mate to +15. On the Lichess curve that
+# is the same as capping win% itself.
+WIN_CAP = 100.0 / (1.0 + math.exp(-LICHESS_K * 1000))   # 97.54
+WIN_FLOOR = 100.0 - WIN_CAP                              # 2.46
 
+
+def lichess_win(win: float) -> float:
+    """A win% (0..100, from expected_points with the Lichess curve) capped the way Lichess caps it."""
+    return min(WIN_CAP, max(WIN_FLOOR, win))
+
+
+def move_accuracy(win_before: float, win_after: float) -> float:
+    """Per-move accuracy from win% (0..100, mover's POV) before/after (Lichess's formula)."""
     if win_after >= win_before:
         return 100.0
     raw = 103.1668 * math.exp(-0.04354 * (win_before - win_after)) - 3.1669 + 1
     return max(0.0, min(100.0, raw))
 
 
+def lichess_move_accuracy(win_before: float, win_after: float) -> float:
+    """Per-move accuracy as Lichess computes it: from capped win% (see WIN_CAP)."""
+    return move_accuracy(lichess_win(win_before), lichess_win(win_after))
+
+
 def game_accuracy(white_win_pcts: list[float], white_first: bool = True) -> tuple[float | None, float | None]:
     """Lichess-style volatility-weighted + harmonic mean accuracy for both sides.
 
-    `white_win_pcts` is White's win% (0..100) for every position, start included.
+    `white_win_pcts` is White's win% (0..100, Lichess curve) for every position, start included; it is
+    capped like Lichess does (see WIN_CAP) before anything else.
     """
     import statistics
 
+    white_win_pcts = [lichess_win(w) for w in white_win_pcts]
     n = len(white_win_pcts)
     if n < 2:
         return None, None

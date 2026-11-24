@@ -42,7 +42,7 @@ TOP = {C.BEST, C.GREAT, C.BRILLIANT}
 BOT_SOURCES = {"nightmare"}
 
 CACHE_FILE = USERDATA / "cache" / "peers.pkl"
-CACHE_VERSION = 1
+CACHE_VERSION = 2
 SAVE_EVERY = 60.0
 
 
@@ -104,7 +104,7 @@ def facts(record: dict) -> dict | None:
         white = m["color"] == "w"
         before = wins[i] if white else 100 - wins[i]
         after = wins[i + 1] if white else 100 - wins[i + 1]
-        acc = 100.0 if m["cls"] in (C.BEST, C.BRILLIANT, C.GREAT, C.BOOK, C.FORCED) else C.move_accuracy(before, after)
+        acc = 100.0 if m["cls"] in (C.BEST, C.BRILLIANT, C.GREAT, C.BOOK, C.FORCED) else C.lichess_move_accuracy(before, after)
         phase = insights._phase(board, board.fullmove_number, m["cls"])
         s["n"] += 1
         s["loss"] += m["loss"]

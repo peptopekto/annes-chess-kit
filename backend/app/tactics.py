@@ -314,8 +314,9 @@ def enrich(record: dict) -> dict:
             theme = theme_of_line(after, line, chess.Board(m["fenBefore"]))
             m["refute"] = {"san": nxt["bestSan"], "uci": nxt["bestUci"], "line": line[:6], "theme": theme,
                            "label": describe(theme)}
-        # What did you miss? The theme of your own best line.
-        if m["loss"] >= 0.10 or m["cls"] == C.MISS:
+        # What did you miss? The theme of your own best line (for a Mistake, Miss or Blunder – the bands
+        # follow the players' level, so a fixed loss would leave out the mistakes of lower-rated games).
+        if m["cls"] in (C.MISTAKE, C.MISS, C.BLUNDER):
             theme = theme_of_line(chess.Board(m["fenBefore"]), m.get("bestLine") or [m["bestSan"]],
                                   exchange_start(moves, i))
             if theme:

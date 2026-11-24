@@ -158,6 +158,47 @@ def run() -> None:
 
 
 # --------------------------------------------------------------------------- #
+#  Accuracy with Lichess's evaluation cap (no engine needed)
+# --------------------------------------------------------------------------- #
+
+ACC_CHECK = analysis.ACC_CHECK  # bump it there to recompute the accuracy of every review
+
+
+def reaccuracy(record: dict) -> bool:
+    """Recompute a stored review's accuracy from its win% curve. True if it changed."""
+    wins = record.get("winPct") or []
+    if len(wins) < 2:
+        return False
+    white_first = chess.Board(record.get("startFen") or chess.STARTING_FEN).turn == chess.WHITE
+    w, b = C.game_accuracy(wins, white_first=white_first)
+    new = {"w": w, "b": b}
+    if record.get("accuracy") == new:
+        return False
+    record["accuracy"] = new
+    return True
+
+
+def run_accuracy() -> None:
+    """Once per review: recompute the accuracy of reviews made before the ±10-pawn cap (see classify.WIN_CAP)."""
+    todo = [s["id"] for s in storage.summaries() if (s.get("accCheck") or 0) < ACC_CHECK]
+    changed = 0
+    for gid in todo:
+        def apply(record: dict) -> bool:
+            nonlocal changed
+            if (record.get("accCheck") or 0) >= ACC_CHECK:
+                return False
+            changed += reaccuracy(record)
+            record["accCheck"] = ACC_CHECK
+            return True
+        try:
+            storage.update(gid, apply)
+        except Exception:  # one odd review must not stop the rest
+            log.exception("accuracy recompute failed for %s", gid)
+    if todo:
+        log.info("accuracy recompute: %d reviews, %d changed", len(todo), changed)
+
+
+# --------------------------------------------------------------------------- #
 #  Re-rating mates and misses (no engine needed)
 # --------------------------------------------------------------------------- #
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+Fixes:
+
+- Accuracy now follows Lichess exactly: evaluations are capped at ten pawns (a forced mate counts as ten
+  pawns) before they become win chances. Before, going from a mate to a slower win, or from +25 to +12,
+  lowered your accuracy although Lichess doesn't count it. Earlier reviews are recomputed once at startup
+  (no engine needed); only games with big advantages change, by a few points at most.
+- The tactic you missed ("Find the fork") is now named for every Mistake, Miss and Blunder. Before, it
+  needed a fixed loss of 10 %, which left out many mistakes of lower-rated games, where the bands are
+  narrower.
+- The deeper check of Brilliant and Great moves applies the same rule as the review: a Brilliant must
+  still leave you no worse than about equal, a Great must still hold the position.
+
 ## 1.0.3
 
 New:

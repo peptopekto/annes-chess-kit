@@ -27,6 +27,7 @@ ANALYSIS_VERSION = 2
 CHESSCOM_SHIFT = 350  # Chess.com ratings sit ~350 below Lichess at club level
 SAC_CHECK = 2  # brilliant needs an engine-confirmed sacrifice; recheck.py re-judges older reviews
 RATE_CHECK = 2  # allowing mate is a blunder, stricter Miss; recheck.run_rates re-rates older reviews
+ACC_CHECK = 1  # accuracy with Lichess's ±10-pawn cap; recheck.run_accuracy recomputes older reviews
 
 
 def game_rating(headers) -> float | None:
@@ -480,8 +481,9 @@ def confirm_special(moves: list[dict], k: float, depth: int, time_cap: float = B
 
     They're the moves people remember – and celebrate – but at review depth about one Brilliant in five
     isn't (near) best any more a few plies deeper. The move is searched again from the same position as
-    the best move; a Brilliant/Great that isn't near-best there – or, for Great, isn't the only good move –
-    gets the plain rating of that search (never below Good: the rest of the game was judged at review depth).
+    the best move; a Brilliant/Great that isn't near-best there – or, for Great, isn't the only good move;
+    or that leaves you worse than the review's own rule allows (Brilliant 45 %, Great 30 %) – gets the plain
+    rating of that search (never below Good: the rest of the game was judged at review depth).
     Changes `moves` in place; returns (ply, san, old, new) for each downgrade.
     """
     todo = [i for i, m in enumerate(moves) if m.get("cls") in (C.BRILLIANT, C.GREAT)]
@@ -503,11 +505,11 @@ def confirm_special(moves: list[dict], k: float, depth: int, time_cap: float = B
             if not top:
                 return None
             if top[0].move == move:
-                return 0.0, (ep(top[0]) - ep(top[1])) if len(top) > 1 else None, top, board
+                return 0.0, (ep(top[0]) - ep(top[1])) if len(top) > 1 else None, ep(top[0]), top, board
             played = analyse_lines(eng, board, deep, multipv=1, max_time=cap, root_moves=[move], game=token)
             if not played:
                 return None
-            return max(0.0, ep(top[0]) - ep(played[0])), 0.0, top, board
+            return max(0.0, ep(top[0]) - ep(played[0])), 0.0, ep(played[0]), top, board
 
     with ThreadPoolExecutor(max_workers=min(len(todo), engine.batch.size)) as pool:
         results = list(pool.map(judge, todo))
@@ -515,12 +517,14 @@ def confirm_special(moves: list[dict], k: float, depth: int, time_cap: float = B
     for i, res in zip(todo, results):
         if res is None:
             continue
-        loss, gap, top, board = res
+        loss, gap, ep_after, top, board = res
         best = top[0]
         m = moves[i]
         holds = loss < C.EXCELLENT_MAX * sc
         if m["cls"] == C.GREAT:
-            holds = holds and gap is not None and gap >= 0.20 * sc
+            holds = holds and gap is not None and gap >= 0.20 * sc and ep_after >= 0.30
+        else:  # Brilliant: the deeper search must agree that you're not worse after the sacrifice either
+            holds = holds and ep_after >= 0.45
         if holds:
             continue
         new = C.BEST if loss < 0.005 * sc else C.EXCELLENT if loss < C.EXCELLENT_MAX * sc else C.GOOD
@@ -699,6 +703,7 @@ def analyse_game(pgn_text: str, limits: Limits | int = 18, progress: ProgressFn 
         "sacCheck": SAC_CHECK,
         "specialCheck": SPECIAL_CHECK,
         "rateCheck": RATE_CHECK,
+        "accCheck": ACC_CHECK,
         "accuracy": {"w": acc_w, "b": acc_b},
         "counts": {"w": dict(counts[chess.WHITE]), "b": dict(counts[chess.BLACK])},
         "startEval": eval_json(pos_scores[0]),

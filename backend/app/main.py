@@ -29,6 +29,7 @@ async def lifespan(_app: FastAPI):
         openings.book()  # then the opening book
         recheck.run()    # re-judge old brilliant moves with the stricter sacrifice rule (once)
         recheck.run_rates()  # re-rate mates and misses in older reviews (once, no engine needed)
+        recheck.run_accuracy()  # accuracy with Lichess's evaluation cap for older reviews (once, no engine)
         # …then (once, a few minutes in the background) confirm old Brilliant/Great moves with a deeper search.
         threading.Thread(target=recheck.run_special, daemon=True, name="special-recheck").start()
         upgrade.resume() # carry on with a re-analysis interrupted by closing the app

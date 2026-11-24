@@ -19,7 +19,7 @@ from .config import GAMES_DIR, my_names, write_atomic
 
 SUMMARY_KEYS = ("id", "white", "black", "whiteElo", "blackElo", "result", "date", "timeControl",
                 "plies", "opening", "me", "accuracy", "counts", "analysedAt", "source", "url", "depth", "moveTime", "depthReached", "version",
-                "sacCheck", "specialCheck", "rateCheck")
+                "sacCheck", "specialCheck", "rateCheck", "accCheck")
 HIGHLIGHT_CLASSES = ("brilliant", "great", "blunder", "mistake", "miss")
 HIGHLIGHT_KEYS = ("ply", "san", "uci", "color", "cls", "fenBefore", "bestUci", "bestSan", "text", "loss")
 
